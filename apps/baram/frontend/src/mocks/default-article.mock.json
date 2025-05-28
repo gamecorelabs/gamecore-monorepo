@@ -7,7 +7,8 @@
     "author": {
       "name": "Zess"
     },
-    "community": 1
+    "community": 1,
+    "thumbnail": "https://picsum.photos/seed/picsum/200/200"
   },
   {
     "id": 2,
@@ -17,7 +18,8 @@
     "author": {
       "name": "John Smith"
     },
-    "community": 1
+    "community": 1,
+    "thumbnail": ""
   },
   {
     "id": 3,
@@ -27,6 +29,7 @@
     "author": {
       "name": "Alice Johnson"
     },
-    "community": 1
+    "community": 1,
+    "thumbnail": "https://picsum.photos/seed/picsum/200/200"
   }
 ]
