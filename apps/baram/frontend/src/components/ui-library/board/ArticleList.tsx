@@ -1,3 +1,4 @@
+import { NewPostButton } from "../floating";
 import { ArticleContent } from "./ArticleContent";
 import { ArticleInfo } from "./ArticleInfo";
 import defaultPostJson from "@/mocks/default-article.mock.json";
@@ -33,6 +34,7 @@ const ArticleList = ({ posts }: { posts: Post[] }) => {
           <ArticleInfo post={post} />
         </article>
       ))}
+      <NewPostButton />
     </>
   );
 };
