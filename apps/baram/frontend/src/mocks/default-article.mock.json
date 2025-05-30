@@ -31,5 +31,115 @@
     },
     "community": 1,
     "thumbnail": "https://picsum.photos/seed/picsum/200/200"
+  },
+  {
+    "id": 4,
+    "title": "새로운 소식",
+    "content": "오늘의 새로운 소식을 전합니다.",
+    "category": "공지",
+    "author": {
+      "name": "Admin"
+    },
+    "community": 2,
+    "thumbnail": ""
+  },
+  {
+    "id": 5,
+    "title": "게임 팁 공유",
+    "content": "게임을 더 잘하는 방법을 알려드려요.",
+    "category": "정보",
+    "author": {
+      "name": "GamerKim"
+    },
+    "community": 1,
+    "thumbnail": "https://picsum.photos/seed/game1/200/200"
+  },
+  {
+    "id": 6,
+    "title": "버그 제보합니다",
+    "content": "이런 버그가 발생했어요. 확인 부탁드립니다.",
+    "category": "질문",
+    "author": {
+      "name": "BugHunter"
+    },
+    "community": 2,
+    "thumbnail": ""
+  },
+  {
+    "id": 7,
+    "title": "오늘의 잡담",
+    "content": "오늘은 날씨가 참 좋네요.",
+    "category": "잡담",
+    "author": {
+      "name": "SunnyDay"
+    },
+    "community": 1,
+    "thumbnail": "https://picsum.photos/seed/chat1/200/200"
+  },
+  {
+    "id": 8,
+    "title": "이벤트 안내",
+    "content": "다가오는 이벤트에 많은 참여 부탁드립니다.",
+    "category": "공지",
+    "author": {
+      "name": "EventMaster"
+    },
+    "community": 2,
+    "thumbnail": "https://picsum.photos/seed/event1/200/200"
+  },
+  {
+    "id": 9,
+    "title": "질문 있습니다",
+    "content": "이 기능은 어떻게 사용하나요?",
+    "category": "질문",
+    "author": {
+      "name": "Questioner"
+    },
+    "community": 1,
+    "thumbnail": ""
+  },
+  {
+    "id": 10,
+    "title": "정보 공유합니다",
+    "content": "유용한 정보를 공유합니다.",
+    "category": "정보",
+    "author": {
+      "name": "InfoGuy"
+    },
+    "community": 2,
+    "thumbnail": "https://picsum.photos/seed/info1/200/200"
+  },
+  {
+    "id": 11,
+    "title": "잡담해요",
+    "content": "오늘 점심 뭐 드셨나요?",
+    "category": "잡담",
+    "author": {
+      "name": "Chatter"
+    },
+    "community": 1,
+    "thumbnail": ""
+  },
+  {
+    "id": 12,
+    "title": "업데이트 안내",
+    "content": "새로운 업데이트가 적용되었습니다.",
+    "category": "공지",
+    "author": {
+      "name": "Updater"
+    },
+    "community": 2,
+    "thumbnail": "https://picsum.photos/seed/update1/200/200"
+  },
+  {
+    "id": 13,
+    "title": "게임 질문",
+    "content": "이 스테이지는 어떻게 깨나요?",
+    "category": "질문",
+    "author": {
+      "name": "HelpMe"
+    },
+    "community": 1,
+    "thumbnail": ""
   }
 ]
