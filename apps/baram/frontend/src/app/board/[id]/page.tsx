@@ -1,4 +1,4 @@
-import { ArticleList } from "@/components";
+import { ArticleList } from "@/components/ui-library";
 import React from "react";
 
 const BoardPage = () => {
