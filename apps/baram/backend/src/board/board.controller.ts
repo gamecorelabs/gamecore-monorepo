@@ -1,6 +1,6 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Post } from "@nestjs/common";
 import { BoardService } from "./board.service";
-import { BaseBoardService } from "@_core/board/board.service";
+import { BaseBoardService } from "@_core/base-board/base-board.service";
 
 @Controller("board")
 export class BoardController {
@@ -9,8 +9,13 @@ export class BoardController {
     private readonly baseBoardService: BaseBoardService
   ) {}
 
-  @Get(":id/posts")
-  getBoard() {
-    return this.baseBoardService.getBoardPosts(100);
+  @Get()
+  getBoards() {
+    return this.baseBoardService.boardList();
+  }
+
+  @Post()
+  postBoard() {
+    return this.baseBoardService.saveBoard();
   }
 }

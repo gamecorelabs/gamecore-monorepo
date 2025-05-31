@@ -2,11 +2,11 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
-import { TestModule } from "./test/test.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommonModule } from "./common/common.module";
-import { TestUser } from "./test/entity/test-user.entity";
-import { BoardModule } from './board/board.module';
+import { BoardModule } from "./board/board.module";
+
+import { BaseBoardConfig } from "@_core/base-board/entity/base-board-config.entity";
 
 @Module({
   imports: [
@@ -22,10 +22,9 @@ import { BoardModule } from './board/board.module';
       username: process.env["DB_USERNAME"],
       password: process.env["DB_PASSWORD"],
       database: process.env["DB_DATABASE"],
-      entities: [TestUser],
+      entities: [BaseBoardConfig],
       synchronize: true,
     }),
-    TestModule,
     CommonModule,
     BoardModule,
   ],

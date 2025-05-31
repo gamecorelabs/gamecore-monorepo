@@ -1,9 +1,9 @@
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-export default function NewPostButton() {
+export default function NewPostButton({ link }: { link?: string }) {
   return (
-    <div className="fixed bottom-6 right-0 px-4 z-100">
+    <div className="fixed bottom-6 right-0 px-6 z-100">
       <div className="flex justify-end">
         <Link
           href="/posts/new"

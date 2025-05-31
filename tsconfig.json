@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "apps/baram/backend" },
-    { "path": "apps/baram/frontend" }
+    { "path": "apps/baram/frontend" },
+    { "path": "apps/admin/backend" }
   ]
 }
