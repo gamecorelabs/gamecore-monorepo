@@ -1,5 +1,6 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ConfigService } from './config.service';
+import { CreateDomainConfigDto } from './dto/create-domain-config.dto';
 
 @Controller('config')
 export class ConfigController {
@@ -10,8 +11,16 @@ export class ConfigController {
     return this.configService.boardConfigList();
   }
 
-  @Post('/board')
-  postBoardConfig() {
-    return this.configService.saveBoardConfig();
+  @Post('/domain')
+  postDomainConfig(@Body() body: CreateDomainConfigDto) {
+    return this.configService.saveDomainConfig(body);
   }
+
+  // @Post('/board')
+  // postBoardConfig(
+  //   @Body() body: CreatePostDto,
+  //   // @QueryRunner() qr?: QR,
+  // ) {
+  //   return this.configService.saveBoardConfig();
+  // }
 }

@@ -1,5 +1,5 @@
 import { BaseModel } from '@_core/base-common/entity/base.entity';
-import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BoardConfig } from './board-config';
 
@@ -36,7 +36,7 @@ export class DomainConfig extends BaseModel {
   @IsEnum(DomainStatus)
   @Column()
   @IsNumber()
-  status: boolean;
+  status: number;
 
   @OneToMany(() => BoardConfig, (boardConfig) => boardConfig.domain)
   boardConfigs: BoardConfig[];
