@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { CreateDomainConfigDto } from './dto/create-domain-config.dto';
-import { CreateBoardConfigDto } from './dto/create-board-config.dto';
+import { CreateDomainConfigDto } from '@_core/base-board/dto/create-domain-config.dto';
+import { CreateBoardConfigDto } from '@_core/base-board/dto/create-board-config.dto';
 
 @Controller('config')
 export class ConfigController {

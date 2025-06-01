@@ -1,14 +1,14 @@
-import { BaseModel } from '@_core/base-common/entity/base.entity';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
-import { BoardConfig } from './board-config';
+import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { IsEnum, IsNumber, IsString } from "class-validator";
+import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
+import { BoardConfig } from "../../base-board/entity/board-config";
 
 export enum DomainCategory {
-  GAME = 'game',
-  HOBBY = 'hobby',
-  COMMUNITY = 'community',
-  EDUCATION = 'education',
-  ETC = 'etc',
+  GAME = "game",
+  HOBBY = "hobby",
+  COMMUNITY = "community",
+  EDUCATION = "education",
+  ETC = "etc",
 }
 
 export enum DomainStatus {
@@ -26,11 +26,11 @@ export class DomainConfig extends BaseModel {
   category: DomainCategory;
 
   @IsString()
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: "varchar", length: 50, unique: true })
   domain: string; // ex) diablo4, baram
 
   @IsString()
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: "varchar", length: 100 })
   title: string; // ex) 디아블로4, 바람의나라
 
   @IsEnum(DomainStatus)

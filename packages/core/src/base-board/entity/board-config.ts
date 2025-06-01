@@ -1,13 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { BaseModel } from '@_core/base-common/entity/base.entity';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { DomainConfig } from './domain-config';
-import { BoardPost } from './board-post';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { IsEnum, IsNumber, IsString } from "class-validator";
+import { DomainConfig } from "../../base-common/entity/domain-config";
+import { BoardPost } from "./board-post";
 
 export enum BoardType {
-  FREE = 'free', // 자유게시판
-  GALLERY = 'gallery', // 갤러리
-  ETC = 'etc',
+  FREE = "free", // 자유게시판
+  GALLERY = "gallery", // 갤러리
+  ETC = "etc",
 }
 
 export enum BoardStatus {
@@ -24,11 +24,11 @@ export class BoardConfig extends BaseModel {
   type: BoardType; // 게시판 종류 (자유게시판, 기타 등등)
 
   @IsString()
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: "varchar", length: 50 })
   title: string; // 바람의나라 자유게시판
 
   @IsString()
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: "varchar", length: 255 })
   description?: string;
 
   @IsEnum(BoardStatus)
@@ -37,7 +37,7 @@ export class BoardConfig extends BaseModel {
   status: number;
 
   @ManyToOne(() => DomainConfig, (domain) => domain.boardConfigs)
-  @JoinColumn({ name: 'domain_id' })
+  @JoinColumn({ name: "domain_id" })
   domain: DomainConfig;
 
   @OneToMany(() => BoardPost, (BoardPost) => BoardPost.boardConfig)

@@ -5,12 +5,11 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardConfig } from './entity/board-config';
+import { BoardConfig } from '@_core/base-board/entity/board-config';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { DomainConfig } from './entity/domain-config';
-import { CreateDomainConfigDto } from './dto/create-domain-config.dto';
-import { CreateBoardConfigDto } from './dto/create-board-config.dto';
-import { BoardPost } from './entity/board-post';
+import { DomainConfig } from '@_core/base-common/entity/domain-config';
+import { CreateDomainConfigDto } from '@_core/base-board/dto/create-domain-config.dto';
+import { CreateBoardConfigDto } from '@_core/base-board/dto/create-board-config.dto';
 
 @Injectable()
 export class ConfigService {

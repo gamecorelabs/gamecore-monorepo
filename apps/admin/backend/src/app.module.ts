@@ -4,9 +4,9 @@ import { AppService } from './app.service';
 import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
-import { BoardConfig } from './config/entity/board-config';
-import { DomainConfig } from './config/entity/domain-config';
-import { BoardPost } from './config/entity/board-post';
+import { BoardConfig } from '@_core/base-board/entity/board-config';
+import { DomainConfig } from '@_core/base-common/entity/domain-config';
+import { BoardPost } from '@_core/base-board/entity/board-post';
 
 @Module({
   imports: [
