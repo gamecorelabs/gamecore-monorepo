@@ -6,8 +6,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommonModule } from "./common/common.module";
 import { BoardModule } from "./board/board.module";
 
-import { BaseBoardConfig } from "@_core/base-board/entity/base-board-config.entity";
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,7 +20,7 @@ import { BaseBoardConfig } from "@_core/base-board/entity/base-board-config.enti
       username: process.env["DB_USERNAME"],
       password: process.env["DB_PASSWORD"],
       database: process.env["DB_DATABASE"],
-      entities: [BaseBoardConfig],
+      entities: [],
       synchronize: true,
     }),
     CommonModule,
