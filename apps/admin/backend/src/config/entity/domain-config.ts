@@ -1,6 +1,6 @@
 import { BaseModel } from '@_core/base-common/entity/base.entity';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { BoardConfig } from './board-config';
 
 export enum DomainCategory {
@@ -31,7 +31,7 @@ export class DomainConfig extends BaseModel {
 
   @IsString()
   @Column({ type: 'varchar', length: 100 })
-  name: string; // ex) 디아블로4, 바람의나라
+  title: string; // ex) 디아블로4, 바람의나라
 
   @IsEnum(DomainStatus)
   @Column()

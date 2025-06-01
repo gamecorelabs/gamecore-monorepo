@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
 import { BoardConfig } from './config/entity/board-config';
 import { DomainConfig } from './config/entity/domain-config';
+import { BoardPost } from './config/entity/board-post';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { DomainConfig } from './config/entity/domain-config';
       username: process.env['DB_USERNAME'],
       password: process.env['DB_PASSWORD'],
       database: process.env['DB_DATABASE'],
-      entities: [DomainConfig, BoardConfig],
+      entities: [DomainConfig, BoardConfig, BoardPost],
       synchronize: true,
     }),
     ConfigModule,
