@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
 import { BoardConfig } from '@_core/base-board/entity/board-config';
 import { DomainConfig } from '@_core/base-common/entity/domain-config';
-import { BoardPost } from '@_core/base-board/entity/board-post';
+import { BoardPost } from '@_core/base-post/entity/board-post';
 
 @Module({
   imports: [

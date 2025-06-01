@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { DomainConfig } from "../../base-common/entity/domain-config";
-import { BoardPost } from "./board-post";
+import { BoardPost } from "../../base-post/entity/board-post";
 
 export enum BoardType {
   FREE = "free", // 자유게시판
