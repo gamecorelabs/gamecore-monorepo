@@ -1,6 +1,6 @@
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { BoardConfig } from "../../base-board/entity/board-config";
+import { BoardConfig } from "@_core/base-board/entity/board-config";
 import { IsNumber, IsString } from "class-validator";
 
 @Entity()
