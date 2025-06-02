@@ -22,12 +22,19 @@ export class BoardController {
     private readonly baseCommentService: BaseCommentService // Assuming you have a BaseCommentService for comments
   ) {}
 
+  // FIXME: nested 하게 처리할지 고민
+
   @Get()
   getBoards() {
     return this.baseBoardService.boardList();
   }
 
-  // FIXME: nested 하게 처리할지 고민
+  @Get("/:id/post")
+  getBoardPost(@Param("id", ParseIntPipe) board_id: number) {
+    // TODO: pagination 적용
+    return this.basePostService.getPost(board_id);
+  }
+
   @Post("/:id/post")
   postBoardPost(
     @Param("id", ParseIntPipe) board_id: number,
@@ -36,7 +43,6 @@ export class BoardController {
     return this.basePostService.savePost(board_id, body);
   }
 
-  // FIXME: nested 하게 처리할지 고민
   @Post("/:id/post/:post_id/comment")
   postBoardComment(
     @Param("id", ParseIntPipe) board_id: number,

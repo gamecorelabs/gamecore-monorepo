@@ -4,7 +4,10 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BoardPost } from "@_core/base-post/entity/board-post.entity";
+import {
+  BoardPost,
+  PostStatus,
+} from "@_core/base-post/entity/board-post.entity";
 import { Repository } from "typeorm";
 import { CreateBoardPostDto } from "@_core/base-post/dto/create-board-post.dto";
 import { BoardConfig } from "@_core/base-board/entity/board-config";
@@ -17,6 +20,19 @@ export class BasePostService {
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>
   ) {}
+
+  async getPost(board_id: number) {
+    const conditions = {
+      where: {
+        status: PostStatus.USE,
+        boardConfig: { id: board_id },
+      },
+    };
+
+    // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정
+
+    return await this.boardPostRepository.find(conditions);
+  }
 
   async savePost(
     board_id: number,

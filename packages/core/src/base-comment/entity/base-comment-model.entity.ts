@@ -8,7 +8,7 @@ import { Column } from "typeorm";
  */
 
 // FIXME: Status 공용화
-enum CommentStatus {
+export enum CommentStatus {
   DELETED = 0, // 삭제
   USE = 1, // 사용
   HOLD = 2, // 보류

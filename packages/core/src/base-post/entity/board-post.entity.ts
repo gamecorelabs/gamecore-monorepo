@@ -5,7 +5,7 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardComment } from "@_core/base-comment/entity/board-comment.entity";
 
 // FIXME: Status 공용화
-enum PostStatus {
+export enum PostStatus {
   DELETED = 0, // 삭제
   USE = 1, // 사용
   HOLD = 2, // 보류
