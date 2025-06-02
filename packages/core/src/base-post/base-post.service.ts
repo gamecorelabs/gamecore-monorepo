@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BoardPost } from "@_core/base-post/entity/board-post";
+import { BoardPost } from "@_core/base-post/entity/board-post.entity";
 import { Repository } from "typeorm";
 import { CreateBoardPostDto } from "@_core/base-post/dto/create-board-post.dto";
 import { BoardConfig } from "@_core/base-board/entity/board-config";

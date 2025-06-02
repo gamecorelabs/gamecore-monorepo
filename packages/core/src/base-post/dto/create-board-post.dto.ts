@@ -1,5 +1,5 @@
 import { PickType } from "@nestjs/mapped-types";
-import { BoardPost } from "../../base-post/entity/board-post";
+import { BoardPost } from "../entity/board-post.entity";
 
 export class CreateBoardPostDto extends PickType(BoardPost, [
   "guest_author_id",
