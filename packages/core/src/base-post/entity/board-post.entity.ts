@@ -1,6 +1,6 @@
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BoardConfig } from "@_core/base-board/entity/board-config";
+import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardComment } from "@_core/base-comment/entity/board-comment.entity";
 
@@ -40,7 +40,7 @@ export class BoardPost extends BaseModel {
 
   // 삭제 여부
   @IsEnum(PostStatus)
-  @Column()
+  @Column({ default: PostStatus.USE })
   status: number;
 
   // 조회수

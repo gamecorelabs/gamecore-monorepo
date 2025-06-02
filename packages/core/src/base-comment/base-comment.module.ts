@@ -4,7 +4,7 @@ import { BaseCommentService } from "./base-comment.service";
 import { BaseCommentController } from "./base-comment.controller";
 import { BoardComment } from "./entity/board-comment.entity";
 import { BoardPost } from "@_core/base-post/entity/board-post.entity";
-import { BoardConfig } from "@_core/base-board/entity/board-config";
+import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, BoardComment])],

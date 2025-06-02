@@ -5,7 +5,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommonModule } from "./common/common.module";
 import { BoardModule } from "./board/board.module";
-import { BoardConfig } from "@_core/base-board/entity/board-config";
+import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/entity/board-post.entity";
 import { DomainConfig } from "@_core/base-common/entity/domain-config";
 import { BoardComment } from "@_core/base-comment/entity/board-comment.entity";

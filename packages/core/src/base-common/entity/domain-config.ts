@@ -1,7 +1,7 @@
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
-import { BoardConfig } from "@_core/base-board/entity/board-config";
+import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
 export enum DomainCategory {
   GAME = "game",

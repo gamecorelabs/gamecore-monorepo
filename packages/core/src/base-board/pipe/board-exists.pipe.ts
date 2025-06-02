@@ -4,9 +4,8 @@ import {
   PipeTransform,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BoardConfig } from "../entity/board-config";
+import { BoardConfig } from "../entity/board-config.entity";
 import { Repository } from "typeorm";
-import { NotFoundError } from "rxjs";
 
 export class BoardExistsPipe implements PipeTransform {
   constructor(
