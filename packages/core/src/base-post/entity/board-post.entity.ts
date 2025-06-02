@@ -1,8 +1,16 @@
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BoardConfig } from "@_core/base-board/entity/board-config";
-import { IsNumber, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardComment } from "@_core/base-comment/entity/board-comment.entity";
+
+// FIXME: Status 공용화
+enum PostStatus {
+  DELETED = 0, // 삭제
+  USE = 1, // 사용
+  HOLD = 2, // 보류
+  ADMIN_DELETED = 99, // 관리자 삭제
+}
 
 @Entity()
 export class BoardPost extends BaseModel {
@@ -29,6 +37,11 @@ export class BoardPost extends BaseModel {
   @IsString()
   @Column({ type: "text" })
   content: string;
+
+  // 삭제 여부
+  @IsEnum(PostStatus)
+  @Column()
+  status: number;
 
   // 조회수
   @IsNumber()

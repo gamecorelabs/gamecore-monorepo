@@ -1,11 +1,19 @@
 import { BaseModel } from "@_core/base-common/entity/base.entity";
-import { IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
 import { Column } from "typeorm";
 
 /**
  * BaseCommentEntity
  * 각종 댓글 Entity의 공통 요소를 정의한다.
  */
+
+// FIXME: Status 공용화
+enum CommentStatus {
+  DELETED = 0, // 삭제
+  USE = 1, // 사용
+  HOLD = 2, // 보류
+  ADMIN_DELETED = 99, // 관리자 삭제
+}
 
 export class BaseCommentModel extends BaseModel {
   // (비회원) 작성자 닉네임
@@ -22,4 +30,8 @@ export class BaseCommentModel extends BaseModel {
   @IsString()
   @Column({ type: "varchar", length: 500 })
   content: string;
+
+  @IsEnum(CommentStatus)
+  @Column()
+  status: number;
 }
