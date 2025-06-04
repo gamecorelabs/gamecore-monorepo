@@ -1,43 +1,84 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { CreateBoardCommentDto } from "./dto/create-board-comment.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BoardComment } from "./entity/board-comment.entity";
 import { Repository } from "typeorm";
-import { BoardPost } from "@_core/base-post/entity/board-post.entity";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+import {
+  BaseCommentModel,
+  CommentStatus,
+  ResourceType,
+} from "./entity/base-comment-model.entity";
 
 @Injectable()
 export class BaseCommentService {
   constructor(
-    @InjectRepository(BoardPost)
-    private readonly boardPostRepository: Repository<BoardPost>,
-    @InjectRepository(BoardComment)
-    private readonly boardCommentRepository: Repository<BoardComment>
+    @InjectRepository(BaseCommentModel)
+    private readonly commentRepository: Repository<BaseCommentModel>
   ) {}
 
-  async saveComment(
-    board_id: number,
-    post_id: number,
-    dto: CreateBoardCommentDto
-  ) {
-    const post = await this.boardPostRepository.findOne({
+  async saveComment(dto: CreateCommentDto): Promise<BaseCommentModel> {
+    const comment = this.commentRepository.create(dto);
+    return this.commentRepository.save(comment);
+  }
+
+  // 특정 리소스의 댓글 조회
+  async getCommentsByResource(
+    resource_type: ResourceType,
+    resource_id: number
+  ): Promise<BaseCommentModel[]> {
+    return this.commentRepository.find({
       where: {
-        id: post_id,
+        resource_type,
+        resource_id,
       },
+      relations: ["parent", "children"],
+      order: { created_at: "DESC" },
+    });
+  }
+
+  // 댓글 단일 조회
+  async getCommentById(id: number): Promise<BaseCommentModel> {
+    const data = await this.commentRepository.findOne({
+      where: { id },
+      relations: ["parent", "children"],
     });
 
-    if (!post) {
-      throw new ConflictException(
-        "존재하지 않은 게시물이므로 댓글을 저장할 수 없습니다."
-      );
+    if (!data) {
+      throw new ConflictException("Comment not found");
     }
 
-    const data = this.boardCommentRepository.create({
-      content: dto.content,
-      guest_author_id: dto.guest_author_id ?? "",
-      guest_author_password: dto.guest_author_password ?? "",
-      boardPost: post,
+    return data;
+  }
+
+  // 댓글 수정
+  async updateComment(
+    id: number,
+    dto: UpdateCommentDto
+  ): Promise<BaseCommentModel> {
+    await this.commentRepository.update(id, dto);
+    return this.getCommentById(id);
+  }
+
+  // 댓글 삭제 (논리적 삭제)
+  async deleteComment(id: number): Promise<void> {
+    await this.commentRepository.update(id, { status: CommentStatus.DELETED });
+  }
+
+  // 대댓글 생성
+  async createReply(
+    parentId: number,
+    dto: CreateCommentDto
+  ): Promise<BaseCommentModel> {
+    const parent = await this.getCommentById(parentId);
+    if (!parent) {
+      throw new Error("Parent comment not found");
+    }
+
+    const reply = this.commentRepository.create({
+      ...dto,
+      parent,
     });
 
-    return await this.boardCommentRepository.save(data);
+    return this.commentRepository.save(reply);
   }
 }

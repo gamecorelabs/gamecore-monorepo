@@ -1,6 +1,13 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsString } from "class-validator";
-import { Column } from "typeorm";
 
 /**
  * BaseCommentEntity
@@ -15,6 +22,13 @@ export enum CommentStatus {
   ADMIN_DELETED = 99, // 관리자 삭제
 }
 
+export enum ResourceType {
+  BOARD_POST = "board", // 게시판 글
+  NEWS_POST = "news", // 뉴스 글
+  GUIDE_POST = "guide", // 가이드 글
+}
+
+@Entity()
 export class BaseCommentModel extends BaseModel {
   // (비회원) 작성자 닉네임
   @IsString()
@@ -27,11 +41,30 @@ export class BaseCommentModel extends BaseModel {
   @Column({ type: "varchar", length: 20, nullable: true })
   guest_author_password?: string;
 
-  @IsString()
-  @Column({ type: "varchar", length: 500 })
+  @Column({ type: "enum", enum: ResourceType })
+  resource_type: ResourceType;
+
+  @Column()
+  resource_id: number;
+
+  @Column()
+  resource_sub_id?: number;
+
+  @Column()
   content: string;
 
   @IsEnum(CommentStatus)
-  @Column()
-  status: number;
+  @Column({ type: "int", default: CommentStatus.USE })
+  status: CommentStatus = CommentStatus.USE;
+
+  @ManyToOne(() => BaseCommentModel, (comment) => comment.children, {
+    nullable: true,
+    onDelete: "CASCADE",
+  })
+  parent?: BaseCommentModel;
+
+  @OneToMany(() => BaseCommentModel, (comment) => comment.parent, {
+    cascade: true,
+  })
+  children?: BaseCommentModel[];
 }

@@ -2,7 +2,6 @@ import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { BoardComment } from "@_core/base-comment/entity/board-comment.entity";
 
 // FIXME: Status 공용화
 export enum PostStatus {
@@ -61,7 +60,4 @@ export class BoardPost extends BaseModel {
   @ManyToOne(() => BoardConfig, (boardConfig) => boardConfig.boardPosts)
   @JoinColumn({ name: "board_id" })
   boardConfig: BoardConfig;
-
-  @OneToMany(() => BoardComment, (BoardComment) => BoardComment.boardPost)
-  comments: BoardComment[];
 }
