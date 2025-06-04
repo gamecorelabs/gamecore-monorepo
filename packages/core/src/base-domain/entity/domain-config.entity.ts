@@ -9,9 +9,8 @@ import {
 
 @Entity()
 export class DomainConfig extends BaseModel {
-  @Column()
   @IsEnum(DomainCategory)
-  @IsString()
+  @Column({ type: "varchar", length: 20 })
   category: DomainCategory;
 
   @IsString()
@@ -23,8 +22,7 @@ export class DomainConfig extends BaseModel {
   title: string; // ex) 디아블로4, 바람의나라
 
   @IsEnum(DomainStatus)
-  @Column()
-  @IsNumber()
+  @Column({ type: "int", default: DomainStatus.MAINTENANCE })
   status: number;
 
   @OneToMany(() => BoardConfig, (boardConfig) => boardConfig.domain)
