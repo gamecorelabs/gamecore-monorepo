@@ -8,6 +8,7 @@ import { BoardModule } from "./board/board.module";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/entity/board-post.entity";
 import { DomainConfig } from "@_core/base-common/entity/domain-config";
+import { Comment } from "@_core/base-comment/entity/base-comment-model.entity";
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { DomainConfig } from "@_core/base-common/entity/domain-config";
       username: process.env["DB_USERNAME"],
       password: process.env["DB_PASSWORD"],
       database: process.env["DB_DATABASE"],
-      entities: [BoardConfig, DomainConfig, BoardPost],
+      entities: [BoardConfig, DomainConfig, BoardPost, Comment],
       synchronize: true,
     }),
     CommonModule,

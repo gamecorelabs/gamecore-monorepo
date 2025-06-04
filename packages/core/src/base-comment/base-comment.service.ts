@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import {
-  BaseCommentModel,
+  Comment,
   CommentStatus,
   ResourceType,
 } from "./entity/base-comment-model.entity";
@@ -12,11 +12,11 @@ import {
 @Injectable()
 export class BaseCommentService {
   constructor(
-    @InjectRepository(BaseCommentModel)
-    private readonly commentRepository: Repository<BaseCommentModel>
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>
   ) {}
 
-  async saveComment(dto: CreateCommentDto): Promise<BaseCommentModel> {
+  async saveComment(dto: CreateCommentDto): Promise<Comment> {
     const comment = this.commentRepository.create(dto);
     return this.commentRepository.save(comment);
   }
@@ -25,7 +25,7 @@ export class BaseCommentService {
   async getCommentsByResource(
     resource_type: ResourceType,
     resource_id: number
-  ): Promise<BaseCommentModel[]> {
+  ): Promise<Comment[]> {
     return this.commentRepository.find({
       where: {
         resource_type,
@@ -37,7 +37,7 @@ export class BaseCommentService {
   }
 
   // 댓글 단일 조회
-  async getCommentById(id: number): Promise<BaseCommentModel> {
+  async getCommentById(id: number): Promise<Comment> {
     const data = await this.commentRepository.findOne({
       where: { id },
       relations: ["parent", "children"],
@@ -51,10 +51,7 @@ export class BaseCommentService {
   }
 
   // 댓글 수정
-  async updateComment(
-    id: number,
-    dto: UpdateCommentDto
-  ): Promise<BaseCommentModel> {
+  async updateComment(id: number, dto: UpdateCommentDto): Promise<Comment> {
     await this.commentRepository.update(id, dto);
     return this.getCommentById(id);
   }
@@ -65,10 +62,7 @@ export class BaseCommentService {
   }
 
   // 대댓글 생성
-  async createReply(
-    parentId: number,
-    dto: CreateCommentDto
-  ): Promise<BaseCommentModel> {
+  async createReply(parentId: number, dto: CreateCommentDto): Promise<Comment> {
     const parent = await this.getCommentById(parentId);
     if (!parent) {
       throw new Error("Parent comment not found");

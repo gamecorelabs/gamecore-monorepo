@@ -8,12 +8,13 @@ import { BaseCommentModule } from "@_core/base-comment/base-comment.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/entity/board-post.entity";
+import { Comment } from "@_core/base-comment/entity/base-comment-model.entity";
 
 @Module({
   controllers: [BoardController],
   providers: [BoardService],
   imports: [
-    TypeOrmModule.forFeature([BoardConfig, BoardPost]),
+    TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment]),
     BaseBoardModule,
     BasePostModule,
     BaseCommentModule,

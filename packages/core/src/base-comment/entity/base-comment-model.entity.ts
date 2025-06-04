@@ -23,13 +23,13 @@ export enum CommentStatus {
 }
 
 export enum ResourceType {
-  BOARD_POST = "board", // 게시판 글
-  NEWS_POST = "news", // 뉴스 글
-  GUIDE_POST = "guide", // 가이드 글
+  BOARD = "board", // 게시판 글
+  NEWS = "news", // 뉴스 글
+  GUIDE = "guide", // 가이드 글
 }
 
 @Entity()
-export class BaseCommentModel extends BaseModel {
+export class Comment extends BaseModel {
   // (비회원) 작성자 닉네임
   @IsString()
   @Column({ type: "varchar", length: 20, nullable: true })
@@ -57,14 +57,14 @@ export class BaseCommentModel extends BaseModel {
   @Column({ type: "int", default: CommentStatus.USE })
   status: CommentStatus = CommentStatus.USE;
 
-  @ManyToOne(() => BaseCommentModel, (comment) => comment.children, {
+  @ManyToOne(() => Comment, (comment) => comment.children, {
     nullable: true,
     onDelete: "CASCADE",
   })
-  parent?: BaseCommentModel;
+  parent?: Comment;
 
-  @OneToMany(() => BaseCommentModel, (comment) => comment.parent, {
+  @OneToMany(() => Comment, (comment) => comment.parent, {
     cascade: true,
   })
-  children?: BaseCommentModel[];
+  children?: Comment[];
 }
