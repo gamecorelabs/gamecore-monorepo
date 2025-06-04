@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BoardPost } from "@_core/base-post/entity/board-post.entity";
+import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
 @Injectable()
 export class PostInBoardGuard implements CanActivate {

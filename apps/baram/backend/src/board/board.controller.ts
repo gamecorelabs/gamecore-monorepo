@@ -11,7 +11,7 @@ import {
 import { BoardService } from "./board.service";
 import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { BasePostService } from "@_core/base-post/base-post.service";
-import { CreateBoardPostDto } from "@_core/base-post/dto/create-board-post.dto";
+import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
 import { BoardCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
@@ -20,7 +20,7 @@ import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
 import { PostInBoardGuard } from "@_core/base-post/board/guard/post-in-board.guard";
 import { Request as ExpressRequest } from "express";
-import { BoardPost } from "@_core/base-post/entity/board-post.entity";
+import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
 interface BoardPostRequest extends ExpressRequest {
   boardPost: BoardPost;
