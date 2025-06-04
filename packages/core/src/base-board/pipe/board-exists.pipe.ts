@@ -1,5 +1,6 @@
 import {
   ArgumentMetadata,
+  Injectable,
   NotFoundException,
   PipeTransform,
 } from "@nestjs/common";
@@ -7,6 +8,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BoardConfig } from "../entity/board-config.entity";
 import { Repository } from "typeorm";
 
+@Injectable()
 export class BoardExistsPipe implements PipeTransform {
   constructor(
     @InjectRepository(BoardConfig)
