@@ -1,55 +1,55 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import {
-  BoardPost,
-  PostStatus,
-} from "@_core/base-post/board/entity/board-post.entity";
-import { Repository } from "typeorm";
-import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
+import { ResourceType } from "@_core/base-comment/entity/base-comment-model.entity";
+import { BoardPostService } from "./board/board-post.service";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { PostUtilService } from "./util/post-util.service";
 
 @Injectable()
 export class BasePostService {
   constructor(
-    @InjectRepository(BoardConfig)
-    private readonly boardConfigRepository: Repository<BoardConfig>,
-    @InjectRepository(BoardPost)
-    private readonly boardPostRepository: Repository<BoardPost>
+    private readonly boardPostService: BoardPostService,
+    private readonly PostUtilService: PostUtilService
   ) {}
 
-  async getPost(board_id: number) {
-    const conditions = {
-      where: {
-        status: PostStatus.USE,
-        boardConfig: { id: board_id },
-      },
-    };
+  // // 통합 검색 메서드
+  // async searchAllContents(keyword: string, options?: any) {
+  //   // 모든 도메인에 대해 병렬 검색 수행
+  //   const [boardResults, newsResults, guideResults] = await Promise.all([
+  //     this.boardPostService.search(keyword, options),
+  //     this.newsPostService.search(keyword, options),
+  //     this.guidePostService.search(keyword, options),
+  //   ]);
 
-    // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정
+  //   // 검색 결과 통합 및 가공
+  //   return {
+  //     board: this.formatResults(boardResults, "board"),
+  //     news: this.formatResults(newsResults, "news"),
+  //     guides: this.formatResults(guideResults, "guide"),
+  //     // 메타데이터
+  //     totalCount:
+  //       boardResults.length + newsResults.length + guideResults.length,
+  //   };
+  // }
 
-    return await this.boardPostRepository.find(conditions);
-  }
+  // // 특정 타입의 게시물만 검색
+  // async searchByType(type: string, keyword: string, options?: any) {
+  //   switch (type) {
+  //     case "board":
+  //       return this.boardPostService.search(keyword, options);
+  //     case "news":
+  //       return this.newsPostService.search(keyword, options);
+  //     case "guide":
+  //       return this.guidePostService.search(keyword, options);
+  //     default:
+  //       throw new Error(`Unsupported content type: ${type}`);
+  //   }
+  // }
 
-  async savePost(
-    board: BoardConfig,
-    dto: CreateBoardPostDto
-  ): Promise<BoardPost> {
-    const boardPost = this.boardPostRepository.create({
-      title: dto.title,
-      content: dto.content,
-      guest_author_id: dto.guest_author_id ?? "",
-      guest_author_password: dto.guest_author_password ?? "",
-      boardConfig: board,
-    });
-
-    try {
-      return await this.boardPostRepository.save(boardPost);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
+  // // 검색 결과 포맷팅
+  // private formatResults(results: any[], type: string) {
+  //   return results.map((item) => ({
+  //     ...item,
+  //     contentType: type,
+  //     url: this.PostUtilService.generateUrl(type, item.id),
+  //   }));
+  // }
 }

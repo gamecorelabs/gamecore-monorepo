@@ -2,5 +2,7 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class BaseBoardService {
-  boardList() {}
+  boardList() {
+    return "List of boards";
+  }
 }

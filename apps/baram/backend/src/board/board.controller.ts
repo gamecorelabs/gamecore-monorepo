@@ -9,8 +9,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { BoardService } from "./board.service";
-import { BaseBoardService } from "@_core/base-board/base-board.service";
-import { BasePostService } from "@_core/base-post/base-post.service";
 import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
@@ -22,6 +20,9 @@ import { PostInBoardGuard } from "@_core/base-post/board/guard/post-in-board.gua
 import { Request as ExpressRequest } from "express";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
+import { BaseBoardService } from "@_core/base-board/base-board.service";
+import { BoardPostService } from "@_core/base-post/board/board-post.service";
+
 interface BoardPostRequest extends ExpressRequest {
   boardPost: BoardPost;
 }
@@ -31,7 +32,7 @@ export class BoardController {
   constructor(
     private readonly boardService: BoardService,
     private readonly baseBoardService: BaseBoardService,
-    private readonly basePostService: BasePostService,
+    private readonly boardPostService: BoardPostService,
     private readonly baseCommentService: BaseCommentService
   ) {}
 
@@ -50,7 +51,7 @@ export class BoardController {
   @Get("/:id/post")
   getBoardPost(@Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig) {
     // TODO: pagination 적용
-    return this.basePostService.getPost(board.id);
+    return this.boardPostService.getPosts(board.id);
   }
 
   @Post("/:id/post")
@@ -58,7 +59,7 @@ export class BoardController {
     @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
     @Body() body: CreateBoardPostDto
   ) {
-    return this.basePostService.savePost(board, body);
+    return this.boardPostService.savePost(board.id, body);
   }
 
   @Post("/:id/post/:post_id/comment")
