@@ -1,4 +1,3 @@
-import { ResourceType } from "@_core/base-comment/entity/base-comment-model.entity";
 import { BoardPostService } from "./board/board-post.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PostUtilService } from "./util/post-util.service";

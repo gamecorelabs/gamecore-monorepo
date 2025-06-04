@@ -1,28 +1,12 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { DomainConfig } from "@_core/base-common/entity/domain-config";
+import { DomainConfig } from "@_core/base-domain/entity/domain-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
-
-export enum BoardType {
-  FREE = "free", // 자유게시판
-  GALLERY = "gallery", // 갤러리
-  ETC = "etc",
-}
-
-export enum BoardStatus {
-  INACTIVE = 0, // 비활성화
-  ACTIVE = 1,
-  MAINTENANCE = 2, // 유지보수 (관계자만 접속 가능)
-  ARCHIVED = 3, // 보관됨 (관계자만 접속 가능)
-}
+import { BoardType, BoardStatus } from "../enum/board-config.enum";
 
 @Entity()
 export class BoardConfig extends BaseModel {
-  @IsEnum(BoardType)
-  @Column()
-  type: BoardType; // 게시판 종류 (자유게시판, 기타 등등)
-
   @IsString()
   @Column({ type: "varchar", length: 50 })
   title: string; // 바람의나라 자유게시판
@@ -31,9 +15,12 @@ export class BoardConfig extends BaseModel {
   @Column({ type: "varchar", length: 255 })
   description?: string;
 
+  @IsEnum(BoardType)
+  @Column({ type: "varchar", length: 20 })
+  type: BoardType; // 게시판 종류 (자유게시판, 기타 등등)
+
   @IsEnum(BoardStatus)
-  @Column()
-  @IsNumber()
+  @Column({ type: "int", default: BoardStatus.ACTIVE })
   status: number;
 
   @ManyToOne(() => DomainConfig, (domain) => domain.boardConfigs)

@@ -13,7 +13,6 @@ import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
 import { BoardCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
-import { ResourceType } from "@_core/base-comment/entity/base-comment-model.entity";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
 import { PostInBoardGuard } from "@_core/base-post/board/guard/post-in-board.guard";
@@ -22,6 +21,7 @@ import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
 import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
+import { ResourceType } from "@_core/base-comment/enum/comment.enum";
 
 interface BoardPostRequest extends ExpressRequest {
   boardPost: BoardPost;

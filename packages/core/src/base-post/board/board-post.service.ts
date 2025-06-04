@@ -1,12 +1,10 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import {
-  BoardPost,
-  PostStatus,
-} from "@_core/base-post/board/entity/board-post.entity";
+import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { Repository } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
+import { BoardPostStatus } from "./enum/board-post.enum";
 
 @Injectable()
 export class BoardPostService {
@@ -19,7 +17,7 @@ export class BoardPostService {
   async getPosts(board_id: number) {
     const conditions = {
       where: {
-        status: PostStatus.USE,
+        status: BoardPostStatus.USE,
         boardConfig: { id: board_id },
       },
     };

@@ -3,11 +3,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { Comment } from "./entity/base-comment-model.entity";
+
 import {
-  Comment,
-  CommentStatus,
   ResourceType,
-} from "./entity/base-comment-model.entity";
+  CommentStatus,
+} from "@_core/base-comment/enum/comment.enum";
 
 @Injectable()
 export class BaseCommentService {
