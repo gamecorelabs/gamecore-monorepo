@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { BaseDomainService } from "./base-common.service";
+import { BaseDomainService } from "./base-domain.service";
 
 @Module({
   providers: [BaseDomainService],

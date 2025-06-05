@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { BaseCommonService } from "./base-common.service";
+import { BaseCommonService } from "./base-domain.service";
 
 describe("BaseCommonService", () => {
   let service: BaseCommonService;
