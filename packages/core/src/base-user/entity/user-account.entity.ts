@@ -1,0 +1,70 @@
+import { IsEmail, IsString, Length } from "class-validator";
+import { Column, Entity } from "typeorm";
+import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { stringValidationMessage } from "@_core/base-common/validation/string-validation-mesage";
+import { emailValidationMessage } from "@_core/base-common/validation/email-validation.message";
+import { lengthValidationMessage } from "@_core/base-common/validation/length-validation.message";
+import { UserGrade, UserRoles } from "../enum/user.enum";
+import { Exclude } from "class-transformer";
+
+@Entity()
+export class UserAccount extends BaseModel {
+  @Column({
+    length: 20,
+    unique: true,
+  })
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @Length(2, 20, {
+    message: lengthValidationMessage,
+  })
+  nickname: string;
+
+  @Column({
+    unique: true,
+  })
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @IsEmail(undefined, {
+    message: emailValidationMessage,
+  })
+  email: string;
+
+  @Column()
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @Length(3, 16, {
+    message: lengthValidationMessage,
+  })
+  @Exclude({
+    toPlainOnly: true, // 응답에서만 제외
+  })
+  password: string;
+
+  @Column({
+    type: "enum",
+    enum: UserRoles,
+    default: UserRoles.USER,
+  })
+  role: UserRoles;
+
+  @Column({
+    type: "enum",
+    enum: UserGrade,
+    default: UserGrade.BASIC,
+  })
+  grade: UserGrade;
+
+  // @Expose()
+  // get nicknameAndEmail() {
+  //   return this.nickname + '/' + this.email;
+  // }
+
+  // @OneToMany(() => CommentsModel, (comment) => comment.author)
+  // comments: CommentsModel[];
+  // @OneToMany(() => PostsModel, (post) => post.author)
+  // posts: PostsModel[];
+}
