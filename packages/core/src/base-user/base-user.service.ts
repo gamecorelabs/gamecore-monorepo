@@ -50,4 +50,10 @@ export class BaseUserService {
 
     return true;
   }
+
+  async getUserByEmail(email: string): Promise<UserAccount | null> {
+    return await this.userAccountRepository.findOne({
+      where: { email },
+    });
+  }
 }
