@@ -1,22 +1,25 @@
-import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
+import { BaseAuthService } from '@_core/base-auth/base-auth.service';
 import { ENV_HASH_ROUNDS } from '@_core/base-common/const/env-keys.const';
+import { BaseUserService } from '@_core/base-user/base-user.service';
+import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
+import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 import {
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as bcrpyt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { BaseUserService } from '@_core/base-user/base-user.service';
-import { UserAccount } from '@_core/base-user/entity/user-account.entity';
+import * as bcrpyt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly baseUserService: BaseUserService,
+    private readonly baseAuthService: BaseAuthService,
+    private readonly configService: ConfigService,
   ) {}
 
+  // 로그인
   async loginUser(loginInfo: Pick<UserAccount, 'email' | 'password'>) {
     const existsUser = await this.baseUserService.getUserByEmail(
       loginInfo.email,
@@ -35,9 +38,11 @@ export class AuthService {
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
 
-    return existsUser;
+    // 토큰 재발급
+    return this.baseAuthService.getIssuanceToken(existsUser);
   }
 
+  // 회원가입
   async registerUser(dto: CreateUserAccountDto) {
     const hash = await bcrpyt.hash(
       dto.password,
@@ -49,36 +54,11 @@ export class AuthService {
       password: hash,
     });
 
-    // TODO: 토큰 발급
-    return newUser;
-  }
-
-  extractToken(authHeader: string): string {
-    const prefix = ['Bearer', 'Basic'];
-    const splitHeader = authHeader.split(' ');
-
-    if (splitHeader.length !== 2 || !prefix.includes(splitHeader[0])) {
-      throw new UnauthorizedException('토큰이 잘못되었습니다.');
+    if (!newUser) {
+      throw new InternalServerErrorException('사용자 등록에 실패했습니다.');
     }
 
-    const token = splitHeader[1];
-
-    return token;
-  }
-
-  decodeBasicToken(token: string) {
-    const decoded = Buffer.from(token, 'base64').toString('utf-8');
-    const splitDecoded = decoded.split(':');
-
-    if (splitDecoded.length !== 2) {
-      throw new UnauthorizedException('잘못된 유형의 토큰입니다.');
-    }
-
-    const [email, password] = splitDecoded;
-
-    return {
-      email,
-      password,
-    };
+    // 토큰 발급
+    return this.baseAuthService.getIssuanceToken(newUser);
   }
 }
