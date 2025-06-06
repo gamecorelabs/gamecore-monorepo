@@ -10,7 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
 import { BaseAuthService } from '@_core/base-auth/base-auth.service';
-import { BasicTokenGuard } from '@_core/base-auth/guard/basic-token.guard';
+import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.guard';
 import { Request as ExpressRequest } from 'express';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 
@@ -31,11 +31,8 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(BasicTokenGuard)
+  @UseGuards(BasicUserTokenGuard)
   async loginUser(@Request() req: BoardPostRequest) {
     return this.authService.loginUser(req.loginInfo);
   }
-
-  @Post('test')
-  testAccess() {}
 }
