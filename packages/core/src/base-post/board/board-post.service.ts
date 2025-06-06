@@ -5,6 +5,7 @@ import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post
 import { Repository } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
+import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 
 @Injectable()
 export class BoardPostService {
@@ -27,19 +28,22 @@ export class BoardPostService {
     return await this.boardPostRepository.find(conditions);
   }
 
-  async savePost(board_id: number, dto: CreateBoardPostDto) {
-    const boardPost = this.boardPostRepository.create({
-      title: dto.title,
-      content: dto.content,
-      guest_author_id: dto.guest_author_id ?? "",
-      guest_author_password: dto.guest_author_password ?? "",
-      boardConfig: { id: board_id },
-    });
+  async savePost(board_id: number, user, dto: CreateBoardPostDto) {
+    console.log("savePost", board_id, user, dto);
 
-    try {
-      return await this.boardPostRepository.save(boardPost);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    return false;
+    // const boardPost = this.boardPostRepository.create({
+    //   title: dto.title,
+    //   content: dto.content,
+    //   guest_author_id: dto.guest_author_id ?? "",
+    //   guest_author_password: dto.guest_author_password ?? "",
+    //   boardConfig: { id: board_id },
+    // });
+
+    // try {
+    //   return await this.boardPostRepository.save(boardPost);
+    // } catch (error) {
+    //   throw new InternalServerErrorException(error.message);
+    // }
   }
 }

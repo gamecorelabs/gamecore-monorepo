@@ -23,6 +23,10 @@ import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
 import { ResourceType } from "@_core/base-comment/enum/comment.enum";
 
+import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
+
+import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
+
 interface BoardPostRequest extends ExpressRequest {
   boardPost: BoardPost;
 }
@@ -55,11 +59,14 @@ export class BoardController {
   }
 
   @Post("/:id/post")
+  @UseGuards(GuestOrUserTokenGuard)
   postBoardPost(
+    @CurrentUser() user, // TODO: 타입 정의
     @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
     @Body() body: CreateBoardPostDto
   ) {
-    return this.boardPostService.savePost(board.id, body);
+    console.log("user", user);
+    // return this.boardPostService.savePost(board.id, req.user, body);
   }
 
   @Post("/:id/post/:post_id/comment")
