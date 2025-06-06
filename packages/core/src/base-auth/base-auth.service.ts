@@ -12,6 +12,19 @@ export class BaseAuthService {
     private readonly jwtService: JwtService
   ) {}
 
+  /** 토큰 검증 */
+  async verifyToken(token: string) {
+    try {
+      return await this.jwtService.verify(token, {
+        secret: this.configService.get<string>(ENV_JWT_SECRET),
+      });
+    } catch (error) {
+      throw new UnauthorizedException(
+        "토큰이 만료 되었거나 잘못된 토큰입니다."
+      );
+    }
+  }
+
   /** 토큰 발급  */
   getIssuanceToken(user: UserAccount, token?: string) {
     return {
@@ -40,7 +53,7 @@ export class BaseAuthService {
     // refresh 토큰 폐기
   }
 
-  extractToken(authHeader: string): string {
+  extractHeader(authHeader: string): { token: string; type: string } {
     const prefix = ["Bearer", "Basic"];
     const splitHeader = authHeader.split(" ");
 
@@ -50,7 +63,10 @@ export class BaseAuthService {
 
     const token = splitHeader[1];
 
-    return token;
+    return {
+      token,
+      type: splitHeader[0],
+    };
   }
 
   decodeBasicToken(token: string) {
@@ -61,11 +77,13 @@ export class BaseAuthService {
       throw new UnauthorizedException("잘못된 유형의 토큰입니다.");
     }
 
-    const [email, password] = splitDecoded;
+    return splitDecoded;
 
-    return {
-      email,
-      password,
-    };
+    // const [email, password] = splitDecoded;
+
+    // return {
+    //   email,
+    //   password,
+    // };
   }
 }

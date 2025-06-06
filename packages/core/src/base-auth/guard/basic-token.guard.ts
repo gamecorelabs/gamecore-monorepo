@@ -19,17 +19,10 @@ export class BasicTokenGuard implements CanActivate {
       throw new UnauthorizedException("토큰이 존재하지 않습니다.");
     }
 
-    const token = this.baseAuthService.extractToken(rawHeaderToken);
-    const { email, password } = this.baseAuthService.decodeBasicToken(token);
+    const extract = this.baseAuthService.extractHeader(rawHeaderToken);
+    const decoded = this.baseAuthService.decodeBasicToken(extract.token);
 
-    if (!email || !password) {
-      throw new UnauthorizedException("계정 정보를 찾을 수 없습니다.");
-    }
-
-    request.loginInfo = {
-      email,
-      password,
-    };
+    request.decoded = decoded;
 
     return true;
   }
