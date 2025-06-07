@@ -1,24 +1,62 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
-import { Comment } from "./entity/base-comment-model.entity";
+import { Comment } from "./entity/comment.entity";
 
 import {
   ResourceType,
   CommentStatus,
 } from "@_core/base-comment/enum/comment.enum";
+import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+import { ConfigService } from "@nestjs/config";
+import * as bcrpyt from "bcrypt";
+import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 
 @Injectable()
 export class BaseCommentService {
   constructor(
     @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>
+    private readonly commentRepository: Repository<Comment>,
+    private readonly configService: ConfigService
   ) {}
 
-  async saveComment(dto: CreateCommentDto): Promise<Comment> {
-    const comment = this.commentRepository.create(dto);
+  async saveComment(
+    dto: CreateCommentDto,
+    user: UserOrGuestLoginRequest
+  ): Promise<Comment> {
+    //FIXME: 회원 비회원 데이터 처리 유틸화 필요
+    let userInfo = {};
+
+    switch (user.type) {
+      case "user":
+        userInfo = {
+          author: { id: user.id },
+        };
+        break;
+      case "guest":
+        const hash = await bcrpyt.hash(
+          user.guest_author_password,
+          parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+        );
+        userInfo = {
+          guest_author_id: user.guest_author_id,
+          guest_author_password: hash,
+        };
+        break;
+      default:
+        throw new InternalServerErrorException("사용자 정보가 없습니다.");
+    }
+
+    const comment = this.commentRepository.create({
+      ...dto,
+      ...userInfo,
+    });
     return this.commentRepository.save(comment);
   }
 

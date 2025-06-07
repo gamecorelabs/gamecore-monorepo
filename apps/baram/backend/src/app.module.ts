@@ -8,7 +8,7 @@ import { BoardModule } from "./board/board.module";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { DomainConfig } from "@_core/base-domain/entity/domain-config.entity";
-import { Comment } from "@_core/base-comment/entity/base-comment-model.entity";
+import { Comment } from "@_core/base-comment/entity/comment.entity";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 
 @Module({

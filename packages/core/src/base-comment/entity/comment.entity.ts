@@ -1,10 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsString } from "class-validator";
 import {
   ResourceType,
   CommentStatus,
 } from "@_core/base-comment/enum/comment.enum";
+import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 
 /**
  * BaseCommentEntity
@@ -50,4 +51,8 @@ export class Comment extends BaseModel {
     cascade: true,
   })
   children?: Comment[];
+
+  @ManyToOne(() => UserAccount, (userAccount) => userAccount.comments)
+  @JoinColumn({ name: "author_id" })
+  author?: UserAccount;
 }

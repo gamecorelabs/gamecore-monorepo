@@ -7,6 +7,7 @@ import { emailValidationMessage } from "@_core/base-common/validation/email-vali
 import { lengthValidationMessage } from "@_core/base-common/validation/length-validation.message";
 import { UserGrade, UserRoles } from "../enum/user.enum";
 import { Exclude } from "class-transformer";
+import { Comment } from "@_core/base-comment/entity/comment.entity";
 
 @Entity()
 export class UserAccount extends BaseModel {
@@ -66,4 +67,7 @@ export class UserAccount extends BaseModel {
 
   @OneToMany(() => BoardPost, (boardPost) => boardPost.author)
   posts: BoardPost[];
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[];
 }

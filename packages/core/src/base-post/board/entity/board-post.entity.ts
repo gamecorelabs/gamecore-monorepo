@@ -53,5 +53,5 @@ export class BoardPost extends BaseModel {
 
   @ManyToOne(() => UserAccount, (userAccount) => userAccount.posts)
   @JoinColumn({ name: "author_id" })
-  author: UserAccount;
+  author?: UserAccount;
 }

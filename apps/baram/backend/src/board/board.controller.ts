@@ -9,10 +9,13 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { BoardService } from "./board.service";
-import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
+import {
+  CreateBoardPostDto,
+  RequestCreateBoardPostDto,
+} from "@_core/base-post/board/dto/create-board-post.dto";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 
-import { BoardCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
+import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
 import { PostInBoardGuard } from "@_core/base-post/board/guard/post-in-board.guard";
@@ -64,20 +67,26 @@ export class BoardController {
   @UseGuards(GuestOrUserTokenGuard)
   postBoardPost(
     @CurrentUser() user: UserOrGuestLoginRequest,
-    @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
-    @Body() body: CreateBoardPostDto
+    @Param("id", ParseIntPipe, BoardExistsPipe) boardConfig: BoardConfig,
+    @Body() body: RequestCreateBoardPostDto
   ) {
-    return this.boardPostService.savePost(board.id, user, body);
+    const dto = {
+      boardConfig,
+      ...body,
+    };
+
+    return this.boardPostService.savePost(dto, user);
   }
 
   @Post("/:id/post/:post_id/comment")
   @UseGuards(PostInBoardGuard)
+  @UseGuards(GuestOrUserTokenGuard)
   postBoardComment(
     @Request() req: BoardPostRequest,
     @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
     @Param("post_id", ParseIntPipe) post_id: number,
     @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: BoardCreateCommentDto
+    @Body() body: RequestCreateCommentDto
   ) {
     const dto = {
       resource_type: ResourceType.BOARD,
@@ -86,6 +95,6 @@ export class BoardController {
       ...body,
     };
 
-    return this.baseCommentService.saveComment(dto);
+    return this.baseCommentService.saveComment(dto, user);
   }
 }

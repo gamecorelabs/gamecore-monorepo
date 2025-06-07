@@ -8,6 +8,7 @@ import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 import { BoardPost } from '@_core/base-post/board/entity/board-post.entity';
 import { BoardConfig } from '@_core/base-board/entity/board-config.entity';
 import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
+import { Comment } from '@_core/base-comment/entity/comment.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
       username: process.env['DB_USERNAME'],
       password: process.env['DB_PASSWORD'],
       database: process.env['DB_DATABASE'],
-      entities: [UserAccount, BoardPost, BoardConfig, DomainConfig],
+      entities: [UserAccount, BoardPost, BoardConfig, DomainConfig, Comment],
       synchronize: true,
     }),
     AuthModule,

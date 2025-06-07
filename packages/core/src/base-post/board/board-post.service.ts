@@ -33,11 +33,7 @@ export class BoardPostService {
     return await this.boardPostRepository.find(conditions);
   }
 
-  async savePost(
-    board_id: number,
-    user: UserOrGuestLoginRequest,
-    dto: CreateBoardPostDto
-  ) {
+  async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
     let userInfo = {};
 
     switch (user.type) {
@@ -63,7 +59,6 @@ export class BoardPostService {
     const boardPost = this.boardPostRepository.create({
       ...dto,
       ...userInfo,
-      boardConfig: { id: board_id },
     });
 
     try {
