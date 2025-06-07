@@ -7,6 +7,10 @@ import { ConfigModule } from './config/config.module';
 import { BoardConfig } from '@_core/base-board/entity/board-config.entity';
 import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
 import { BoardPost } from '@_core/base-post/board/entity/board-post.entity';
+import { UserAccount } from '@_core/base-user/entity/user-account.entity';
+import { Comment } from '@_core/base-comment/entity/comment.entity';
+import { BaseAuthModule } from '@_core/base-auth/base-auth.module';
+import { BaseUserModule } from '@_core/base-user/base-user.module';
 
 @Module({
   imports: [
@@ -22,7 +26,7 @@ import { BoardPost } from '@_core/base-post/board/entity/board-post.entity';
       username: process.env['DB_USERNAME'],
       password: process.env['DB_PASSWORD'],
       database: process.env['DB_DATABASE'],
-      entities: [DomainConfig, BoardConfig, BoardPost],
+      entities: [DomainConfig, BoardConfig, BoardPost, UserAccount, Comment],
       synchronize: true,
     }),
     ConfigModule,
