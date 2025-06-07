@@ -27,6 +27,8 @@ import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-toke
 
 import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 
+import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+
 interface BoardPostRequest extends ExpressRequest {
   boardPost: BoardPost;
 }
@@ -61,12 +63,11 @@ export class BoardController {
   @Post("/:id/post")
   @UseGuards(GuestOrUserTokenGuard)
   postBoardPost(
-    @CurrentUser() user, // TODO: 타입 정의
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
     @Body() body: CreateBoardPostDto
   ) {
-    console.log("user", user);
-    // return this.boardPostService.savePost(board.id, req.user, body);
+    return this.boardPostService.savePost(board.id, user, body);
   }
 
   @Post("/:id/post/:post_id/comment")
@@ -75,6 +76,7 @@ export class BoardController {
     @Request() req: BoardPostRequest,
     @Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig,
     @Param("post_id", ParseIntPipe) post_id: number,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: BoardCreateCommentDto
   ) {
     const dto = {

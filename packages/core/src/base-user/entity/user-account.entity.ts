@@ -1,6 +1,7 @@
 import { IsEmail, IsString, Length } from "class-validator";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { stringValidationMessage } from "@_core/base-common/validation/string-validation-mesage";
 import { emailValidationMessage } from "@_core/base-common/validation/email-validation.message";
 import { lengthValidationMessage } from "@_core/base-common/validation/length-validation.message";
@@ -63,8 +64,6 @@ export class UserAccount extends BaseModel {
   //   return this.nickname + '/' + this.email;
   // }
 
-  // @OneToMany(() => CommentsModel, (comment) => comment.author)
-  // comments: CommentsModel[];
-  // @OneToMany(() => PostsModel, (post) => post.author)
-  // posts: PostsModel[];
+  @OneToMany(() => BoardPost, (boardPost) => boardPost.author)
+  posts: BoardPost[];
 }

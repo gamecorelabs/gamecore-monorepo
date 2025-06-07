@@ -6,13 +6,18 @@ import { Repository } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
+import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+import * as bcrpyt from "bcrypt";
+import { ConfigService } from "@nestjs/config";
+import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 
 @Injectable()
 export class BoardPostService {
   constructor(
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>,
-    private readonly postUtilService: PostUtilService
+    private readonly postUtilService: PostUtilService,
+    private readonly configService: ConfigService
   ) {}
 
   async getPosts(board_id: number) {
@@ -28,22 +33,43 @@ export class BoardPostService {
     return await this.boardPostRepository.find(conditions);
   }
 
-  async savePost(board_id: number, user, dto: CreateBoardPostDto) {
-    console.log("savePost", board_id, user, dto);
+  async savePost(
+    board_id: number,
+    user: UserOrGuestLoginRequest,
+    dto: CreateBoardPostDto
+  ) {
+    let userInfo = {};
 
-    return false;
-    // const boardPost = this.boardPostRepository.create({
-    //   title: dto.title,
-    //   content: dto.content,
-    //   guest_author_id: dto.guest_author_id ?? "",
-    //   guest_author_password: dto.guest_author_password ?? "",
-    //   boardConfig: { id: board_id },
-    // });
+    switch (user.type) {
+      case "user":
+        userInfo = {
+          author: { id: user.id },
+        };
+        break;
+      case "guest":
+        const hash = await bcrpyt.hash(
+          user.guest_author_password,
+          parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+        );
+        userInfo = {
+          guest_author_id: user.guest_author_id,
+          guest_author_password: hash,
+        };
+        break;
+      default:
+        throw new InternalServerErrorException("사용자 정보가 없습니다.");
+    }
 
-    // try {
-    //   return await this.boardPostRepository.save(boardPost);
-    // } catch (error) {
-    //   throw new InternalServerErrorException(error.message);
-    // }
+    const boardPost = this.boardPostRepository.create({
+      ...dto,
+      ...userInfo,
+      boardConfig: { id: board_id },
+    });
+
+    try {
+      return await this.boardPostRepository.save(boardPost);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 }

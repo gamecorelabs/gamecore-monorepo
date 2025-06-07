@@ -21,7 +21,7 @@ export class Comment extends BaseModel {
   // (비회원) 작성자 패스워드
   // FIXME: 일단 비암호화 상태로 작업, 추후 변경
   @IsString()
-  @Column({ type: "varchar", length: 20, nullable: true })
+  @Column({ type: "varchar", length: 200, nullable: true })
   guest_author_password?: string;
 
   @Column({ type: "enum", enum: ResourceType })

@@ -34,6 +34,7 @@ export class GuestOrUserTokenGuard implements CanActivate {
       }
 
       request.user = {
+        type: "guest",
         guest_author_id,
         guest_author_password,
       };
@@ -44,7 +45,10 @@ export class GuestOrUserTokenGuard implements CanActivate {
       const decoded = await this.baseAuthService.verifyToken(extract.token);
       const user = await this.baseUserService.getUserByEmail(decoded.email);
 
-      request.user = user;
+      request.user = {
+        type: "user",
+        ...user,
+      };
     }
 
     return true;

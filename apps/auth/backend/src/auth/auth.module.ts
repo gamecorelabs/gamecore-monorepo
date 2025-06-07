@@ -5,11 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 import { BaseUserModule } from '@_core/base-user/base-user.module';
 import { BaseAuthModule } from '@_core/base-auth/base-auth.module';
+import { BoardPost } from '@_core/base-post/board/entity/board-post.entity';
+import { BoardConfig } from '@_core/base-board/entity/board-config.entity';
+import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
 // import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserAccount]),
+    TypeOrmModule.forFeature([
+      UserAccount,
+      BoardPost,
+      BoardConfig,
+      DomainConfig,
+    ]),
     // JwtModule.register({}),
     BaseUserModule,
     BaseAuthModule,

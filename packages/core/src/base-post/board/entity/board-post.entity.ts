@@ -3,21 +3,18 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardPostStatus } from "@_core/base-post/board/enum/board-post.enum";
+import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 
 @Entity()
 export class BoardPost extends BaseModel {
-  // 작성자 ID
-  // TODO: 인증 작업 완료시 유저 ID 추가
-
   // (비회원) 작성자 닉네임
   @IsString()
   @Column({ type: "varchar", length: 20, nullable: true })
   guest_author_id?: string;
 
   // (비회원) 작성자 패스워드
-  // FIXME: 일단 비암호화 상태로 작업, 추후 변경
   @IsString()
-  @Column({ type: "varchar", length: 20, nullable: true })
+  @Column({ type: "varchar", length: 200, nullable: true })
   guest_author_password?: string;
 
   // 제목
@@ -53,4 +50,8 @@ export class BoardPost extends BaseModel {
   @ManyToOne(() => BoardConfig, (boardConfig) => boardConfig.boardPosts)
   @JoinColumn({ name: "board_id" })
   boardConfig: BoardConfig;
+
+  @ManyToOne(() => UserAccount, (userAccount) => userAccount.posts)
+  @JoinColumn({ name: "author_id" })
+  author: UserAccount;
 }
