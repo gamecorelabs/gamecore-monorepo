@@ -34,6 +34,7 @@ export class BoardPostService {
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
+    //FIXME: 회원 비회원 데이터 처리 유틸화 필요
     let userInfo = {};
 
     switch (user.type) {
@@ -48,8 +49,10 @@ export class BoardPostService {
           parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
         );
         userInfo = {
-          guest_author_id: user.guest_author_id,
-          guest_author_password: hash,
+          guest_account: {
+            guest_author_id: user.guest_author_id,
+            guest_author_password: hash,
+          },
         };
         break;
       default:

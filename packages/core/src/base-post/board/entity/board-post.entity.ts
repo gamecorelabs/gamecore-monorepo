@@ -4,18 +4,12 @@ import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardPostStatus } from "@_core/base-post/board/enum/board-post.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
+import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable";
 
 @Entity()
 export class BoardPost extends BaseModel {
-  // (비회원) 작성자 닉네임
-  @IsString()
-  @Column({ type: "varchar", length: 20, nullable: true })
-  guest_author_id?: string;
-
-  // (비회원) 작성자 패스워드
-  @IsString()
-  @Column({ type: "varchar", length: 200, nullable: true })
-  guest_author_password?: string;
+  @Column(() => GuestAccount, { prefix: "" })
+  guest_account: GuestAccount;
 
   // 제목
   @IsString()

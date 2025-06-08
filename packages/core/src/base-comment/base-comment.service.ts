@@ -43,8 +43,10 @@ export class BaseCommentService {
           parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
         );
         userInfo = {
-          guest_author_id: user.guest_author_id,
-          guest_author_password: hash,
+          guest_account: {
+            guest_author_id: user.guest_author_id,
+            guest_author_password: hash,
+          },
         };
         break;
       default:
