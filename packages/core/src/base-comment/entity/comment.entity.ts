@@ -1,16 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsString } from "class-validator";
-import {
-  ResourceType,
-  CommentStatus,
-} from "@_core/base-comment/enum/comment.enum";
+import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
-
-/**
- * BaseCommentEntity
- * 각종 댓글 Entity의 공통 요소를 정의한다.
- */
+import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
 
 @Entity()
 export class Comment extends BaseModel {
@@ -25,14 +19,8 @@ export class Comment extends BaseModel {
   @Column({ type: "varchar", length: 200, nullable: true })
   guest_author_password?: string;
 
-  @Column({ type: "enum", enum: ResourceType })
-  resource_type: ResourceType;
-
-  @Column()
-  resource_id: number;
-
-  @Column()
-  resource_sub_id?: number;
+  @Column(() => ResourceInfo, { prefix: "" })
+  resource_info: ResourceInfo;
 
   @Column()
   content: string;

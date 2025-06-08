@@ -9,14 +9,12 @@ import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
-import {
-  ResourceType,
-  CommentStatus,
-} from "@_core/base-comment/enum/comment.enum";
+import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { ConfigService } from "@nestjs/config";
 import * as bcrpyt from "bcrypt";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
 
 @Injectable()
 export class BaseCommentService {
@@ -67,8 +65,10 @@ export class BaseCommentService {
   ): Promise<Comment[]> {
     return this.commentRepository.find({
       where: {
-        resource_type,
-        resource_id,
+        resource_info: {
+          resource_type,
+          resource_id,
+        },
       },
       relations: ["parent", "children"],
       order: { created_at: "DESC" },

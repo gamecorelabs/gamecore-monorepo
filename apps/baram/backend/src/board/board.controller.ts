@@ -24,7 +24,7 @@ import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
 import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
-import { ResourceType } from "@_core/base-comment/enum/comment.enum";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
 
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
 
@@ -89,9 +89,11 @@ export class BoardController {
     @Body() body: RequestCreateCommentDto
   ) {
     const dto = {
-      resource_type: ResourceType.BOARD,
-      resource_id: req.boardPost.boardConfig.id,
-      resource_sub_id: req.boardPost.id,
+      resource_info: {
+        resource_type: ResourceType.BOARD,
+        resource_id: req.boardPost.boardConfig.id,
+        resource_sub_id: req.boardPost.id,
+      },
       ...body,
     };
 
