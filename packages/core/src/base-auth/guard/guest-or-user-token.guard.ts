@@ -51,6 +51,10 @@ export class GuestOrUserTokenGuard implements CanActivate {
       };
     }
 
+    // client IP 주소 설정
+    request.user.ip_address =
+      request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+
     return true;
   }
 }

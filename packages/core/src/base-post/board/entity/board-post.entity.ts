@@ -48,4 +48,8 @@ export class BoardPost extends BaseModel {
   @ManyToOne(() => UserAccount, (userAccount) => userAccount.posts)
   @JoinColumn({ name: "author_id" })
   author?: UserAccount;
+
+  @IsString()
+  @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
+  ip_address?: string;
 }

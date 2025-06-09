@@ -33,6 +33,8 @@ export class BearerTokenGuard implements CanActivate {
     const user = await this.baseUserService.getUserByEmail(decoded.email);
 
     request.user = user;
+    request.user.ip_address =
+      request.headers["x-forwarded-for"] || request.socket.remoteAddress;
     return true;
   }
 }

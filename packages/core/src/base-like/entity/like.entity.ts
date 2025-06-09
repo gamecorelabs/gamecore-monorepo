@@ -9,17 +9,6 @@ import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable
 
 @Entity()
 export class Like extends BaseModel {
-  // (비회원) 작성자 닉네임
-  @IsString()
-  @Column({ type: "varchar", length: 20, nullable: true })
-  guest_author_id?: string;
-
-  // (비회원) 작성자 패스워드
-  // FIXME: 일단 비암호화 상태로 작업, 추후 변경
-  @IsString()
-  @Column({ type: "varchar", length: 200, nullable: true })
-  guest_author_password?: string;
-
   @Column(() => ResourceInfo, { prefix: "" })
   resource_info: ResourceInfo;
 
@@ -42,4 +31,8 @@ export class Like extends BaseModel {
   @ManyToOne(() => )
   @JoinColumn({ name: "comment_id" })
   comment?: Comment;
+
+  @IsString()
+  @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
+  ip_address?: string;
 }

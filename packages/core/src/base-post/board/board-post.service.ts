@@ -62,6 +62,7 @@ export class BoardPostService {
     const boardPost = this.boardPostRepository.create({
       ...dto,
       ...userInfo,
+      ip_address: user.ip_address,
     });
 
     try {

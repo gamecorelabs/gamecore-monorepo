@@ -56,6 +56,7 @@ export class BaseCommentService {
     const comment = this.commentRepository.create({
       ...dto,
       ...userInfo,
+      ip_address: user.ip_address,
     });
     return this.commentRepository.save(comment);
   }
