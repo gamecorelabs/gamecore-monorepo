@@ -4,7 +4,6 @@ import { IsBoolean, IsEnum, IsString } from "class-validator";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { BoardPost }  from "@_core/base-post/board/entity/board-post.entity";
 import { Comment } from "@_core/base-comment/entity/comment.entity";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
 
 @Entity()

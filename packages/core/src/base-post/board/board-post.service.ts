@@ -5,11 +5,11 @@ import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post
 import { Repository } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
-import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import * as bcrpyt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
+import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 
 @Injectable()
 export class BoardPostService {
@@ -34,30 +34,10 @@ export class BoardPostService {
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
-    //FIXME: 회원 비회원 데이터 처리 유틸화 필요
-    let userInfo = {};
-
-    switch (user.type) {
-      case "user":
-        userInfo = {
-          author: { id: user.id },
-        };
-        break;
-      case "guest":
-        const hash = await bcrpyt.hash(
-          user.guest_author_password,
-          parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
-        );
-        userInfo = {
-          guest_account: {
-            guest_author_id: user.guest_author_id,
-            guest_author_password: hash,
-          },
-        };
-        break;
-      default:
-        throw new InternalServerErrorException("사용자 정보가 없습니다.");
-    }
+    const userInfo = await getUserInfo(
+      user,
+      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+    );
 
     const boardPost = this.boardPostRepository.create({
       ...dto,
