@@ -13,6 +13,7 @@ import { Like } from "@_core/base-like/entity/like.entity";
 import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { LikeModule } from "./like/like.module";
+import { CoreModule } from "@_core/core.module";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { LikeModule } from "./like/like.module";
       ],
       synchronize: true,
     }),
+    CoreModule,
     BoardModule,
     PostModule,
     CommentModule,

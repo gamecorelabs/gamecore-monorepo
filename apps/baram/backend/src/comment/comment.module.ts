@@ -7,14 +7,10 @@ import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { Comment } from "@_core/base-comment/entity/comment.entity";
 
 import { Like } from "@_core/base-like/entity/like.entity";
-import { CoreModule } from "@_core/core.module";
 
 @Module({
   controllers: [CommentController],
   providers: [CommentService],
-  imports: [
-    TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like]),
-    CoreModule,
-  ],
+  imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like])],
 })
 export class CommentModule {}
