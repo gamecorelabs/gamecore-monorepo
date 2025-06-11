@@ -39,13 +39,9 @@ interface BoardPostRequest extends ExpressRequest {
 @Controller("board")
 export class BoardController {
   constructor(
-    private readonly boardService: BoardService,
     private readonly baseBoardService: BaseBoardService,
-    private readonly boardPostService: BoardPostService,
     private readonly baseCommentService: BaseCommentService
   ) {}
-
-  // FIXME: nested 하게 처리할지 고민
 
   @Get()
   getBoards() {
@@ -55,27 +51,6 @@ export class BoardController {
   @Get("/:id")
   getBoardById(@Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig) {
     return board;
-  }
-
-  @Get("/:id/post")
-  getBoardPost(@Param("id", ParseIntPipe, BoardExistsPipe) board: BoardConfig) {
-    // TODO: pagination 적용
-    return this.boardPostService.getPosts(board.id);
-  }
-
-  @Post("/:id/post")
-  @UseGuards(GuestOrUserTokenGuard)
-  postBoardPost(
-    @CurrentUser() user: UserOrGuestLoginRequest,
-    @Param("id", ParseIntPipe, BoardExistsPipe) boardConfig: BoardConfig,
-    @Body() body: RequestCreateBoardPostDto
-  ) {
-    const dto = {
-      boardConfig,
-      ...body,
-    };
-
-    return this.boardPostService.savePost(dto, user);
   }
 
   @Post("/:id/post/:post_id/comment")
