@@ -6,10 +6,21 @@ import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPostService } from "./board/board-post.service";
 import { PostUtilService } from "./util/post-util.service";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
+import { PostInBoardGuard } from "./board/guard/post-in-board.guard";
 
 @Module({
   imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, UserAccount])],
-  providers: [BasePostService, BoardPostService, PostUtilService],
-  exports: [BasePostService, BoardPostService, PostUtilService],
+  providers: [
+    BasePostService,
+    BoardPostService,
+    PostUtilService,
+    PostInBoardGuard,
+  ],
+  exports: [
+    BasePostService,
+    BoardPostService,
+    PostUtilService,
+    PostInBoardGuard,
+  ],
 })
 export class BasePostModule {}
