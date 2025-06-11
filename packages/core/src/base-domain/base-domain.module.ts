@@ -5,4 +5,4 @@ import { BaseDomainService } from "./base-domain.service";
   providers: [BaseDomainService],
   exports: [BaseDomainService],
 })
-export class BaseCommonModule {}
+export class BaseDomainModule {}
