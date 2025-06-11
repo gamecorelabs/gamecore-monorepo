@@ -24,7 +24,6 @@ import { Like } from "@_core/base-like/entity/like.entity";
     BaseUserModule,
     BaseAuthModule,
     BaseLikeModule,
-    PostModule,
   ],
 })
 export class PostModule {}
