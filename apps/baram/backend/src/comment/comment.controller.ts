@@ -44,9 +44,8 @@ export class CommentController {
   ) {
     const dto = {
       resource_info: {
-        resource_type: ResourceType.BOARD,
-        resource_id: req.boardPost.boardConfig.id,
-        resource_sub_id: req.boardPost.id,
+        resource_type: ResourceType.POST,
+        resource_id: req.boardPost.id,
       },
       ...body,
     };

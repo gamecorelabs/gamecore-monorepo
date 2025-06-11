@@ -53,7 +53,4 @@ export class BoardPost extends BaseModel {
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
   ip_address?: string;
-
-  @OneToMany(() => Like, (like) => like.post)
-  likes: Like[];
 }

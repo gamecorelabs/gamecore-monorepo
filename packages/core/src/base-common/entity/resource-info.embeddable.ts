@@ -14,8 +14,4 @@ export class ResourceInfo {
   @IsNumber()
   @Column()
   resource_id: number;
-
-  @IsNumber()
-  @Column({ nullable: true })
-  resource_sub_id?: number;
 }
