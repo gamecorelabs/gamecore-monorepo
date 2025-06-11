@@ -9,6 +9,8 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
+import { BoardPostStatus } from "../enum/board-post.enum";
+import { BoardStatus } from "@_core/base-board/enum/board-config.enum";
 
 @Injectable()
 export class PostInBoardGuard implements CanActivate {
@@ -20,29 +22,30 @@ export class PostInBoardGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const boardId = request.params.id;
-    const postId = request.params.post_id;
+    const postId = request.params.id;
 
-    if (!boardId || !postId) {
-      throw new BadRequestException("Board ID와 Post ID가 필요합니다");
+    if (!postId) {
+      throw new BadRequestException("존재하지 않은 게시물입니다.");
     }
 
     // 게시판에 속한 게시물인지 확인
     const post = await this.boardPostRepository.findOne({
       where: {
         id: postId,
-        boardConfig: { id: boardId },
       },
       relations: ["boardConfig"], // 게시판 정보도 함께 가져오기
     });
 
-    if (!post) {
-      throw new NotFoundException(
-        `게시판 ${boardId}에 게시글 ${postId}가 존재하지 않습니다`
-      );
+    if (!post || post.status !== BoardPostStatus.USE) {
+      throw new NotFoundException(`삭제되었거나 존재하지 않는 게시글입니다.`);
+    }
+
+    if (post.boardConfig.status !== BoardStatus.ACTIVE) {
+      throw new NotFoundException(`더이상 이용할 수 없는 게시판입니다.`);
     }
 
     request.boardPost = post;
-    return true; // true를 반환하면 요청 처리 계속 진행
+
+    return true;
   }
 }

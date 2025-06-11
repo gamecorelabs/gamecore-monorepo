@@ -11,6 +11,7 @@ import { Comment } from "@_core/base-comment/entity/comment.entity";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { Like } from "@_core/base-like/entity/like.entity";
 import { PostModule } from "./post/post.module";
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PostModule } from "./post/post.module";
     }),
     BoardModule,
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
