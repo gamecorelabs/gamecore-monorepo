@@ -23,14 +23,6 @@ export class Like extends BaseModel {
   @JoinColumn({ name: "author_id" })
   author?: UserAccount;
 
-  @ManyToOne(() => BoardPost, (boardPost) => boardPost.likes)
-  @JoinColumn({ name: "post_id" })
-  post?: BoardPost;
-
-  @ManyToOne(() => Comment, (comment) => comment.likes)
-  @JoinColumn({ name: "comment_id" })
-  comment?: Comment;
-
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
   ip_address?: string;
