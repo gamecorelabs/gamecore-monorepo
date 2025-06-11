@@ -5,6 +5,7 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardPostStatus } from "@_core/base-post/board/enum/board-post.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable";
+import { Like } from "@_core/base-like/entity/like.entity";
 
 @Entity()
 export class BoardPost extends BaseModel {
@@ -52,4 +53,7 @@ export class BoardPost extends BaseModel {
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
   ip_address?: string;
+
+  @OneToMany(() => Like, (like) => like.post)
+  likes: Like[];
 }

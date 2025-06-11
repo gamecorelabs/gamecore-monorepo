@@ -5,6 +5,7 @@ import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
 import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable";
+import { Like } from "@_core/base-like/entity/like.entity";
 
 @Entity()
 export class Comment extends BaseModel {
@@ -39,4 +40,7 @@ export class Comment extends BaseModel {
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
   ip_address?: string;
+
+  @OneToMany(() => Like, (like) => like.comment)
+  likes: Like[];
 }
