@@ -3,7 +3,6 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CommonModule } from "./common/common.module";
 import { BoardModule } from "./board/board.module";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
@@ -11,6 +10,7 @@ import { DomainConfig } from "@_core/base-domain/entity/domain-config.entity";
 import { Comment } from "@_core/base-comment/entity/comment.entity";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { Like } from "@_core/base-like/entity/like.entity";
+import { PostModule } from "./post/post.module";
 
 @Module({
   imports: [
@@ -36,8 +36,8 @@ import { Like } from "@_core/base-like/entity/like.entity";
       ],
       synchronize: true,
     }),
-    CommonModule,
     BoardModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
