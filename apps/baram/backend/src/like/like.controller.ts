@@ -9,6 +9,8 @@ import {
   CreateLikeDto,
   CreateRequestLikeDto,
 } from "@_core/base-like/dto/create-like.dto";
+import { Request as ExpressRequest } from "express";
+import { CommonRequest } from "@_core/base-common/types/resource-types";
 
 @Controller("like")
 export class LikeController {
@@ -18,10 +20,10 @@ export class LikeController {
   ) {}
 
   @Post("/:resource_type/:id")
-  @UseGuards(GuestOrUserTokenGuard)
   @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
   async toggleLike(
-    @Request() req: any,
+    @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: CreateRequestLikeDto
   ) {

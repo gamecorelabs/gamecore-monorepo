@@ -9,6 +9,11 @@ import {
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 
+/**
+ * ResourceExistenceGuard
+ * resource_type을 구분하는 api 처리시,
+ * resource_type에 따라 해당 리소스 존재 여부를 확인하는 guard로 분기한다.
+ */
 @Injectable()
 export class ResourceExistenceGuard implements CanActivate {
   constructor(

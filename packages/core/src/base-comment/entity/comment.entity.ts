@@ -16,6 +16,7 @@ export class Comment extends BaseModel {
   @Column(() => ResourceInfo, { prefix: "" })
   resource_info: ResourceInfo;
 
+  @IsString()
   @Column()
   content: string;
 
