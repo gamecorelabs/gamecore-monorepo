@@ -36,11 +36,12 @@ export class ResourceExistenceGuard implements CanActivate {
 
     request.resource_info = {
       resource_type: apiResourceType,
-      resource_id: request.params.id,
+      resource_id: request.params.resource_id,
     };
 
     // resource_type에 따라 다른 가드 적용
     switch (apiResourceType) {
+      case "board":
       case "post":
         return this.postInBoardGuard.canActivate(context);
       case "comment":

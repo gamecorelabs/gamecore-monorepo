@@ -16,14 +16,14 @@ import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { BoardPostRequest } from "@_core/base-common/types/resource-types";
 
-@Controller("comment")
+@Controller(":resource_type/:resource_id/comment")
 export class CommentController {
   constructor(
     private readonly commentService: CommentService,
     private readonly baseCommentService: BaseCommentService
   ) {}
 
-  @Post("/:resource_type/:id")
+  @Post()
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   postBoardComment(

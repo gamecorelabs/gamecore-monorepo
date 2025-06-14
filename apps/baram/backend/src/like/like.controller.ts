@@ -12,14 +12,14 @@ import {
 import { Request as ExpressRequest } from "express";
 import { CommonRequest } from "@_core/base-common/types/resource-types";
 
-@Controller("like")
+@Controller(":resource_type/:resource_id/like")
 export class LikeController {
   constructor(
     private readonly likeService: LikeService,
     private readonly baseLikeService: BaseLikeService
   ) {}
 
-  @Post("/:resource_type/:id")
+  @Post()
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   async toggleLike(
