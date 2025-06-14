@@ -31,7 +31,7 @@ export class BoardController {
     return this.baseBoardService.boardList();
   }
 
-  @Get("/:id")
+  @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   async getBoardById(
     @Request() req: BoardConfigRequest,
@@ -40,7 +40,7 @@ export class BoardController {
     return req.boardConfig;
   }
 
-  @Get("/:id/post")
+  @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
   getBoardPost(
     @Request() req: BoardConfigRequest,
@@ -51,7 +51,8 @@ export class BoardController {
   }
 
   // 해당 게시판에 글쓰기
-  @Post("/:id/post")
+  @Post(":id/post")
+  @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   postBoardPost(
     @Request() req: BoardConfigRequest,

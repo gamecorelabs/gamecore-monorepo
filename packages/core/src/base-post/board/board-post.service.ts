@@ -1,8 +1,12 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { Repository } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
@@ -50,5 +54,47 @@ export class BoardPostService {
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
+  }
+
+  async checkOwnerPost(
+    id: number,
+    user: UserOrGuestLoginRequest
+  ): Promise<boolean> {
+    const userInfo = await getUserInfo(
+      user,
+      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+    );
+
+    const post = await this.boardPostRepository.findOne({
+      where: { id, status: BoardPostStatus.USE },
+      relations: ["author"],
+    });
+
+    if (!post) {
+      throw new ConflictException("댓글이 존재하지 않습니다.");
+    }
+
+    if ("author" in userInfo && post.author) {
+      return post.author.id === userInfo.author.id;
+    } else if ("guest_account" in userInfo && user.type === "guest") {
+      const isPasswordValid = await bcrpyt.compare(
+        user.guest_author_password,
+        post.guest_account.guest_author_password
+      );
+
+      if (!isPasswordValid) {
+        throw new ConflictException("비밀번호가 일치하지 않습니다.");
+      }
+      return true;
+    } else {
+      throw new ConflictException("계정 정보가 올바르지 않습니다.");
+    }
+  }
+
+  // 댓글 삭제 (soft-delete)
+  async deletePost(id: number): Promise<UpdateResult> {
+    return await this.boardPostRepository.update(id, {
+      status: BoardPostStatus.DELETED,
+    });
   }
 }

@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  InternalServerErrorException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -34,6 +37,22 @@ export class BoardPostController {
     private readonly baseLikeService: BaseLikeService,
     private readonly baseCommentService: BaseCommentService
   ) {}
+
+  @Delete(":id")
+  @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
+  async deletePost(
+    @Param("id", ParseIntPipe) id: number,
+    @CurrentUser() user: UserOrGuestLoginRequest
+  ) {
+    const checked = await this.boardPostService.checkOwnerPost(id, user);
+
+    if (!checked) {
+      throw new InternalServerErrorException("게시글 작성자가 아닙니다.");
+    }
+
+    return this.boardPostService.deletePost(id);
+  }
 
   // 특정 게시글 댓글 저장
   @Post(":id/comment")
