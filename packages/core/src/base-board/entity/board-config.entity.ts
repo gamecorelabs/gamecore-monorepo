@@ -8,7 +8,7 @@ import { BoardType, BoardStatus } from "../enum/board-config.enum";
 @Entity()
 export class BoardConfig extends BaseModel {
   @IsString()
-  @Column({ type: "varchar", length: 50 })
+  @Column({ type: "varchar", length: 100 })
   title: string; // 바람의나라 자유게시판
 
   @IsString()

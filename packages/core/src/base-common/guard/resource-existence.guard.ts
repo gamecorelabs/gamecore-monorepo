@@ -1,4 +1,5 @@
 import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { BoardExistsGuard } from "@_core/base-board/guard/board-exists.guard";
 import { PostInBoardGuard } from "@_core/base-post/board/guard/post-in-board.guard";
 import { CommentInPostGuard } from "@_core/base-comment/guard/comment-in-post.guard";
 import {
@@ -17,6 +18,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class ResourceExistenceGuard implements CanActivate {
   constructor(
+    private readonly boardExistsGuard: BoardExistsGuard,
     private readonly postInBoardGuard: PostInBoardGuard,
     private readonly commentInPostGuard: CommentInPostGuard
   ) {}
@@ -25,7 +27,10 @@ export class ResourceExistenceGuard implements CanActivate {
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    const apiResourceType = request.params.resource_type;
+    const fullPath = request.route.path;
+
+    const apiResourceType =
+      request.params.resource_type || fullPath.split("/").filter(Boolean)[0];
 
     if (
       !apiResourceType ||
@@ -36,17 +41,19 @@ export class ResourceExistenceGuard implements CanActivate {
 
     request.resource_info = {
       resource_type: apiResourceType,
-      resource_id: request.params.resource_id,
+      resource_id: request.params.id,
     };
 
     // resource_type에 따라 다른 가드 적용
     switch (apiResourceType) {
       case "board":
-      case "post":
+        return this.boardExistsGuard.canActivate(context);
+      case "board-post":
         return this.postInBoardGuard.canActivate(context);
+      // case "news-post":
+      // case "guide-post":
       case "comment":
         return this.commentInPostGuard.canActivate(context);
-      // case "guide": case "news":
       default:
         throw new BadRequestException(
           `지원하지 않는 resource_type: ${apiResourceType}`

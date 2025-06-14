@@ -21,7 +21,7 @@ export class PostInBoardGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const postId = request.params.resource_id;
+    const postId = request.params.id;
 
     if (!postId) {
       throw new BadRequestException("존재하지 않은 게시물입니다.");

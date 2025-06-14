@@ -6,9 +6,10 @@ import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { Comment } from "@_core/base-comment/entity/comment.entity";
 import { Like } from "@_core/base-like/entity/like.entity";
+import { BoardPostController } from "./board-post.controller";
 
 @Module({
-  controllers: [PostController],
+  controllers: [PostController, BoardPostController],
   providers: [PostService],
   imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like])],
 })

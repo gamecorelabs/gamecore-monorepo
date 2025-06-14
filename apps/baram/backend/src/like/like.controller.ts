@@ -12,26 +12,10 @@ import {
 import { Request as ExpressRequest } from "express";
 import { CommonRequest } from "@_core/base-common/types/resource-types";
 
-@Controller(":resource_type/:resource_id/like")
+@Controller("like")
 export class LikeController {
   constructor(
     private readonly likeService: LikeService,
     private readonly baseLikeService: BaseLikeService
   ) {}
-
-  @Post()
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
-  async toggleLike(
-    @Request() req: CommonRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: CreateRequestLikeDto
-  ) {
-    const dto = {
-      ...body,
-      resource_info: req.resource_info,
-    };
-
-    return this.baseLikeService.toggleLike(dto, user);
-  }
 }

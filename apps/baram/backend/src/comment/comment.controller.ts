@@ -16,34 +16,25 @@ import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import { BoardPostRequest } from "@_core/base-common/types/resource-types";
+import {
+  BoardPostRequest,
+  CommonRequest,
+} from "@_core/base-common/types/resource-types";
+import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
+import { BaseLikeService } from "@_core/base-like/base-like.service";
 
-@Controller(":resource_type/:resource_id/comment")
+@Controller("comment")
 export class CommentController {
   constructor(
     private readonly commentService: CommentService,
-    private readonly baseCommentService: BaseCommentService
+    private readonly baseCommentService: BaseCommentService,
+    private readonly baseLikeService: BaseLikeService
   ) {}
 
-  @Post()
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
-  postComment(
-    @Request() req: BoardPostRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: RequestCreateCommentDto
-  ) {
-    const dto = {
-      resource_info: req.resource_info,
-      ...body,
-    };
-
-    return this.baseCommentService.saveComment(dto, user);
-  }
-
   // CONSIDER: 댓글 수정은 의도적으로 지원하지 않음. 추후 필요시 구현
-  // @Put(":id")
+  // @Patch(":id")
 
+  // 댓글 삭제
   @Delete(":id")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
@@ -58,5 +49,22 @@ export class CommentController {
     }
 
     return this.baseCommentService.deleteComment(id);
+  }
+
+  // 특정 댓글 좋아요/싫어요
+  @Post(":id/like")
+  @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
+  async toggleLike(
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Body() body: CreateRequestLikeDto
+  ) {
+    const dto = {
+      ...body,
+      resource_info: req.resource_info,
+    };
+
+    return this.baseLikeService.toggleLike(dto, user);
   }
 }
