@@ -17,6 +17,7 @@ import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-toke
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
+import { BoardConfigRequest } from "@_core/base-common/types/resource-types";
 
 @Controller("board")
 export class BoardController {
@@ -33,7 +34,7 @@ export class BoardController {
   @Get("/:id")
   @UseGuards(ResourceExistenceGuard)
   async getBoardById(
-    @Request() req: any, // FIXME: TYPE 추가
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
   ) {
     return req.boardConfig;
@@ -42,7 +43,7 @@ export class BoardController {
   @Get("/:id/post")
   @UseGuards(ResourceExistenceGuard)
   getBoardPost(
-    @Request() req: any, // FIXME: TYPE 추가
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
     // @Param("board_id", ParseIntPipe) board_id: number
   ) {
@@ -53,7 +54,7 @@ export class BoardController {
   @Post("/:id/post")
   @UseGuards(GuestOrUserTokenGuard)
   postBoardPost(
-    @Request() req: any, // FIXME: TYPE 추가
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
     @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: RequestCreateBoardPostDto
