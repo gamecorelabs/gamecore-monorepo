@@ -1,12 +1,7 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
 import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
@@ -15,6 +10,7 @@ import { ConfigService } from "@nestjs/config";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
+import * as bcrpyt from "bcrypt";
 
 @Injectable()
 export class BaseCommentService {
@@ -72,15 +68,46 @@ export class BaseCommentService {
     return data;
   }
 
-  // 댓글 수정
-  async updateComment(id: number, dto: UpdateCommentDto): Promise<Comment> {
-    await this.commentRepository.update(id, dto);
-    return this.getCommentById(id);
+  async checkOwnerComment(
+    id: number,
+    user: UserOrGuestLoginRequest
+  ): Promise<boolean> {
+    const userInfo = await getUserInfo(
+      user,
+      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+    );
+
+    const comment = await this.commentRepository.findOne({
+      where: { id, status: CommentStatus.USE },
+      relations: ["author"],
+    });
+
+    if (!comment) {
+      throw new ConflictException("댓글이 존재하지 않습니다.");
+    }
+
+    if ("author" in userInfo && comment.author) {
+      return comment.author.id === userInfo.author.id;
+    } else if ("guest_account" in userInfo && user.type === "guest") {
+      const isPasswordValid = await bcrpyt.compare(
+        user.guest_author_password,
+        comment.guest_account.guest_author_password
+      );
+
+      if (!isPasswordValid) {
+        throw new ConflictException("비밀번호가 일치하지 않습니다.");
+      }
+      return true;
+    } else {
+      throw new ConflictException("계정 정보가 올바르지 않습니다.");
+    }
   }
 
-  // 댓글 삭제 (논리적 삭제)
-  async deleteComment(id: number): Promise<void> {
-    await this.commentRepository.update(id, { status: CommentStatus.DELETED });
+  // 댓글 삭제 (soft-delete)
+  async deleteComment(id: number): Promise<UpdateResult> {
+    return await this.commentRepository.update(id, {
+      status: CommentStatus.DELETED,
+    });
   }
 
   // 대댓글 생성

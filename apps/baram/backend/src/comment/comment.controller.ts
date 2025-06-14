@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Post,
@@ -26,7 +28,7 @@ export class CommentController {
   @Post()
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
-  postBoardComment(
+  postComment(
     @Request() req: BoardPostRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: RequestCreateCommentDto
@@ -37,5 +39,24 @@ export class CommentController {
     };
 
     return this.baseCommentService.saveComment(dto, user);
+  }
+
+  // CONSIDER: 댓글 수정은 의도적으로 지원하지 않음. 추후 필요시 구현
+  // @Put(":id")
+
+  @Delete(":id")
+  @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
+  async deleteComment(
+    @Param("id", ParseIntPipe) id: number,
+    @CurrentUser() user: UserOrGuestLoginRequest
+  ) {
+    const checked = await this.baseCommentService.checkOwnerComment(id, user);
+
+    if (!checked) {
+      throw new InternalServerErrorException("댓글 작성자가 아닙니다.");
+    }
+
+    return this.baseCommentService.deleteComment(id);
   }
 }

@@ -2,11 +2,22 @@ import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { InternalServerErrorException } from "@nestjs/common";
 import * as bcrpyt from "bcrypt";
 
+type UserInfo =
+  | {
+      author: { id: number };
+    }
+  | {
+      guest_account: {
+        guest_author_id: string;
+        guest_author_password: string;
+      };
+    };
+
 export const getUserInfo = async (
   user: UserOrGuestLoginRequest,
   hashRounds = 10
-) => {
-  let userInfo = {};
+): Promise<UserInfo> => {
+  let userInfo: UserInfo;
   switch (user.type) {
     case "user":
       userInfo = {
