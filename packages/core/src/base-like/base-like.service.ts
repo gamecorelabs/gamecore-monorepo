@@ -7,8 +7,9 @@ import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 import { CreateLikeDto } from "./dto/create-like.dto";
 import { Like } from "./entity/like.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LikeStatus } from "./enum/like.enum";
+import { LikeStatus, LikeType } from "./enum/like.enum";
 import { UpdateLikeDto } from "./dto/update-like.dto";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
 
 @Injectable()
 export class BaseLikeService {
@@ -17,6 +18,48 @@ export class BaseLikeService {
     private readonly likeRepository: Repository<Like>,
     private readonly configService: ConfigService
   ) {}
+
+  async getLikeCountByResource(
+    resource_type: ResourceType,
+    resource_id: number
+  ) {
+    const counts = await this.likeRepository
+      .createQueryBuilder("like")
+      .select("type")
+      .addSelect("COUNT(*)", "count")
+      .where("resource_type = :resource_type", {
+        resource_type,
+      })
+      .where("status", {
+        status: LikeStatus.SELECTED,
+      })
+      .andWhere("resource_id = :resource_id", {
+        resource_id: resource_id,
+      })
+      .groupBy("type")
+      .getRawMany();
+
+    if (!counts || counts.length === 0) {
+      return {};
+    }
+
+    return counts.reduce((acc, cur) => {
+      let key: string;
+
+      switch (parseInt(cur.type)) {
+        case LikeType.LIKE:
+          key = "likeCount";
+          break;
+        case LikeType.DISLIKE:
+          key = "dislikeCount";
+          break;
+        default:
+          key = String(cur.type);
+      }
+      acc[key] = parseInt(cur.count, 10);
+      return acc;
+    }, {});
+  }
 
   async toggleLike(dto: CreateLikeDto, user: UserOrGuestLoginRequest) {
     let conditions = {

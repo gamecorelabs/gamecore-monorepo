@@ -94,6 +94,19 @@ export class BoardPostController {
     return this.baseCommentService.saveComment(dto, user);
   }
 
+  // 특정 게시글의 좋아요 갯수
+  @Get(":id/like/count")
+  @UseGuards(ResourceExistenceGuard)
+  getLikeCountByPostId(
+    @Request() req: CommonRequest,
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    return this.baseLikeService.getLikeCountByResource(
+      req.resource_info.resource_type,
+      req.resource_info.resource_id
+    );
+  }
+
   // 특정 게시글 좋아요
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
