@@ -35,6 +35,12 @@ export class BoardPostController {
     private readonly baseCommentService: BaseCommentService
   ) {}
 
+  @Get(":id")
+  @UseGuards(ResourceExistenceGuard)
+  getPostById(@Param("id", ParseIntPipe) id: number) {
+    return this.boardPostService.getPostById(id);
+  }
+
   @Patch(":id")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)

@@ -34,8 +34,20 @@ export class BoardPostService {
     };
 
     // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정
-
     return await this.boardPostRepository.find(conditions);
+  }
+
+  async getPostById(id: number) {
+    const post = await this.boardPostRepository.findOne({
+      where: { id, status: BoardPostStatus.USE },
+      relations: ["author"],
+    });
+
+    if (!post) {
+      throw new ConflictException("존재하지 않은 게시글 입니다.");
+    }
+
+    return post;
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
@@ -72,7 +84,7 @@ export class BoardPostService {
     });
 
     if (!post) {
-      throw new ConflictException("댓글이 존재하지 않습니다.");
+      throw new ConflictException("존재하지 않은 게시글 입니다.");
     }
 
     if ("author" in userInfo && post.author) {
