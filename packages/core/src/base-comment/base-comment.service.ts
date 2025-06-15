@@ -48,6 +48,7 @@ export class BaseCommentService {
           resource_type,
           resource_id,
         },
+        status: CommentStatus.USE,
       },
       relations: ["parent", "children"],
       order: { created_at: "DESC" },

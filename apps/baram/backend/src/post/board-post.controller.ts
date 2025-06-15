@@ -64,6 +64,19 @@ export class BoardPostController {
     return this.boardPostService.deletePost(id);
   }
 
+  // 특정 게시글의 댓글 리스트
+  @Get(":id/comments")
+  @UseGuards(ResourceExistenceGuard)
+  getCommentsByPostId(
+    @Request() req: CommonRequest,
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    return this.baseCommentService.getCommentsByResource(
+      req.resource_info.resource_type,
+      req.resource_info.resource_id
+    );
+  }
+
   // 특정 게시글 댓글 저장
   @Post(":id/comment")
   @UseGuards(ResourceExistenceGuard)
