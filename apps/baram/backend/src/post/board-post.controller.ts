@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
@@ -14,10 +13,7 @@ import {
 import { PostService } from "./post.service";
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
 import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import {
@@ -27,6 +23,7 @@ import {
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
+import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 
 @Controller(["board-post"])
@@ -38,6 +35,18 @@ export class BoardPostController {
     private readonly baseCommentService: BaseCommentService
   ) {}
 
+  @Patch(":id")
+  @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
+  async patchPost(
+    @Param("id", ParseIntPipe) id: number,
+    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Body() body: UpdateBoardPostDto
+  ) {
+    await this.boardPostService.checkOwnerPost(id, user);
+    return this.boardPostService.updatePost(id, body);
+  }
+
   @Delete(":id")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
@@ -45,12 +54,7 @@ export class BoardPostController {
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserOrGuestLoginRequest
   ) {
-    const checked = await this.boardPostService.checkOwnerPost(id, user);
-
-    if (!checked) {
-      throw new InternalServerErrorException("게시글 작성자가 아닙니다.");
-    }
-
+    await this.boardPostService.checkOwnerPost(id, user);
     return this.boardPostService.deletePost(id);
   }
 

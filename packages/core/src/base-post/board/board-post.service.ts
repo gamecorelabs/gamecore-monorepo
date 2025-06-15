@@ -14,6 +14,7 @@ import * as bcrpyt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
+import { UpdateBoardPostDto } from "./dto/update-board-post.dto";
 
 @Injectable()
 export class BoardPostService {
@@ -75,7 +76,10 @@ export class BoardPostService {
     }
 
     if ("author" in userInfo && post.author) {
-      return post.author.id === userInfo.author.id;
+      if (post.author.id !== userInfo.author.id) {
+        throw new ConflictException("게시글 작성자가 아닙니다.");
+      }
+      return true;
     } else if ("guest_account" in userInfo && user.type === "guest") {
       const isPasswordValid = await bcrpyt.compare(
         user.guest_author_password,
@@ -88,6 +92,24 @@ export class BoardPostService {
       return true;
     } else {
       throw new ConflictException("계정 정보가 올바르지 않습니다.");
+    }
+  }
+
+  async updatePost(id: number, dto: UpdateBoardPostDto) {
+    const post = await this.boardPostRepository.findOne({
+      where: { id, status: BoardPostStatus.USE },
+    });
+
+    if (!post) {
+      throw new ConflictException("게시글이 존재하지 않습니다.");
+    }
+
+    Object.assign(post, dto);
+
+    try {
+      return await this.boardPostRepository.save(post);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
     }
   }
 
