@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsBoolean, IsEnum, IsString } from "class-validator";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
@@ -8,6 +15,11 @@ import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable
 import { Transform } from "class-transformer";
 import { LikeStatus, LikeType } from "../enum/like.enum";
 
+@Index("IDX_resource", [
+  "resource_info.resource_type",
+  "resource_info.resource_id",
+  "status",
+])
 @Entity()
 export class Like extends BaseModel {
   @Column(() => ResourceInfo, { prefix: "" })

@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { BaseModel } from "@_core/base-common/entity/base.entity";
 import { IsEnum, IsString } from "class-validator";
 import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
@@ -8,6 +15,11 @@ import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable
 import { Like } from "@_core/base-like/entity/like.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 
+@Index("IDX_resource", [
+  "resource_info.resource_type",
+  "resource_info.resource_id",
+  "status",
+])
 @Entity()
 export class Comment extends BaseModel {
   @Column(() => GuestAccount, { prefix: "" })
