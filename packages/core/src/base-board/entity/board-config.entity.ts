@@ -16,12 +16,12 @@ export class BoardConfig extends BaseModel {
   description?: string;
 
   @IsEnum(BoardType)
-  @Column({ type: "varchar", length: 20 })
+  @Column({ type: "enum", enum: BoardType })
   type: BoardType; // 게시판 종류 (자유게시판, 기타 등등)
 
   @IsEnum(BoardStatus)
-  @Column({ type: "int", default: BoardStatus.ACTIVE })
-  status: number;
+  @Column({ type: "enum", enum: BoardType, default: BoardStatus.ACTIVE })
+  status: BoardStatus;
 
   @ManyToOne(() => DomainConfig, (domain) => domain.boardConfigs)
   @JoinColumn({ name: "domain_id" })

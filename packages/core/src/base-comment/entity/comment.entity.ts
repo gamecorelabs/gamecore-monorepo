@@ -33,8 +33,8 @@ export class Comment extends BaseModel {
   content: string;
 
   @IsEnum(CommentStatus)
-  @Column({ type: "int", default: CommentStatus.USE })
-  status: CommentStatus = CommentStatus.USE;
+  @Column({ type: "enum", enum: CommentStatus, default: CommentStatus.USE })
+  status: CommentStatus;
 
   @ManyToOne(() => Comment, (comment) => comment.children, {
     nullable: true,

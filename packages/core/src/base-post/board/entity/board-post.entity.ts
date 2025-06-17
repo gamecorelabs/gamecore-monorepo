@@ -24,8 +24,8 @@ export class BoardPost extends BaseModel {
 
   // 삭제 여부
   @IsEnum(BoardPostStatus)
-  @Column({ default: BoardPostStatus.USE })
-  status: number;
+  @Column({ type: "enum", enum: BoardPostStatus, default: BoardPostStatus.USE })
+  status: BoardPostStatus;
 
   // 조회수
   @IsNumber()

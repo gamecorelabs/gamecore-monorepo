@@ -46,7 +46,7 @@ export class BaseLikeService {
     return counts.reduce((acc, cur) => {
       let key: string;
 
-      switch (parseInt(cur.type)) {
+      switch (cur.type) {
         case LikeType.LIKE:
           key = "likeCount";
           break;
