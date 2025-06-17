@@ -10,6 +10,7 @@ import { BoardConfig } from '@_core/base-board/entity/board-config.entity';
 import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
 import { Comment } from '@_core/base-comment/entity/comment.entity';
 import { Like } from '@_core/base-like/entity/like.entity';
+import { BoardCategory } from '@_core/base-board/entity/board-category.entity';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Like } from '@_core/base-like/entity/like.entity';
         UserAccount,
         BoardPost,
         BoardConfig,
+        BoardCategory,
         DomainConfig,
         Comment,
         Like,

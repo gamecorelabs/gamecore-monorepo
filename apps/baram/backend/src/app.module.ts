@@ -14,6 +14,7 @@ import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { LikeModule } from "./like/like.module";
 import { CoreModule } from "@_core/core.module";
+import { BoardCategory } from "@_core/base-board/entity/board-category.entity";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CoreModule } from "@_core/core.module";
       database: process.env["DB_DATABASE"],
       entities: [
         BoardConfig,
+        BoardCategory,
         DomainConfig,
         BoardPost,
         UserAccount,

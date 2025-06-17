@@ -4,6 +4,7 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { DomainConfig } from "@_core/base-domain/entity/domain-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { BoardType, BoardStatus } from "../enum/board-config.enum";
+import { BoardCategory } from "@_core/base-board/entity/board-category.entity";
 
 @Entity()
 export class BoardConfig extends BaseModel {
@@ -17,10 +18,10 @@ export class BoardConfig extends BaseModel {
 
   @IsEnum(BoardType)
   @Column({ type: "enum", enum: BoardType })
-  type: BoardType; // 게시판 종류 (자유게시판, 기타 등등)
+  type: BoardType; // 게시판 형태 (기본, 갤러리 등등)
 
   @IsEnum(BoardStatus)
-  @Column({ type: "enum", enum: BoardType, default: BoardStatus.ACTIVE })
+  @Column({ type: "enum", enum: BoardStatus, default: BoardStatus.ACTIVE })
   status: BoardStatus;
 
   @ManyToOne(() => DomainConfig, (domain) => domain.boardConfigs)
@@ -29,4 +30,9 @@ export class BoardConfig extends BaseModel {
 
   @OneToMany(() => BoardPost, (BoardPost) => BoardPost.boardConfig)
   boardPosts: BoardPost[]; // 게시판에 속한 게시글들
+
+  @OneToMany(() => BoardCategory, (category) => category.boardConfig, {
+    cascade: true,
+  })
+  categories: BoardCategory[];
 }
