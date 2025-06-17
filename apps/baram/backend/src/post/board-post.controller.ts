@@ -35,10 +35,32 @@ export class BoardPostController {
     private readonly baseCommentService: BaseCommentService
   ) {}
 
-  @Get(":id")
+  // 게시글 보기 (사용안함)
+  // @Get(":id")
+  // @UseGuards(ResourceExistenceGuard)
+  // getPostById(@Param("id", ParseIntPipe) id: number) {
+  //   return this.boardPostService.getPostById(id);
+  // }
+
+  // 게시글 상세히 보기
+  @Get(":id/detail")
   @UseGuards(ResourceExistenceGuard)
-  getPostById(@Param("id", ParseIntPipe) id: number) {
-    return this.boardPostService.getPostById(id);
+  async getPostDetail(
+    @Request() req: CommonRequest,
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    // 게시글 정보 & 좋아요수, 댓글 리스트 & 좋아요수
+    const [post, comments] = await Promise.all([
+      this.boardPostService.getPostWithLikeCount(id),
+      this.baseCommentService.getCommentsByResourceWithLikeCount(
+        req.resource_info.resource_type,
+        req.resource_info.resource_id
+      ),
+    ]);
+    return {
+      post,
+      comments,
+    };
   }
 
   @Patch(":id")

@@ -11,6 +11,7 @@ import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
+import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 
 @Injectable()
 export class BaseCommentService {
@@ -50,9 +51,54 @@ export class BaseCommentService {
         },
         status: CommentStatus.USE,
       },
-      relations: ["parent", "children"],
+      relations: ["author", "parent", "children"],
       order: { created_at: "DESC" },
     });
+  }
+
+  async getCommentsByResourceWithLikeCount(
+    resource_type: ResourceType,
+    resource_id: number,
+    id?: number
+  ) {
+    const queryBuilder = this.commentRepository
+      .createQueryBuilder("comment")
+      .leftJoin(
+        "like",
+        "like",
+        `like.resource_id = comment.id
+        AND like.resource_type = :likeResourceType
+        AND like.status = :likeStatus`,
+        {
+          likeResourceType: ResourceType.COMMENT,
+          likeStatus: LikeStatus.SELECTED,
+        }
+      )
+      .addSelect([
+        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
+        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
+      ])
+      .where("comment.status = :commentStatus", {
+        commentStatus: CommentStatus.USE,
+      })
+      .andWhere("comment.resource_info.resource_id = :commentResourceId", {
+        commentResourceId: resource_id,
+      })
+      .andWhere("comment.resource_info.resource_type = :commentResourceType", {
+        commentResourceType: resource_type,
+      })
+      .groupBy("comment.id")
+      .setParameters({
+        likeType: LikeType.LIKE,
+        dislikeType: LikeType.DISLIKE,
+      });
+
+    if (id) {
+      queryBuilder.andWhere("comment.id = :id", { id });
+    }
+
+    const result = await queryBuilder.getRawAndEntities();
+    return result;
   }
 
   // 댓글 단일 조회

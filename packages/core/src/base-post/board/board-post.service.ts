@@ -15,6 +15,8 @@ import { ConfigService } from "@nestjs/config";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import { UpdateBoardPostDto } from "./dto/update-board-post.dto";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 
 @Injectable()
 export class BoardPostService {
@@ -48,6 +50,41 @@ export class BoardPostService {
     }
 
     return post;
+  }
+
+  async getPostWithLikeCount(id?: number) {
+    const queryBuilder = this.boardPostRepository
+      .createQueryBuilder("board_post")
+      .leftJoin(
+        "like",
+        "like",
+        `like.resource_id = board_post.id
+          AND like.resource_type = :likeResourceType
+          AND like.status = :likeStatus`,
+        {
+          likeResourceType: ResourceType.BOARD_POST,
+          likeStatus: LikeStatus.SELECTED,
+        }
+      )
+      .addSelect([
+        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
+        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
+      ])
+      .where("board_post.status = :boardPostStatus", {
+        boardPostStatus: BoardPostStatus.USE,
+      })
+      .groupBy("board_post.id")
+      .setParameters({
+        likeType: LikeType.LIKE,
+        dislikeType: LikeType.DISLIKE,
+      });
+
+    if (id) {
+      queryBuilder.andWhere("board_post.id = :id", { id });
+    }
+
+    const result = await queryBuilder.getRawAndEntities();
+    return result;
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
