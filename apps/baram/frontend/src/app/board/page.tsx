@@ -1,4 +1,4 @@
-import FallbackPage from "@/components/fallback/FallbackPage";
+import { FallbackPage } from "@_web-ui/components/ui-library";
 
 export default function BoardFallbackPage() {
   return (
