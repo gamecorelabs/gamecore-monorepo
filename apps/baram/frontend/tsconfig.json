@@ -21,7 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@_web-ui/*": ["../../../packages/web-ui/src/*"]
+      "@gamecoregg/web-ui/*": ["../../../packages/web-ui/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

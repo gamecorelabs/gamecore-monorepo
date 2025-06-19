@@ -1,4 +1,4 @@
-import { FallbackPage } from "@_web-ui/components/ui-library";
+import { FallbackPage } from "@gamecoregg/web-ui/components/ui-library";
 
 export default function BoardFallbackPage() {
   return (

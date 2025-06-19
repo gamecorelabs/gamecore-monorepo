@@ -6,7 +6,7 @@ import {
   Header,
   Main,
   Footer,
-} from "@_web-ui/components/ui-library";
+} from "@gamecoregg/web-ui/components/ui-library";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
