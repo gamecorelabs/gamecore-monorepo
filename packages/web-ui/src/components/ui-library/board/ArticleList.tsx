@@ -1,9 +1,8 @@
 import { NewPostButton } from "../floating";
 import { ArticleContent } from "./ArticleContent";
 import { ArticleInfo } from "./ArticleInfo";
-import defaultPostJson from "@/mocks/default-article.mock.json";
 
-// FIXME: 타입 분리
+// FIXME: 타입 맞추기
 type Post = {
   id: number;
   title: string;
@@ -12,16 +11,9 @@ type Post = {
   author: {
     name: string;
   };
-  thumbnail?: string;
-  community: number;
 };
 
-const defaultPosts: Post[] = defaultPostJson;
-
-const ArticleList = ({ posts }: { posts: Post[] }) => {
-  // FIXME: 추후 DB 조회를 이용하여 게시글 불러오기
-  posts = posts && posts.length > 0 ? posts : defaultPosts;
-
+const ArticleList = async ({ posts }: { posts: Post[] }) => {
   if (!posts || posts.length === 0) {
     return <div className="text-center py-4">게시글이 없습니다.</div>;
   }

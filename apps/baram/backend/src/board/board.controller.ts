@@ -42,10 +42,10 @@ export class BoardController {
 
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
   getBoardPost(
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
-    // @Param("board_id", ParseIntPipe) board_id: number
   ) {
     return this.boardPostService.getPosts(boardId);
   }
