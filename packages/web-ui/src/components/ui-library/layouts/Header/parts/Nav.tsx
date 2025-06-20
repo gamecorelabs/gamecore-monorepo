@@ -18,8 +18,6 @@ const Nav = ({ items }: { items?: NavItem[] }) => {
   const menuItems = items && items.length > 0 ? items : defaultMenu;
   if (typeof window !== "undefined" && window.location.pathname) {
     pathname = window.location.pathname;
-
-    console.log("Current Pathname:", pathname);
   }
   return (
     <nav className="bg-gray-800 text-white overflow-x-auto">
