@@ -76,15 +76,15 @@ export class AuthService {
     res.cookie('access_token', tokenData.accessToken, {
       httpOnly: true,
       secure: false,
-      sameSite: 'none', // 크로스 도메인 요청 허용
-      maxAge: TOKEN_EXPIRE.access,
+      sameSite: 'lax',
+      maxAge: TOKEN_EXPIRE.access * 1000,
     });
 
     res.cookie('refresh_token', tokenData.refreshToken, {
       httpOnly: true,
       secure: false,
-      sameSite: 'none',
-      maxAge: TOKEN_EXPIRE.refresh,
+      sameSite: 'lax',
+      maxAge: TOKEN_EXPIRE.refresh * 1000,
     });
 
     return { success: true };
