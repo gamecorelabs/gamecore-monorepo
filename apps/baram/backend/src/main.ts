@@ -7,9 +7,12 @@ async function bootstrap() {
 
   // FIXME: 개발중 임시 허용
   app.enableCors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3200",
+      "http://localhost:3400",
+    ],
   });
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
