@@ -24,20 +24,21 @@ gamecoregg/
 ```
 
 ### `/apps`
-- 실제 실행 가능한 애플리케이션이 위치하는 디렉토리입니다.
-- 각 애플리케이션 내에는 backend, frontend로 나뉘어져있습니다
-    - 기술스택은 backend는 NestJS, frontend는 Next.js를 채택하고 있습니다
-- 공통 서비스 처리 로직(NestJs) 및 공통 UI Component (Next.js, React)는 `/packages` 에서 관리합니다.
+- 각 애플리케이션이 위치하는 디렉토리입니다.
+- 각 서비스마다 backend, ~frontend 서버를 분리하여 진행합니다.~
+    - frontend는 현 시점에서 당장 micro하게 나누진 않을 예정입니다.
+- backend : NestJS ^11, frontend : Next.js ^15 기반으로 진행중입니다.
+- 공통 서비스 처리 로직(NestJs) 및 공통 UI Component, Utils (Next.js, React)는 `/packages` 에서 관리 합니다.
 
 ### `/packages`
-- 프로젝트의 핵심 로직이나 유틸리티, 공유 라이브러리 등이 담긴 모노레포 스타일의 코드 모듈입니다.
-- 재사용 가능한 함수, 타입 정의 등 프로젝트 전체에서 사용하는 핵심 기능을 포함합니다.
+- 프로젝트의 공통 핵심 로직이나 UI-Components, 유틸리티 함수 등을 관리하는 shared 디렉터리 입니다.
 - `/packages/core`
-    - NestJs의 공통 service를 담고있는 코어 모듈입니다.
-    - 추후 repo 분리시에는 skeleton nestjs project를 publish 할 예정입니다.
+    - gamecoregg의 공통 코어 service 로직들을 담고있는 코어 모듈 패키지입니다.
+    - 추후 repo 분리시에는 해당 패키지를 포함한 skeleton nestjs project를 구성 할 예정입니다.
 - `/packages/ui-library`
-    - Next.js, React의 공통 컴포넌트를 해당 directory에서 관리합니다.
-    - 추후 repo 분리시에는 ui-library를 publish 하여 각 front service에 install 하여 사용할 예정입니다.
+    - Next.js, React의 공통 컴포넌트를 해당 패키지에서 관리합니다.
+- `/packages/utils`
+    - 공통으로 쓰이는 각종 유틸 함수들을 관리하는 패키지입니다.
 
 ## 🚀 시작하기 (예시)
 
