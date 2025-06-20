@@ -1,4 +1,5 @@
 import { BaseAuthService } from '@_core/base-auth/base-auth.service';
+import { TOKEN_EXPIRE } from '@_core/base-auth/const/auth.const';
 import { ENV_HASH_ROUNDS } from '@_core/base-common/const/env-keys.const';
 import { BaseUserService } from '@_core/base-user/base-user.service';
 import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrpyt from 'bcrypt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -60,5 +62,31 @@ export class AuthService {
 
     // 토큰 발급
     return this.baseAuthService.getIssuanceToken(newUser);
+  }
+
+  // 쿠키에 토큰 설정
+  async setTokenCookie(
+    res: Response,
+    tokenData: {
+      accessToken: string;
+      refreshToken: string;
+    },
+  ) {
+    // 쿠키 설정
+    res.cookie('access_token', tokenData.accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'none', // 크로스 도메인 요청 허용
+      maxAge: TOKEN_EXPIRE.access,
+    });
+
+    res.cookie('refresh_token', tokenData.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'none',
+      maxAge: TOKEN_EXPIRE.refresh,
+    });
+
+    return { success: true };
   }
 }

@@ -1,7 +1,12 @@
 "use client";
 import authApi from "@gamecoregg/utils/common-axios/src/authApi";
+import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -9,12 +14,31 @@ const LoginPage = () => {
     const password = formData.get("password") as string;
 
     try {
-      const response = await authApi.post("/auth/login", { email, password });
-      console.log("로그인 성공:", response.data);
-      // 로그인 성공 후 처리 (예: 리다이렉트)
+      const redirectUrl = searchParams.get("redirect_url") || "/";
+      const basicToken = btoa(`${email}:${password}`);
+      const response = await authApi.post(
+        "/auth/login",
+        {},
+        {
+          headers: {
+            Authorization: `Basic ${basicToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status !== 201) {
+        throw new Error(response.data.message || "로그인 실패");
+      }
+      router.push(redirectUrl);
     } catch (error) {
-      console.error("로그인 실패:", error);
-      // 로그인 실패 처리
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message || "서버 오류";
+        window.alert(msg);
+      } else {
+        console.error("예상치 못한 에러", error);
+      }
+      return false;
     }
   };
 

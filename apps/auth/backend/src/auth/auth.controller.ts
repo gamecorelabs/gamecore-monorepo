@@ -4,6 +4,7 @@ import {
   Headers,
   Post,
   Request,
+  Res,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -11,10 +12,10 @@ import { AuthService } from './auth.service';
 import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
 import { BaseAuthService } from '@_core/base-auth/base-auth.service';
 import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.guard';
-import { Request as ExpressRequest } from 'express';
+import { Request as ExpressRequest, Response } from 'express';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 
-interface BoardPostRequest extends ExpressRequest {
+interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
 }
 interface Requeset {}
@@ -32,7 +33,11 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(BasicUserTokenGuard)
-  async loginUser(@Request() req: BoardPostRequest) {
-    return this.authService.loginUser(req.loginInfo);
+  async loginUser(
+    @Request() req: LoginRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokenData = await this.authService.loginUser(req.loginInfo);
+    await this.authService.setTokenCookie(res, tokenData);
   }
 }
