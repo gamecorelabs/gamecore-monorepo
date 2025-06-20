@@ -36,8 +36,13 @@ export class AuthController {
   async loginUser(
     @Request() req: LoginRequest,
     @Res({ passthrough: true }) res: Response,
+    @Body('test') test: string,
   ) {
     const tokenData = await this.authService.loginUser(req.loginInfo);
+
+    if (test === 'postman') {
+      return tokenData;
+    }
     await this.authService.setTokenCookie(res, tokenData);
   }
 }
