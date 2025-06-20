@@ -30,7 +30,7 @@ const LoginPage = () => {
       if (response.status !== 201) {
         throw new Error(response.data.message || "로그인 실패");
       }
-      // router.push(redirectUrl);
+      router.push(redirectUrl);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const msg = error.response.data?.message || "서버 오류";

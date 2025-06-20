@@ -46,11 +46,13 @@ const RegisterPage = () => {
 
     try {
       const redirectUrl = searchParams.get("redirect_url") || "/";
-      const result = await authApi.post("/auth/register", form);
+      const result = await authApi.post("/auth/register", form, {
+        withCredentials: true,
+      });
       if (result.status !== 201) {
         throw new Error("회원가입에 실패했습니다.");
       }
-      // router.push(redirectUrl);
+      router.push(redirectUrl);
     } catch (error) {
       window.alert("회원가입 중 오류가 발생했습니다.");
     }
