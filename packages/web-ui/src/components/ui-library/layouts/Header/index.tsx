@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "./Nav";
+import Nav from "./parts/Nav";
+import AuthActions from "./parts/AuthActions";
 
 const Header = () => {
   return (
@@ -42,20 +43,7 @@ const Header = () => {
             </svg>
           </span>
         </div>
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/login"
-            className="text-white hover:text-blue-500 transition-colors"
-          >
-            로그인
-          </Link>
-          <Link
-            href="/register"
-            className="text-white hover:text-blue-500 transition-colors"
-          >
-            회원가입
-          </Link>
-        </div>
+        <AuthActions />
       </div>
       {/* Search Bar for Mobile */}
       <div className="flex items-center justify-center">
