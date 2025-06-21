@@ -5,13 +5,14 @@ import dataApi from "@gamecoregg/utils/common-axios/src/dataApi";
 const BoardPage = async () => {
   let posts = [];
   try {
-    const response = await dataApi.get("/board/1/post");
+    const response = await dataApi.get("/board/1/post", {
+      withCredentials: true,
+    });
+
     posts = response?.data ?? [];
   } catch (error) {
     posts = [];
   }
-
-  console.log("posts", posts);
 
   return <ArticleList posts={posts} />;
 };

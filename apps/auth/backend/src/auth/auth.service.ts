@@ -75,15 +75,15 @@ export class AuthService {
     // 쿠키 설정
     res.cookie('access_token', tokenData.accessToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true, // FIXME: dev
+      sameSite: 'none', // FIXME: dev
       maxAge: TOKEN_EXPIRE.access * 1000,
     });
 
     res.cookie('refresh_token', tokenData.refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true, // FIXME: dev
+      sameSite: 'none', // FIXME: dev
       maxAge: TOKEN_EXPIRE.refresh * 1000,
     });
 

@@ -1,16 +1,19 @@
+import * as fs from 'fs';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync('../../../cert/localhost-key.pem'),
+    cert: fs.readFileSync('../../../cert/localhost.pem'),
+  };
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
 
   // FIXME: 개발중 임시 허용
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3200',
-      'http://localhost:3400',
-    ],
+    origin: ['http://localhost:3000'],
     credentials: true,
   });
 
