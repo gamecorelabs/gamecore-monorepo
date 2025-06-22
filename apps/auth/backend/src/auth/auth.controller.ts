@@ -31,9 +31,16 @@ export class AuthController {
   // access token 만료시 재발급
   @Post('token/access')
   @UseGuards(RefreshTokenGuard)
-  async accessToken(@Request() req: UserLoginRequest) {
+  async accessToken(
+    @Request() req: UserLoginRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     // 토큰 재발급
-    return this.baseAuthService.getIssuanceToken(req.user_account, 'access');
+    const tokenData = this.baseAuthService.getIssuanceToken(
+      req.user_account,
+      'access',
+    );
+    await this.authService.setTokenCookie(res, tokenData);
   }
 
   @Post('register')

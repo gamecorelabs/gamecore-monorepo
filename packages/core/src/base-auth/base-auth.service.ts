@@ -26,10 +26,10 @@ export class BaseAuthService {
   }
 
   /** 토큰 발급  */
-  getIssuanceToken(userAccount: UserAccount, token?: "access" | "refresh") {
-    if (token) {
+  getIssuanceToken(userAccount: UserAccount, tokenType?: "access" | "refresh") {
+    if (tokenType) {
       return {
-        [`${token}Token`]: this.signToken(userAccount, token),
+        [`${tokenType}Token`]: this.signToken(userAccount, tokenType),
       };
     } else {
       return {
