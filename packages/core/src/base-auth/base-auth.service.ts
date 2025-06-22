@@ -26,11 +26,17 @@ export class BaseAuthService {
   }
 
   /** 토큰 발급  */
-  getIssuanceToken(user: UserAccount, token?: string) {
-    return {
-      accessToken: this.signToken(user, "access"),
-      refreshToken: this.signToken(user, "refresh"),
-    };
+  getIssuanceToken(userAccount: UserAccount, token?: "access" | "refresh") {
+    if (token) {
+      return {
+        [`${token}Token`]: this.signToken(userAccount, token),
+      };
+    } else {
+      return {
+        accessToken: this.signToken(userAccount, "access"),
+        refreshToken: this.signToken(userAccount, "refresh"),
+      };
+    }
   }
 
   signToken(

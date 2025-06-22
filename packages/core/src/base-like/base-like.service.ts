@@ -69,7 +69,7 @@ export class BaseLikeService {
       },
     };
 
-    const user_id = user.type === "user" ? user.id : 0;
+    const user_id = user.type === "user" ? user.user_account.id : 0;
 
     if (user_id > 0) {
       conditions.where["author"]["id"] = user_id;

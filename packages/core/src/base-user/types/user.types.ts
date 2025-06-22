@@ -1,6 +1,7 @@
 import { UserAccount } from "../entity/user-account.entity";
 
-export type UserLoginRequest = UserAccount & {
+export type UserLoginRequest = {
+  user_account: UserAccount;
   type: "user";
   ip_address: string;
 };

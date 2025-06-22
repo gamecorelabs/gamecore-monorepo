@@ -21,7 +21,7 @@ export const getUserInfo = async (
   switch (user.type) {
     case "user":
       userInfo = {
-        author: { id: user.id },
+        author: { id: user.user_account.id },
       };
       break;
     case "guest":
