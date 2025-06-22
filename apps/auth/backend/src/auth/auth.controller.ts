@@ -15,7 +15,11 @@ import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.gua
 import { RefreshTokenGuard } from '@_core/base-auth/guard/refresh-token.guard';
 import { Request as ExpressRequest, Response } from 'express';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
-import { UserLoginRequest } from '@_core/base-user/types/user.types';
+import {
+  UserLoginRequest,
+  UserOrGuestLoginRequest,
+} from '@_core/base-user/types/user.types';
+import { CurrentUser } from '@_core/base-user/decorator/current-user.decorator';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
@@ -32,12 +36,11 @@ export class AuthController {
   @Post('token/access')
   @UseGuards(RefreshTokenGuard)
   async accessToken(
-    @Request() req: UserLoginRequest,
+    @CurrentUser() user: UserLoginRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    // 토큰 재발급
     const tokenData = this.baseAuthService.getIssuanceToken(
-      req.user_account,
+      user.user_account,
       'access',
     );
     await this.authService.setTokenCookie(res, tokenData);
@@ -57,6 +60,7 @@ export class AuthController {
   ) {
     const tokenData = await this.authService.loginUser(req.loginInfo);
 
+    // FIXME: postman 테스트용
     if (test === 'postman') {
       return tokenData;
     }

@@ -11,7 +11,7 @@ import { BoardConfig } from '@_core/base-board/entity/board-config.entity';
 import { DomainConfig } from '@_core/base-domain/entity/domain-config.entity';
 import { Like } from '@_core/base-like/entity/like.entity';
 import { Comment } from '@_core/base-comment/entity/comment.entity';
-// import { JwtModule } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { Comment } from '@_core/base-comment/entity/comment.entity';
       Like,
       Comment,
     ]),
-    // JwtModule.register({}),
+    JwtModule.register({}),
     BaseUserModule,
     BaseAuthModule,
     BaseLikeModule,
