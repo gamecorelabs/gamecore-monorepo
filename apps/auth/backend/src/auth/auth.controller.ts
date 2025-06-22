@@ -13,7 +13,10 @@ import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.d
 import { BaseAuthService } from '@_core/base-auth/base-auth.service';
 import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.guard';
 import { RefreshTokenGuard } from '@_core/base-auth/guard/refresh-token.guard';
-import { Request as ExpressRequest, Response } from 'express';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
 import {
   UserLoginRequest,
@@ -37,25 +40,29 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   async accessToken(
     @CurrentUser() user: UserLoginRequest,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const tokenData = this.baseAuthService.getIssuanceToken(
       user.user_account,
       'access',
     );
-    await this.authService.setTokenCookie(res, tokenData);
+    await this.baseAuthService.setTokenCookie(res, tokenData);
   }
 
   @Post('register')
-  async registerUser(@Body() dto: CreateUserAccountDto) {
-    return await this.authService.registerUser(dto);
+  async registerUser(
+    @Body() dto: CreateUserAccountDto,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const tokenData = await this.authService.registerUser(dto);
+    await this.baseAuthService.setTokenCookie(res, tokenData);
   }
 
   @Post('login')
   @UseGuards(BasicUserTokenGuard)
   async loginUser(
     @Request() req: LoginRequest,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: ExpressResponse,
     @Body('test') test: string,
   ) {
     const tokenData = await this.authService.loginUser(req.loginInfo);
@@ -64,6 +71,6 @@ export class AuthController {
     if (test === 'postman') {
       return tokenData;
     }
-    await this.authService.setTokenCookie(res, tokenData);
+    await this.baseAuthService.setTokenCookie(res, tokenData);
   }
 }

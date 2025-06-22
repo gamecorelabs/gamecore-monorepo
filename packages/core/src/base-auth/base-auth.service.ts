@@ -4,6 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { TOKEN_EXPIRE } from "./const/auth.const";
 import { JwtService } from "@nestjs/jwt";
+import { Response as ExpressResponse } from "express";
 
 @Injectable()
 export class BaseAuthService {
@@ -91,5 +92,34 @@ export class BaseAuthService {
     //   email,
     //   password,
     // };
+  }
+
+  // 쿠키에 토큰 설정
+  async setTokenCookie(
+    res: ExpressResponse,
+    tokenData: {
+      accessToken?: string;
+      refreshToken?: string;
+    }
+  ) {
+    if (tokenData.accessToken) {
+      res.cookie("access_token", tokenData.accessToken, {
+        httpOnly: true,
+        secure: true, // FIXME: dev
+        sameSite: "none", // FIXME: dev
+        maxAge: TOKEN_EXPIRE.access * 1000,
+      });
+    }
+
+    if (tokenData.refreshToken) {
+      res.cookie("refresh_token", tokenData.refreshToken, {
+        httpOnly: true,
+        secure: true, // FIXME: dev
+        sameSite: "none", // FIXME: dev
+        maxAge: TOKEN_EXPIRE.refresh * 1000,
+      });
+    }
+
+    return { success: true };
   }
 }
