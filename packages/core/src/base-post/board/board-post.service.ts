@@ -131,7 +131,7 @@ export class BoardPostService {
       return true;
     } else if ("guest_account" in userInfo && user.type === "guest") {
       const isPasswordValid = await bcrpyt.compare(
-        user.guest_author_password,
+        user.guest_account.guest_author_password,
         post.guest_account.guest_author_password
       );
 

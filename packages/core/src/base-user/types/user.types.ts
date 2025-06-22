@@ -1,16 +1,19 @@
+import { Request as ExpressRequest } from "express";
 import { UserAccount } from "../entity/user-account.entity";
 
-export type UserLoginRequest = {
-  user_account: UserAccount;
+export type UserLoginRequest = ExpressRequest & {
   type: "user";
-  ip_address: string;
+  user_account: UserAccount;
 };
 
-export type GuestLoginRequest = {
+export type GuestLoginRequest = ExpressRequest & {
   type: "guest";
-  guest_author_id: string;
-  guest_author_password: string;
-  ip_address: string;
+  guest_account: {
+    guest_author_id: string;
+    guest_author_password: string;
+  };
 };
 
-export type UserOrGuestLoginRequest = UserLoginRequest | GuestLoginRequest;
+export type UserOrGuestLoginRequest = {
+  ip_address: string;
+} & (UserLoginRequest | GuestLoginRequest);

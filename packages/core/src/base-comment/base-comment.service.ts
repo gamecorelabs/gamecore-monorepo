@@ -137,7 +137,7 @@ export class BaseCommentService {
       return comment.author.id === userInfo.author.id;
     } else if ("guest_account" in userInfo && user.type === "guest") {
       const isPasswordValid = await bcrpyt.compare(
-        user.guest_author_password,
+        user.guest_account.guest_author_password,
         comment.guest_account.guest_author_password
       );
 

@@ -47,7 +47,7 @@ export class GuestOrUserTokenGuard implements CanActivate {
 
       request.user = {
         type: "user",
-        ...user,
+        user_account: user,
       };
     }
 

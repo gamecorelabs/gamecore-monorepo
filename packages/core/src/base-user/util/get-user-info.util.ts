@@ -25,10 +25,13 @@ export const getUserInfo = async (
       };
       break;
     case "guest":
-      const hash = await bcrpyt.hash(user.guest_author_password, hashRounds);
+      const hash = await bcrpyt.hash(
+        user.guest_account.guest_author_password,
+        hashRounds
+      );
       userInfo = {
         guest_account: {
-          guest_author_id: user.guest_author_id,
+          guest_author_id: user.guest_account.guest_author_id,
           guest_author_password: hash,
         },
       };

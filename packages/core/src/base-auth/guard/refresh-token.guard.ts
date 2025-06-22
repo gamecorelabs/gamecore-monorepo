@@ -4,14 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { BaseAuthService } from "@_core/base-auth/base-auth.service";
 import { BaseUserService } from "@_core/base-user/base-user.service";
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly baseAuthService: BaseAuthService,
     private readonly baseUserService: BaseUserService
   ) {}
@@ -30,7 +28,7 @@ export class RefreshTokenGuard implements CanActivate {
 
       request.user = {
         type: "user",
-        ...user,
+        user_account: user,
       };
       // client IP 주소 설정
       request.user.ip_address =
