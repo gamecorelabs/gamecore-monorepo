@@ -33,8 +33,6 @@ export default function SessionRefresher({ user }: any) {
         setUser(null);
       }
     })();
-
-    console.log("zustand userStore 상태:", useUserStore.getState());
   }, [user, setUser]);
 
   return null;

@@ -4,7 +4,7 @@ const config: Config = {
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
-    "../../../packages/web-ui/**/*.{js,ts,jsx,tsx,mdx}",
+    "../../packages/web-ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   future: {
     hoverOnlyWhenSupported: true,
