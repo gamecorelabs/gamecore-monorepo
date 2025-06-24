@@ -1,11 +1,9 @@
 import {
   Body,
   Controller,
-  Headers,
   Post,
   Request,
   Res,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -13,21 +11,18 @@ import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.d
 import { BaseAuthService } from '@_core/base-auth/base-auth.service';
 import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.guard';
 import { RefreshTokenGuard } from '@_core/base-auth/guard/refresh-token.guard';
+import { AccessTokenGuard } from '@_core/base-auth/guard/access-token.guard';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
 import { UserAccount } from '@_core/base-user/entity/user-account.entity';
-import {
-  UserLoginRequest,
-  UserOrGuestLoginRequest,
-} from '@_core/base-user/types/user.types';
+import { UserLoginRequest } from '@_core/base-user/types/user.types';
 import { CurrentUser } from '@_core/base-user/decorator/current-user.decorator';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
 }
-interface Requeset {}
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -46,7 +41,7 @@ export class AuthController {
       user.user_account,
       'access',
     );
-    await this.baseAuthService.setTokenCookie(res, tokenData);
+    return await this.baseAuthService.setTokenCookie(res, tokenData);
   }
 
   @Post('register')
@@ -72,5 +67,11 @@ export class AuthController {
       return tokenData;
     }
     await this.baseAuthService.setTokenCookie(res, tokenData);
+  }
+
+  @Post('me')
+  @UseGuards(AccessTokenGuard)
+  async getMe(@CurrentUser() user: UserLoginRequest) {
+    return user;
   }
 }
