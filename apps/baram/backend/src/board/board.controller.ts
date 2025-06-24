@@ -14,7 +14,6 @@ import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { GuestOrUserTokenCookieGuard } from "@_core/base-auth/guard/guest-or-user-token-cookie.guard";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
@@ -43,7 +42,6 @@ export class BoardController {
 
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenCookieGuard)
   getBoardPost(
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
