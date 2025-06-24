@@ -21,7 +21,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@gamecoregg/web-ui/*": ["../../packages/web-ui/src/*"],
+      "@ui-library": ["./src/components/ui-library"],
+      "@ui-library/*": ["./src/components/ui-library/*"],
       "@gamecoregg/utils/*": ["../../packages/utils/*"]
     }
   },

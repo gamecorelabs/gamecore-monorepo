@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import {
-  Container,
-  Header,
-  Main,
-  Footer,
-} from "@gamecoregg/web-ui/components/ui-library";
+import { Container, Header, Main, Footer } from "@ui-library";
 import { getCurrentUser } from "@gamecoregg/utils/user/getCurrentUser";
 import SessionRefresher from "@/components/utils/SessionRefresh";
 

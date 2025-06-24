@@ -1,4 +1,4 @@
-import { ArticleList } from "@gamecoregg/web-ui/components/ui-library";
+import { ArticleList } from "@ui-library";
 import React from "react";
 import dataApi from "@gamecoregg/utils/common-axios/src/dataApi";
 
