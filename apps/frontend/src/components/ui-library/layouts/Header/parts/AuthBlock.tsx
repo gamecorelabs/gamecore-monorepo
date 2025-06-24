@@ -1,9 +1,11 @@
 "use client";
+import { useUserStore } from "@/store/userStore";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const AuthActions = () => {
+const AuthBlock = () => {
   const [redirectUrl, setRedirectUrl] = useState("");
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     setRedirectUrl(window.location.href);
@@ -37,4 +39,4 @@ const AuthActions = () => {
   );
 };
 
-export default AuthActions;
+export default AuthBlock;

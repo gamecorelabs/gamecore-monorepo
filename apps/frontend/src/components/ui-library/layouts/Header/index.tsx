@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "./parts/Nav";
-import AuthActions from "./parts/AuthActions";
+import ProfileBlock from "./parts/ProfileBlock";
 
 const Header = () => {
   return (
@@ -43,7 +43,7 @@ const Header = () => {
             </svg>
           </span>
         </div>
-        <AuthActions />
+        <ProfileBlock />
       </div>
       {/* Search Bar for Mobile */}
       <div className="flex items-center justify-center">
