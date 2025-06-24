@@ -103,7 +103,7 @@ export class BaseAuthService {
     }
   ) {
     if (tokenData.accessToken) {
-      res.cookie("access_token", tokenData.accessToken, {
+      res.cookie("accessToken", tokenData.accessToken, {
         httpOnly: true,
         secure: true, // FIXME: dev
         sameSite: "none", // FIXME: dev
@@ -112,7 +112,7 @@ export class BaseAuthService {
     }
 
     if (tokenData.refreshToken) {
-      res.cookie("refresh_token", tokenData.refreshToken, {
+      res.cookie("refreshToken", tokenData.refreshToken, {
         httpOnly: true,
         secure: true, // FIXME: dev
         sameSite: "none", // FIXME: dev

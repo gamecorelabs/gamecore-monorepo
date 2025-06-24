@@ -7,8 +7,8 @@ export async function middleware(req: NextRequest) {
   const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
   const cookieStore = await cookies();
 
-  const accessToken = cookieStore.get("access_token")?.value;
-  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
   const accessTokenExpired = checkTokenExpired(accessToken);
   const refreshTokenExpired = checkTokenExpired(refreshToken);
@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
       const response = await fetch(`${AUTH_API_URL}/auth/token/access`, {
         method: "POST",
         headers: {
-          Cookie: req.headers.get("cookie") || "", // 중요: 기존 쿠키 같이 전달
+          Cookie: req.headers.get("cookie") || "",
         },
         credentials: "include",
       });
@@ -36,11 +36,10 @@ export async function middleware(req: NextRequest) {
       if (response.ok) {
         const res = NextResponse.next();
         const responseCookies = new ResponseCookies(response.headers);
-        const accessToken = responseCookies.get("access_token");
+        const accessToken = responseCookies.get("accessToken");
 
         if (accessToken) {
-          // 새 액세스 토큰을 설정
-          res.cookies.set("access_token", accessToken.value, {
+          res.cookies.set("accessToken", accessToken.value, {
             httpOnly: accessToken.httpOnly,
             sameSite: accessToken.sameSite,
             path: accessToken.path,
