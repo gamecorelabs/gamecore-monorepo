@@ -5,5 +5,5 @@
   "compilerOptions": {
     "deleteOutDir": true
   },
-  "entryFile": "./apps/baram/backend/src/main.js"
+  "entryFile": "./apps/data-api/src/main.js"
 }

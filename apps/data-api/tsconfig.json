@@ -18,7 +18,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@_core/*": ["../../../packages/core/src/*"],
+      "@_core/*": ["../../packages/core/src/*"],
       "@_src/*": ["./src/*"]
     }
   }
