@@ -105,8 +105,8 @@ export class BaseAuthService {
     if (tokenData.accessToken) {
       res.cookie("accessToken", tokenData.accessToken, {
         httpOnly: true,
-        secure: true, // FIXME: dev
-        sameSite: "none", // FIXME: dev
+        secure: true,
+        sameSite: "none",
         maxAge: TOKEN_EXPIRE.access * 1000,
       });
     }
@@ -114,11 +114,27 @@ export class BaseAuthService {
     if (tokenData.refreshToken) {
       res.cookie("refreshToken", tokenData.refreshToken, {
         httpOnly: true,
-        secure: true, // FIXME: dev
-        sameSite: "none", // FIXME: dev
+        secure: true,
+        sameSite: "none",
         maxAge: TOKEN_EXPIRE.refresh * 1000,
       });
     }
+
+    return { success: true };
+  }
+
+  async clearTokenCookie(res: ExpressResponse) {
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
 
     return { success: true };
   }

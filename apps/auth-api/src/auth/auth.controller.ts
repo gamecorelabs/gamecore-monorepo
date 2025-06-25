@@ -66,7 +66,15 @@ export class AuthController {
     if (test === 'postman') {
       return tokenData;
     }
-    await this.baseAuthService.setTokenCookie(res, tokenData);
+    return await this.baseAuthService.setTokenCookie(res, tokenData);
+  }
+
+  @Post('logout')
+  async logoutUser(@Res({ passthrough: true }) res: ExpressResponse) {
+    // 후속 처리 여부에 따라 authService 추가 로직 작성 필요
+    // await this.authService.logoutUser(res);
+
+    return await this.baseAuthService.clearTokenCookie(res);
   }
 
   @Post('me')

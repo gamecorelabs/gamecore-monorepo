@@ -6,13 +6,19 @@ import { useUserStore } from "@/store/userStore";
 
 // FIXME: any type
 export default function SessionRefresher({ user }: any) {
-  const setUser = useUserStore((s) => s.setUser);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     if (user) {
       setUser(user); // SSR에서 받아온 user를 클라이언트 상태로 동기화
       return;
     }
+
+    const refreshToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("refreshToken="));
+    if (!refreshToken) return;
+
     (async () => {
       try {
         const res = await authApi.post(

@@ -3,7 +3,7 @@ import Link from "next/link";
 import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
 
-const Header = () => {
+const Header = ({ user }: any) => {
   return (
     <header className="bg-black shadow">
       {/* TopSide */}
@@ -43,7 +43,7 @@ const Header = () => {
             </svg>
           </span>
         </div>
-        <ProfileBlock />
+        <ProfileBlock user={user} />
       </div>
       {/* Search Bar for Mobile */}
       <div className="flex items-center justify-center">

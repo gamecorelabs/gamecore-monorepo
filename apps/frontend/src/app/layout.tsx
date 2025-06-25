@@ -34,7 +34,7 @@ export default async function RootLayout({
       >
         <Container>
           <SessionRefresher user={user} />
-          <Header />
+          <Header user={user} />
           <Main>{children}</Main>
           <Footer />
         </Container>
