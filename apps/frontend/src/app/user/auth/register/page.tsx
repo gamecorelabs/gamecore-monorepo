@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import authApi from "@gamecoregg/utils/common-axios/src/authApi";
+import authApi from "@/utils/common-axios/authApi";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const RegisterPage = () => {

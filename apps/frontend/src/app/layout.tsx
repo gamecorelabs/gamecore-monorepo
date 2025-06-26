@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Container, Header, Main, Footer } from "@ui-library";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
-import SessionRefresher from "@/components/utils/SessionRefresh";
+import SessionRefresher from "@/components/session/SessionRefresh";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

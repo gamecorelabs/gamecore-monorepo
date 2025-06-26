@@ -1,4 +1,4 @@
-import authApi from "@gamecoregg/utils/common-axios/src/authApi";
+import authApi from "@/utils/common-axios/authApi";
 import axios from "axios";
 
 export const userLogin = async (basicToken: string) => {

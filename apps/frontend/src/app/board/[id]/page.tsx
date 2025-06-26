@@ -1,6 +1,6 @@
 import { ArticleList } from "@ui-library";
 import React from "react";
-import dataApi from "@gamecoregg/utils/common-axios/src/dataApi";
+import dataApi from "@/utils/common-axios/dataApi";
 
 const BoardPage = async () => {
   let posts = [];

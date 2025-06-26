@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import authApi from "@gamecoregg/utils/common-axios/src/authApi";
+import authApi from "@/utils/common-axios/authApi";
 
 export async function getCurrentUser() {
   const cookieStore = await cookies();

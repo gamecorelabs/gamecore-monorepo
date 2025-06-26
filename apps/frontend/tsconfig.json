@@ -22,8 +22,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@ui-library": ["./src/components/ui-library"],
-      "@ui-library/*": ["./src/components/ui-library/*"],
-      "@gamecoregg/utils/*": ["../../packages/utils/*"]
+      "@ui-library/*": ["./src/components/ui-library/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
