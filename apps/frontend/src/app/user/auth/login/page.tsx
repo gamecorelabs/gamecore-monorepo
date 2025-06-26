@@ -2,7 +2,6 @@
 import { useUserStore } from "@/store/userStore";
 import { userLogin } from "@/utils/auth/login";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getCurrentUserCSR } from "@/utils/auth/getCurrentUserCSR";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -31,8 +30,8 @@ const LoginPage = () => {
     if (!result) {
       return false;
     }
-
     router.push(redirectUrl);
+    router.refresh();
   };
 
   return (
