@@ -10,7 +10,6 @@ export const userLogout = async () => {
       );
 
       if (result.data.success) {
-        window.alert("로그아웃 되었습니다.");
         return true;
       } else {
         window.alert("로그아웃 처리 중 문제가 발생하였습니다.");
