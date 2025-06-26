@@ -1,10 +1,16 @@
-import { NewPostButton } from "../../floating";
 import { ArticleContent } from "./parts/ArticleContent";
 import { ArticleInfo } from "./parts/ArticleInfo";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
+import NewPostButton from "../buttons/NewPostButton";
 
-const ArticleList = ({ posts }: { posts?: BoardPost[] }) => {
+const ArticleList = ({
+  boardId,
+  posts,
+}: {
+  boardId: string;
+  posts?: BoardPost[];
+}) => {
   if (!posts || posts.length === 0) {
     return <EmptyArticle />;
   }
@@ -17,7 +23,7 @@ const ArticleList = ({ posts }: { posts?: BoardPost[] }) => {
           <ArticleInfo post={post} />
         </article>
       ))}
-      <NewPostButton />
+      <NewPostButton link={`/board/${boardId}/post/new`} />
     </>
   );
 };
