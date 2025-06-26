@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import authApi from "@/utils/common-axios/authApi";
 import { useUserStore } from "@/store/userStore";
 import Cookies from "js-cookie";
+import { User } from "@gamecoregg/types/user/user.types";
 
-// FIXME: any type
-export default function SessionRefresher({ user }: any) {
+export default function SessionRefresher({ user }: { user: User | null }) {
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
