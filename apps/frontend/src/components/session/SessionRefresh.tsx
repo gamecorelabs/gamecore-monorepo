@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import authApi from "@gamecoregg/utils/common-axios/src/authApi";
+import authApi from "@/utils/common-axios/authApi";
 import { useUserStore } from "@/store/userStore";
 import Cookies from "js-cookie";
 
