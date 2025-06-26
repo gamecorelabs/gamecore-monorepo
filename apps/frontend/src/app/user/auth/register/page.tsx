@@ -53,6 +53,7 @@ const RegisterPage = () => {
         throw new Error("회원가입에 실패했습니다.");
       }
       router.push(redirectUrl);
+      router.refresh();
     } catch (error) {
       window.alert("회원가입 중 오류가 발생했습니다.");
     }
