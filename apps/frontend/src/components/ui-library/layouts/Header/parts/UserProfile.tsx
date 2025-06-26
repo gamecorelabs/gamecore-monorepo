@@ -1,6 +1,6 @@
 "use client";
 import { useUserStore } from "@/store/userStore";
-import { userLogout } from "@/utils/logout";
+import { userLogout } from "@/utils/auth/logout";
 import Link from "next/link";
 
 const UserProfile = () => {
