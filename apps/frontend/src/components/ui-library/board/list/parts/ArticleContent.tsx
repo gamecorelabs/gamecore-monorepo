@@ -1,7 +1,8 @@
+import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-export const ArticleContent = ({ post }: any) => {
+export const ArticleContent = ({ post }: { post: BoardPost }) => {
   return (
     <Link
       href={`/post/${post.id}`}
@@ -9,10 +10,10 @@ export const ArticleContent = ({ post }: any) => {
     >
       <div className="flex items-center">
         <div
-          className={`mt-1 ${post.thumbnail ? "w-3/5 sm:w-4/5 pr-4" : "w-full pr-0"}`}
+        // className={`mt-1 ${post.thumbnail ? "w-3/5 sm:w-4/5 pr-4" : "w-full pr-0"}`}
         >
           <span className="inline-block mb-1 px-2 py-0.5 text-[0.6rem] bg-gray-200 text-gray-600 rounded">
-            {post.category}
+            {/* {post.category} */}
           </span>
           <div className="flex items-center gap-1">
             <h3 className="text-base font-semibold line-clamp-2">
@@ -21,13 +22,13 @@ export const ArticleContent = ({ post }: any) => {
             <span className="flex items-center gap-1">
               <ChatBubbleOvalLeftIcon className="h-4 w-4 text-gray-400" />
               <span className="text-xs text-gray-500">
-                {post.commentCount ?? 0}
+                {post.comment_count ?? 0}
               </span>
             </span>
           </div>
           <p className="text-sm text-gray-700 line-clamp-3">{post.content}</p>
         </div>
-        {post.thumbnail && (
+        {/* {post.thumbnail && (
           <div className="w-2/5 sm:w-1/5 flex justify-end items-center">
             <img
               src="https://picsum.photos/seed/picsum/200/200"
@@ -35,7 +36,7 @@ export const ArticleContent = ({ post }: any) => {
               alt="Article Thumbnail"
             />
           </div>
-        )}
+        )} */}
       </div>
     </Link>
   );

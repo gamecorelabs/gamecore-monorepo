@@ -3,7 +3,7 @@ type BaseUserInfo = {
   ip_address: string;
 };
 
-type UserAccount = {
+export type UserAccount = {
   id: number;
   created_at: string;
   updated_at: string;
@@ -13,7 +13,7 @@ type UserAccount = {
   grade: string;
 };
 
-type GuestAccount = {
+export type GuestAccount = {
   guest_author_id: string;
   guest_author_password: string;
 };

@@ -33,6 +33,7 @@ export class BoardPostService {
         status: BoardPostStatus.USE,
         boardConfig: { id: board_id },
       },
+      relations: ["author"],
     };
 
     // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정
