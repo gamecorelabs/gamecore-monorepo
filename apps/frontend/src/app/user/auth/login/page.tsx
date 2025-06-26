@@ -1,7 +1,8 @@
 "use client";
-import authApi from "@gamecoregg/utils/common-axios/src/authApi";
-import axios from "axios";
+import { useUserStore } from "@/store/userStore";
+import { userLogin } from "@/utils/auth/login";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getCurrentUserCSR } from "@/utils/auth/getCurrentUserCSR";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -13,33 +14,25 @@ const LoginPage = () => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    try {
-      const redirectUrl = searchParams.get("redirect_url") || "/";
-      const basicToken = btoa(`${email}:${password}`);
-      const response = await authApi.post(
-        "/auth/login",
-        {},
-        {
-          headers: {
-            Authorization: `Basic ${basicToken}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (response.status !== 201) {
-        throw new Error(response.data.message || "로그인 실패");
-      }
-      router.push(redirectUrl);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const msg = error.response.data?.message || "서버 오류";
-        window.alert(msg);
-      } else {
-        console.error("예상치 못한 에러", error);
-      }
+    if (!email) {
+      window.alert("이메일을 입력해주세요.");
       return false;
     }
+
+    if (!password) {
+      window.alert("비밀번호를 입력해주세요.");
+      return false;
+    }
+
+    const redirectUrl = searchParams.get("redirect_url") || "/";
+    const basicToken = btoa(`${email}:${password}`);
+    const result = await userLogin(basicToken);
+
+    if (!result) {
+      return false;
+    }
+
+    router.push(redirectUrl);
   };
 
   return (
