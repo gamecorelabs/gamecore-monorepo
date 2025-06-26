@@ -3,11 +3,7 @@ import authApi from "@/utils/common-axios/authApi";
 export const userLogout = async () => {
   if (window.confirm("정말 로그아웃 하시겠습니까?")) {
     try {
-      const result = await authApi.post(
-        "/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      const result = await authApi.post("/auth/logout");
 
       if (result.data.success) {
         return true;

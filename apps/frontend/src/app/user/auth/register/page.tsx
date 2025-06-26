@@ -46,9 +46,7 @@ const RegisterPage = () => {
 
     try {
       const redirectUrl = searchParams.get("redirect_url") || "/";
-      const result = await authApi.post("/auth/register", form, {
-        withCredentials: true,
-      });
+      const result = await authApi.post("/auth/register", form);
       if (result.status !== 201) {
         throw new Error("회원가입에 실패했습니다.");
       }

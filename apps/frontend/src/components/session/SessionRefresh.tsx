@@ -20,18 +20,10 @@ export default function SessionRefresher({ user }: { user: User | null }) {
 
     (async () => {
       try {
-        const res = await authApi.post(
-          "/auth/token/access",
-          {},
-          { withCredentials: true }
-        );
+        const res = await authApi.post("/auth/token/access");
 
         if (res.data.success === true) {
-          const res = await authApi.post(
-            "/auth/me",
-            {},
-            { withCredentials: true }
-          );
+          const res = await authApi.post("/auth/me");
           setUser(res.data);
         }
       } catch (err) {

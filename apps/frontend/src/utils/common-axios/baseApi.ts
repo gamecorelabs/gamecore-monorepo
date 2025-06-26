@@ -1,18 +1,32 @@
 import axios, { AxiosInstance } from "axios";
 
-export function createBaseApi(baseURL: string): AxiosInstance {
+type ApiOptions = {
+  withCredentials?: boolean;
+  headers?: Record<string, string>;
+  timeout?: number;
+};
+
+export function createBaseApi(
+  baseURL: string,
+  options: ApiOptions = {}
+): AxiosInstance {
+  const {
+    headers = { "Content-Type": "application/json" },
+    timeout = 5000,
+    withCredentials = false,
+  } = options;
+
   const instance = axios.create({
     baseURL,
-    timeout: 5000,
-    headers: { "Content-Type": "application/json" },
+    headers,
+    timeout,
+    withCredentials,
   });
 
-  // TODO: 공통 Request 인터셉터 설정
   instance.interceptors.request.use((config) => {
     return config;
   });
 
-  // TODO: 공통 Response 인터셉터 설정
   instance.interceptors.response.use(
     (response) => response,
     (error) => Promise.reject(error)

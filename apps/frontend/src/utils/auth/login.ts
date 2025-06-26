@@ -10,7 +10,6 @@ export const userLogin = async (basicToken: string) => {
         headers: {
           Authorization: `Basic ${basicToken}`,
         },
-        withCredentials: true,
       }
     );
 
