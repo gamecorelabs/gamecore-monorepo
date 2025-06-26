@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import authApi from "@gamecoregg/utils/common-axios/src/authApi";
 import { useUserStore } from "@/store/userStore";
+import Cookies from "js-cookie";
 
 // FIXME: any type
 export default function SessionRefresher({ user }: any) {
@@ -14,9 +15,7 @@ export default function SessionRefresher({ user }: any) {
       return;
     }
 
-    const refreshToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("refreshToken="));
+    const refreshToken = Cookies.get("refreshToken");
     if (!refreshToken) return;
 
     (async () => {
