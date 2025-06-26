@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { ClassSerializerInterceptor, Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
@@ -15,6 +15,7 @@ import { CommentModule } from "./comment/comment.module";
 import { LikeModule } from "./like/like.module";
 import { CoreModule } from "@_core/core.module";
 import { BoardCategory } from "@_core/base-board/entity/board-category.entity";
+import { APP_INTERCEPTOR } from "@nestjs/core";
 
 @Module({
   imports: [
@@ -48,6 +49,12 @@ import { BoardCategory } from "@_core/base-board/entity/board-category.entity";
     LikeModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}
