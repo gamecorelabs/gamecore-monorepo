@@ -15,7 +15,7 @@ const BoardPostPage = async ({ params }: BoardPostProps) => {
     posts = [];
   }
 
-  return <ArticleList posts={posts} />;
+  return <ArticleList boardId={boardId} posts={posts} />;
 };
 
 export default BoardPostPage;

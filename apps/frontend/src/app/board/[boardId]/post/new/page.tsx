@@ -1,7 +1,13 @@
 import NewBoardPost from "@/components/ui-library/board/new/NewBoardPost";
 
-const NewBoardPostPage = () => {
-  return <NewBoardPost />;
+interface NewBoardPostProps {
+  params: { boardId: string };
+}
+
+const NewBoardPostPage = async ({ params }: { params: NewBoardPostProps }) => {
+  const { boardId } = await params;
+
+  return <NewBoardPost boardId={boardId} />;
 };
 
 export default NewBoardPostPage;

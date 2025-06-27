@@ -70,5 +70,5 @@ function checkTokenExpired(token: string | undefined): boolean {
 }
 
 export const config = {
-  matcher: ["/board/:id/new"],
+  matcher: ["/board/:id/post/new"],
 };
