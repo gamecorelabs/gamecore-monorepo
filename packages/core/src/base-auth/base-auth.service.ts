@@ -14,15 +14,20 @@ export class BaseAuthService {
   ) {}
 
   /** 토큰 검증 */
-  async verifyToken(token: string) {
+  async verifyToken(token: string, redraw: boolean = false) {
     try {
-      return await this.jwtService.verify(token, {
+      return await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>(ENV_JWT_SECRET),
       });
     } catch (error) {
-      throw new UnauthorizedException(
-        "토큰이 만료 되었거나 잘못된 토큰입니다."
-      );
+      if (error.name === "TokenExpiredError") {
+        if (redraw) {
+          return false;
+        }
+        throw new UnauthorizedException("토큰이 만료되었습니다.");
+      } else {
+        throw new UnauthorizedException("잘못된 토큰입니다.");
+      }
     }
   }
 

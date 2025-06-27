@@ -5,3 +5,7 @@ export const TOKEN_EXPIRE = {
   access: ACCESS_TOKEN_EXPIRE,
   refresh: REFRESH_TOKEN_EXPIRE,
 };
+
+export const AUTH_HTTP_STATUS_CODE = {
+  ACCESS_TOKEN_EXPIRED: 419,
+};

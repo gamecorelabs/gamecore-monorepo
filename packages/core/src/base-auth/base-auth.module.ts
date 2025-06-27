@@ -4,6 +4,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { BaseUserModule } from "@_core/base-user/base-user.module";
 import { JwtModule } from "@nestjs/jwt";
+import { GuestUserTokenGuard } from "./guard/guest-user-token.guard";
+import { UserTokenGuard } from "./guard/user-token.guard";
 
 @Module({
   imports: [
@@ -11,7 +13,7 @@ import { JwtModule } from "@nestjs/jwt";
     BaseUserModule,
     JwtModule.register({}),
   ],
-  providers: [BaseAuthService],
-  exports: [BaseAuthService],
+  providers: [BaseAuthService, GuestUserTokenGuard, UserTokenGuard],
+  exports: [BaseAuthService, GuestUserTokenGuard, UserTokenGuard],
 })
 export class BaseAuthModule {}
