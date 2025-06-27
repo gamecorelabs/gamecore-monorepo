@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { Repository, UpdateResult } from "typeorm";
+import { FindManyOptions, Repository, UpdateResult } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
@@ -28,12 +28,13 @@ export class BoardPostService {
   ) {}
 
   async getPosts(board_id: number) {
-    const conditions = {
+    const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
         boardConfig: { id: board_id },
       },
       relations: ["author"],
+      order: { created_at: "DESC" },
     };
 
     // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정

@@ -7,6 +7,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
@@ -18,6 +19,7 @@ import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { BoardConfigRequest } from "@_core/base-common/types/resource-types";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
 @Controller("board")
 export class BoardController {
@@ -53,6 +55,7 @@ export class BoardController {
   @Post(":id/post")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(AnyFilesInterceptor()) // 파일 없어도 formData 파싱을 위해 필요
   postBoardPost(
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
