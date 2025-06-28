@@ -1,8 +1,11 @@
 "use client";
 import dataApi from "@/utils/common-axios/dataApi";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { StatusCodes } from "http-status-codes";
 
 const NewBoardPost = ({ boardId }: { boardId: string }) => {
+  const router = useRouter();
   const formRef = React.useRef<HTMLFormElement>(null);
   const handlePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -20,15 +23,18 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
         withCredentials: true,
       });
 
-      console.log(result.data);
+      if (result.status === StatusCodes.CREATED && result.data.id > 0) {
+        router.push(`/board/${boardId}/post`);
+      }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      window.alert("게시글 작성 중 오류가 발생했습니다. 다시 시도해주세요.");
+      return;
     }
   };
 
   return (
     <form
-      className="flex flex-col items-center justify-center h-full w-full max-w-md mx-auto p-6 bg-white rounded shadow"
+      className="flex flex-col items-center justify-center h-full w-full mx-auto p-6 bg-white rounded shadow"
       ref={formRef}
     >
       <h1 className="text-2xl font-bold mb-4">New Post</h1>
