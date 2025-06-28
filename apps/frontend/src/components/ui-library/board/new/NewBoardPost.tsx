@@ -1,10 +1,14 @@
 "use client";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusCodes } from "http-status-codes";
+import { useUserStore } from "@/store/userStore";
+import useHydrated from "@/utils/hooks/useHydrated";
 
 const NewBoardPost = ({ boardId }: { boardId: string }) => {
+  const currentUser = useUserStore((state) => state.user);
+  const hydrated = useHydrated();
   const router = useRouter();
   const formRef = React.useRef<HTMLFormElement>(null);
   const handlePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,12 +36,48 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     }
   };
 
+  if (!hydrated) return null;
+
   return (
     <form
       className="flex flex-col items-center justify-center h-full w-full mx-auto p-6 bg-white rounded shadow"
       ref={formRef}
     >
-      <h1 className="text-2xl font-bold mb-4">New Post</h1>
+      {!currentUser && (
+        <div className="flex mb-4 w-full gap-4 flex-col xs:flex-row">
+          <div className="flex-1">
+            <label
+              htmlFor="guestId"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              아이디 (비회원)
+            </label>
+            <input
+              id="guestId"
+              name="guestId"
+              type="text"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2"
+              placeholder="아이디를 입력하세요"
+            />
+          </div>
+          <div className="flex-1">
+            <label
+              htmlFor="guestPassword"
+              className="block text-gray-700 font-semibold mb-2"
+            >
+              비밀번호 (비회원)
+            </label>
+            <input
+              id="guestPassword"
+              name="guestPassword"
+              type="password"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="비밀번호를 입력하세요"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="w-full mb-4">
         <label
           htmlFor="title"
