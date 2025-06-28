@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import authApi from "@/utils/common-axios/authApi";
 import { useUserStore } from "@/store/userStore";
-import Cookies from "js-cookie";
 import { User } from "@gamecoregg/types/user/user.types";
 
 export default function SessionRefresher({ user }: { user: User | null }) {
@@ -14,9 +13,6 @@ export default function SessionRefresher({ user }: { user: User | null }) {
       setUser(user); // SSR에서 받아온 user를 클라이언트 상태로 동기화
       return;
     }
-
-    const refreshToken = Cookies.get("refreshToken");
-    if (!refreshToken) return;
 
     (async () => {
       try {
