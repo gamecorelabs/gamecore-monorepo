@@ -6,7 +6,11 @@ const config: Config = {
     hoverOnlyWhenSupported: true,
   },
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        xs: "480px",
+      },
+    },
   },
   plugins: [],
 };
