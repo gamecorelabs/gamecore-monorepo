@@ -12,6 +12,7 @@ import {
 } from "@/utils/validation/board/newBoardPostSchema";
 import type { ZodIssue } from "zod";
 import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 
 const NewBoardPost = ({ boardId }: { boardId: string }) => {
   const currentUser = useUserStore((state) => state.user);
@@ -31,10 +32,8 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     const validation = schema.safeParse(formObject);
 
     if (!validation.success) {
-      const messages = validation.error.issues
-        .map((issue: ZodIssue) => " - " + issue.message)
-        .join("\n");
-      window.alert(`[게시판 글 작성 오류]\n${messages}`);
+      const firstIssue = validation.error.issues[0];
+      getZodErrorMessage(formRef, firstIssue);
       return;
     }
 
