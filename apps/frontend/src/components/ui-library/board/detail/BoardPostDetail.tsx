@@ -44,7 +44,7 @@ const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
 
       <CommentContainer>
         <CommentList />
-        <CommentWriteForm />
+        <CommentWriteForm postId={post.id} />
       </CommentContainer>
     </div>
   );
