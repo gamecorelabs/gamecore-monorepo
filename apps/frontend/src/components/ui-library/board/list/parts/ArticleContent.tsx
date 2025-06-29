@@ -2,10 +2,16 @@ import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-export const ArticleContent = ({ post }: { post: BoardPost }) => {
+export const ArticleContent = ({
+  boardId,
+  post,
+}: {
+  boardId: string;
+  post: BoardPost;
+}) => {
   return (
     <Link
-      href={`/post/${post.id}`}
+      href={`/board/${boardId}/post/${post.id}`}
       className="block hover:bg-gray-50 transition rounded"
     >
       <div className="flex items-center">

@@ -43,7 +43,7 @@ export class BoardPostController {
   // }
 
   // 게시글 상세히 보기
-  @Get(":id/detail")
+  @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   async getPostDetail(
     @Request() req: CommonRequest,

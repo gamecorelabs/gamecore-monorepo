@@ -19,7 +19,7 @@ const ArticleList = ({
     <>
       {posts.map((post) => (
         <article key={post.id} className="border-b py-4" data-id={post.id}>
-          <ArticleContent post={post} />
+          <ArticleContent boardId={boardId} post={post} />
           <ArticleInfo post={post} />
         </article>
       ))}

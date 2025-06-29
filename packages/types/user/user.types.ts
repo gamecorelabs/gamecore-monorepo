@@ -15,7 +15,6 @@ export type UserAccount = {
 
 export type GuestAccount = {
   guest_author_id: string;
-  guest_author_password: string;
 };
 
 export type User =
