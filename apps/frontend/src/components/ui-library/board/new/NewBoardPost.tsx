@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import { StatusCodes } from "http-status-codes";
 import { useUserStore } from "@/store/userStore";
 import useHydrated from "@/utils/hooks/useHydrated";
+import { formDataToObject } from "@/utils/helpers/formDataToObject";
+import { newBoardPostSchema } from "@/utils/validation/board/newBoardPostSchema";
+import type { ZodIssue } from "zod";
 
 const NewBoardPost = ({ boardId }: { boardId: string }) => {
   const currentUser = useUserStore((state) => state.user);
@@ -18,6 +21,17 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
       return;
     }
     const formData = new FormData(formRef.current);
+    const formObject = formDataToObject(formData);
+
+    const validation = newBoardPostSchema.safeParse(formObject);
+
+    if (!validation.success) {
+      const messages = validation.error.issues
+        .map((issue: ZodIssue) => " - " + issue.message)
+        .join("\n");
+      window.alert(`[게시판 글 작성 오류]\n${messages}`);
+      return;
+    }
 
     try {
       const result = await dataApi.post(`/board/${boardId}/post`, formData, {
