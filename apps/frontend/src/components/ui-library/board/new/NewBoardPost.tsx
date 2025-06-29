@@ -6,8 +6,12 @@ import { StatusCodes } from "http-status-codes";
 import { useUserStore } from "@/store/userStore";
 import useHydrated from "@/utils/hooks/useHydrated";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
-import { newBoardPostSchema } from "@/utils/validation/board/newBoardPostSchema";
+import {
+  userBoardPostSchema,
+  guestBoardPostSchema,
+} from "@/utils/validation/board/newBoardPostSchema";
 import type { ZodIssue } from "zod";
+import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
 
 const NewBoardPost = ({ boardId }: { boardId: string }) => {
   const currentUser = useUserStore((state) => state.user);
@@ -23,7 +27,8 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     const formData = new FormData(formRef.current);
     const formObject = formDataToObject(formData);
 
-    const validation = newBoardPostSchema.safeParse(formObject);
+    const schema = currentUser ? userBoardPostSchema : guestBoardPostSchema;
+    const validation = schema.safeParse(formObject);
 
     if (!validation.success) {
       const messages = validation.error.issues
@@ -33,11 +38,26 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
       return;
     }
 
+    const headers: Record<string, string> = {
+      "Content-Type": "multipart/form-data",
+    };
+
+    if (
+      !currentUser &&
+      formObject.guestAuthorId &&
+      formObject.guestAuthorPassword
+    ) {
+      const encoded = encodeBase64Unicode(
+        `${formObject.guestAuthorId}:${formObject.guestAuthorPassword}`
+      );
+      headers["Authorization"] = `Basic ${encoded}`;
+      formData.delete("guestAuthorId");
+      formData.delete("guestAuthorPassword");
+    }
+
     try {
       const result = await dataApi.post(`/board/${boardId}/post`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers,
         withCredentials: true,
       });
 
@@ -61,14 +81,14 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
         <div className="flex mb-4 w-full gap-4 flex-col xs:flex-row">
           <div className="flex-1">
             <label
-              htmlFor="guestId"
+              htmlFor="guestAuthorId"
               className="block text-gray-700 font-semibold mb-2"
             >
               아이디 (비회원)
             </label>
             <input
-              id="guestId"
-              name="guestId"
+              id="guestAuthorId"
+              name="guestAuthorId"
               type="text"
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2"
               placeholder="아이디를 입력하세요"
@@ -76,14 +96,14 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
           </div>
           <div className="flex-1">
             <label
-              htmlFor="guestPassword"
+              htmlFor="guestAuthorPassword"
               className="block text-gray-700 font-semibold mb-2"
             >
               비밀번호 (비회원)
             </label>
             <input
-              id="guestPassword"
-              name="guestPassword"
+              id="guestAuthorPassword"
+              name="guestAuthorPassword"
               type="password"
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="비밀번호를 입력하세요"

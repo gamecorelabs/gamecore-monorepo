@@ -9,6 +9,7 @@ import {
 import { BaseAuthService } from "../base-auth.service";
 import { BaseUserService } from "@_core/base-user/base-user.service";
 import { AUTH_HTTP_STATUS_CODE } from "../const/auth.const";
+import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 
 @Injectable()
 export class UserTokenGuard implements CanActivate {
@@ -44,10 +45,9 @@ export class UserTokenGuard implements CanActivate {
     request.user = {
       type: "user",
       user_account: user,
-    };
-    // client IP 주소 설정
-    request.user.ip_address =
-      request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+      ip_address:
+        request.headers["x-forwarded-for"] || request.socket.remoteAddress,
+    } as UserOrGuestLoginRequest;
     return true;
   }
 
