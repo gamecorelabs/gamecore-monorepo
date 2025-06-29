@@ -1,4 +1,5 @@
 import { IsString } from "class-validator";
+import { Exclude } from "class-transformer";
 import { Column } from "typeorm";
 
 /**
@@ -13,6 +14,9 @@ export class GuestAccount {
 
   // (비회원) 작성자 패스워드
   @IsString()
+  @Exclude({
+    toPlainOnly: true, // 응답에서만 제외
+  })
   @Column({ type: "varchar", length: 200, nullable: true })
   guest_author_password?: string;
 }
