@@ -4,6 +4,9 @@ import { cookies } from "next/headers";
 import { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies";
 
 export async function middleware(req: NextRequest) {
+  // 임시 비활성화
+  return NextResponse.next();
+
   const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
   const cookieStore = await cookies();
 

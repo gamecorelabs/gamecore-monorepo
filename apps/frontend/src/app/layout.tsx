@@ -4,6 +4,7 @@ import "./globals.css";
 import { Container, Header, Main, Footer } from "@ui-library";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
 import SessionRefresher from "@/components/session/SessionRefresh";
+import { hasRefreshToken } from "@/utils/auth/hasRefreshToken";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +27,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getCurrentUser();
+  const hasRefresh = await hasRefreshToken();
 
   return (
     <html lang="ko">
@@ -33,7 +35,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Container>
-          <SessionRefresher user={user} />
+          <SessionRefresher user={user} hasRefreshToken={hasRefresh} />
           <Header />
           <Main>{children}</Main>
           <Footer />
