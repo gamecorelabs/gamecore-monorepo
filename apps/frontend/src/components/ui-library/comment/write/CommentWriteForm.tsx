@@ -28,6 +28,7 @@ const CommentWriteForm = ({ postId }: { postId: number }) => {
       return;
     }
 
+    // FIXME: Helper 함수로 분리
     const formData = new FormData(formRef.current);
     const formObject = formDataToObject(formData);
 

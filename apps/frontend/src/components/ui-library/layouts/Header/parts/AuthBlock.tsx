@@ -23,13 +23,13 @@ const AuthBlock = () => {
     <div className="flex items-center space-x-4">
       <Link
         href={buildAuthUrl("/user/auth/login/")}
-        className="text-white hover:text-blue-500 transition-colors"
+        className="hover:text-blue-500 transition-colors"
       >
         로그인
       </Link>
       <Link
         href={buildAuthUrl("/user/auth/register/")}
-        className="text-white hover:text-blue-500 transition-colors"
+        className="hover:text-blue-500 transition-colors"
       >
         회원가입
       </Link>

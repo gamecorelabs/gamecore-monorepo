@@ -25,6 +25,7 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
       window.alert("폼이 올바르게 로드되지 않았습니다. 다시 시도해주세요.");
       return;
     }
+    // FIXME: Helper 함수로 분리
     const formData = new FormData(formRef.current);
     const formObject = formDataToObject(formData);
 
