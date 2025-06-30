@@ -2,7 +2,7 @@ import { z } from "zod";
 import { guestAuthorInputSchema } from "@/utils/validation/user/guestAuthorInputSchema";
 
 const commentField = {
-  comment: z.string().min(1, "댓글을 입력해주세요."),
+  content: z.string().min(1, "댓글을 입력해주세요."),
 };
 
 export const userCommentSchema = z.object({

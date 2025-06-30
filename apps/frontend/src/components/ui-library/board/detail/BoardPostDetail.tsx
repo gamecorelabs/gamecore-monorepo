@@ -1,9 +1,16 @@
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import CommentContainer from "./comment/CommentContainer";
-import CommentList from "./comment/CommentList";
-import CommentWriteForm from "./comment/CommentWriteForm";
+import { Comment } from "@gamecoregg/types/comment/comment.types";
+import CommentContainer from "@ui-library/comment/CommentContainer";
+import CommentList from "@ui-library/comment/list/CommentList";
+import CommentWriteForm from "@ui-library/comment/write/CommentWriteForm";
 
-const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
+const BoardPostDetail = async ({
+  post,
+  comments,
+}: {
+  post: BoardPost;
+  comments?: Comment[];
+}) => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <header className="mb-6">
@@ -43,7 +50,7 @@ const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
       </div>
 
       <CommentContainer>
-        <CommentList />
+        <CommentList comments={comments} />
         <CommentWriteForm postId={post.id} />
       </CommentContainer>
     </div>

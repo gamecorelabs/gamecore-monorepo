@@ -29,7 +29,7 @@ const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
   const postDetail = data?.post?.entities?.[0];
   const comments = data?.comments?.entities ?? [];
 
-  return <BoardPostDetail post={postDetail} />;
+  return <BoardPostDetail post={postDetail} comments={comments} />;
 };
 
 export default BoardPostDetailPage;
