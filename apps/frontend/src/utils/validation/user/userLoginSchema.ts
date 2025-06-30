@@ -9,5 +9,7 @@ export const userLoginSchema = z.object({
       .min(1, { message: "이메일을 입력해주세요." })
       .email({ message: "올바른 이메일 형식으로 입력해주세요." })
   ),
-  password: withCommonRefines(z.string()),
+  password: withCommonRefines(
+    z.string().min(1, "비밀번호는 1글자 이상으로 입력해주세요.")
+  ),
 });

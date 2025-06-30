@@ -10,6 +10,13 @@ export const userRegisterSchema = z.object({
       .email({ message: "올바른 이메일 형식으로 입력해주세요." })
       .max(320, { message: "이메일은 320자 이내로 입력해주세요." })
   ),
+  nickname: withCommonRefines(
+    z
+      .string()
+      .trim()
+      .min(1, { message: "닉네임을 입력해주세요." })
+      .max(10, { message: "닉네임은 10자 이내로 입력해주세요." })
+  ),
   password: withCommonRefines(
     z
       .string()

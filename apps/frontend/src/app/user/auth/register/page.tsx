@@ -1,52 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import authApi from "@/utils/common-axios/authApi";
 import { useRouter, useSearchParams } from "next/navigation";
+import { formDataToObject } from "@/utils/helpers/formDataToObject";
+import { userRegisterSchema } from "@/utils/validation/user/userResigterSchema";
+import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 
 const RegisterPage = () => {
   const router = useRouter();
+  const formRef = React.useRef<HTMLFormElement>(null);
   const searchParams = useSearchParams();
-
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-    nickname: "",
-    role: "",
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const redirectUrl = searchParams.get("redirect_url") || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!form.email) {
-      window.alert("이메일을 입력해주세요.");
-      return;
+    if (formRef.current === null) {
+      window.alert("폼이 올바르게 로드되지 않았습니다. 다시 시도해주세요.");
+      return false;
     }
 
-    if (!form.password) {
-      window.alert("비밀번호를 입력해주세요.");
-      return;
-    }
+    // FIXME: Helper 함수로 분리
+    const formData = new FormData(formRef.current);
+    const formObject = formDataToObject(formData);
 
-    if (!form.nickname) {
-      window.alert("닉네임을 입력해주세요.");
-      return;
-    }
+    const schema = userRegisterSchema;
+    const validation = schema.safeParse(formObject);
 
-    if (!form.role) {
-      window.alert("역할을 선택해주세요.");
+    if (!validation.success) {
+      const firstIssue = validation.error.issues[0];
+      getZodErrorMessage(formRef, firstIssue);
       return;
     }
 
     try {
-      const redirectUrl = searchParams.get("redirect_url") || "/";
-      const result = await authApi.post("/auth/register", form);
+      const result = await authApi.post("/auth/register", formData);
       if (result.status !== 201) {
         throw new Error("회원가입에 실패했습니다.");
       }
@@ -60,15 +47,13 @@ const RegisterPage = () => {
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
       <h2 className="text-2xl font-bold mb-6 text-center">회원가입</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={formRef}>
         <div className="mb-4">
           <label className="block mb-1 font-medium">
             이메일
             <input
               type="email"
               name="email"
-              value={form.email}
-              onChange={handleChange}
               required
               className="mt-2 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -80,8 +65,6 @@ const RegisterPage = () => {
             <input
               type="text"
               name="nickname"
-              value={form.nickname}
-              onChange={handleChange}
               required
               className="mt-2 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -93,8 +76,6 @@ const RegisterPage = () => {
             <input
               type="password"
               name="password"
-              value={form.password}
-              onChange={handleChange}
               required
               className="mt-2 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -106,8 +87,6 @@ const RegisterPage = () => {
             <span className="text-red-600">(*테스트용)</span>
             <select
               name="role"
-              value={form.role}
-              onChange={handleChange}
               required
               className="mt-2 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >

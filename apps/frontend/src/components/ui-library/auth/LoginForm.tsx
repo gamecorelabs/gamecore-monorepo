@@ -24,6 +24,7 @@ export function LoginForm({
   const router = useRouter();
   const formRef = React.useRef<HTMLFormElement>(null);
   const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect_url") || "/";
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,7 +32,6 @@ export function LoginForm({
       window.alert("폼이 올바르게 로드되지 않았습니다. 다시 시도해주세요.");
       return false;
     }
-    const redirectUrl = searchParams.get("redirect_url") || "/";
 
     // FIXME: Helper 함수로 분리
     const formData = new FormData(formRef.current);
