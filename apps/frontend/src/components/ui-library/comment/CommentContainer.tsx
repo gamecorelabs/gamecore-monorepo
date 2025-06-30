@@ -3,7 +3,7 @@ const CommentContainer = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return <div className="mt-6">{children}</div>;
+  return <div className="mt-3">{children}</div>;
 };
 
 export default CommentContainer;

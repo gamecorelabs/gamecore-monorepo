@@ -3,7 +3,7 @@ import { Comment } from "@gamecoregg/types/comment/comment.types";
 
 export const commentItem = ({ comment }: { comment: Comment }) => {
   return (
-    <div className="space-y-4">
+    <div className="mb-3 space-y-4">
       <div className="border-b border-gray-100 pb-4">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center space-x-2">
