@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 const noSpace = (val: string) => !val.includes(" ");
 const noDangerousChars = (val: string) => !/[<>'"&]/.test(val);
 const noScriptKeywords = (val: string) =>
@@ -15,3 +17,13 @@ export const refineNoScriptKeywords = {
   message: "허용되지 않는 문자열이 포함되어 있습니다.",
   validation: noScriptKeywords,
 };
+
+export const withCommonRefines = (zodStr: z.ZodString) =>
+  zodStr
+    .refine(refineNoSpace.validation, { message: refineNoSpace.message })
+    .refine(refineNoDangerousChars.validation, {
+      message: refineNoDangerousChars.message,
+    })
+    .refine(refineNoScriptKeywords.validation, {
+      message: refineNoScriptKeywords.message,
+    });
