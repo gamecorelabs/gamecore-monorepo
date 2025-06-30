@@ -3,7 +3,7 @@ import { z } from "zod";
 export const guestAuthorInputSchema = {
   guestAuthorId: z
     .string()
-    .min(2, "아이디를 2글자 이상으로 입력해주세요.")
+    .min(1, "아이디를 1글자 이상으로 입력해주세요.")
     .refine(
       (val) =>
         /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(
