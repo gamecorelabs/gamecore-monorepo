@@ -3,7 +3,11 @@ import { z } from "zod";
 export const guestAuthorInputSchema = {
   guestAuthorId: z
     .string()
+    .trim()
     .min(1, "아이디를 1글자 이상으로 입력해주세요.")
+    .refine((val) => !val.includes(" "), {
+      message: "아이디에는 공백이 포함될 수 없습니다.",
+    })
     .refine(
       (val) =>
         /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(
