@@ -74,6 +74,7 @@ export class BaseCommentService {
           likeStatus: LikeStatus.SELECTED,
         }
       )
+      .leftJoinAndSelect("comment.author", "user_account")
       .addSelect([
         `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
         `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
