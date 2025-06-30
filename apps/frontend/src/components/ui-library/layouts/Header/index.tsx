@@ -5,7 +5,7 @@ import ProfileBlock from "./parts/ProfileBlock";
 
 const Header = () => {
   return (
-    <header className="bg-black shadow">
+    <header className="">
       {/* TopSide */}
       <div className="flex justify-between h-16 items-center">
         <div className="flex items-center">

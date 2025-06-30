@@ -16,7 +16,11 @@ const UserProfile = () => {
   return (
     <div className="flex items-center space-x-4">
       {/* TODO: Profile 이미지 추가 */}
-      <span className="text-white">{currentUser?.user_account.nickname}</span>
+      <span>
+        {currentUser && currentUser.type === "user"
+          ? currentUser?.user_account.nickname
+          : ""}
+      </span>
       <Link href="/user/profile" className="">
         프로필
       </Link>
