@@ -12,10 +12,12 @@ import React from "react";
 import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
 import { StatusCodes } from "http-status-codes";
 import dataApi from "@/utils/common-axios/dataApi";
+import { useRouter } from "next/navigation";
 
 const CommentWriteForm = ({ postId }: { postId: number }) => {
   const currentUser = useUserStore((state) => state.user);
   const hydrated = useHydrated();
+  const router = useRouter();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const handleCommentSubmit = async (
@@ -57,10 +59,19 @@ const CommentWriteForm = ({ postId }: { postId: number }) => {
     }
 
     try {
-      await dataApi.post(`/board-post/${postId}/comment`, formData, {
-        headers,
-        withCredentials: true,
-      });
+      const result = await dataApi.post(
+        `/board-post/${postId}/comment`,
+        formData,
+        {
+          headers,
+          withCredentials: true,
+        }
+      );
+
+      if (result.status === StatusCodes.CREATED && result.data.id > 0) {
+        formRef.current.reset();
+        router.refresh();
+      }
     } catch (error) {
       window.alert("댓글 작성 중 오류가 발생했습니다. 다시 시도해주세요.");
       return;
