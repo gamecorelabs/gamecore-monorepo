@@ -12,30 +12,42 @@ import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
 import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
+import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 
 @Injectable()
 export class BaseCommentService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
+    @InjectRepository(UserAccount)
+    private readonly userAccountRepository: Repository<UserAccount>,
     private readonly configService: ConfigService
   ) {}
 
-  async saveComment(
-    dto: CreateCommentDto,
-    user: UserOrGuestLoginRequest
-  ): Promise<Comment> {
+  async saveComment(dto: CreateCommentDto, user: UserOrGuestLoginRequest) {
     const userInfo = await getUserInfo(
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
     );
 
-    const comment = this.commentRepository.create({
+    const commentData: Partial<Comment> = {
       ...dto,
-      ...userInfo,
       ip_address: user.ip_address,
-    });
-    return this.commentRepository.save(comment);
+    };
+
+    if ("author" in userInfo && userInfo.author) {
+      commentData.author = this.userAccountRepository.create({
+        id: userInfo.author.id,
+      });
+    } else if ("guest_account" in userInfo) {
+      commentData.guest_account = userInfo.guest_account;
+    }
+
+    if (dto.parent_id) {
+      commentData.parent = this.commentRepository.create({ id: dto.parent_id });
+    }
+
+    return this.commentRepository.save(commentData);
   }
 
   // 특정 리소스의 댓글 조회
