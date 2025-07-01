@@ -1,3 +1,4 @@
+import { getUserName } from "@/utils/helpers/getUsername";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import { Comment } from "@gamecoregg/types/comment/comment.types";
 import CommentContainer from "@ui-library/comment/CommentContainer";
@@ -17,9 +18,7 @@ const BoardPostDetail = async ({
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{post.title}</h1>
         <div className="flex items-center text-sm text-gray-600 space-x-3 justify-between">
           <div className="flex gap-3">
-            <span>
-              {post.guest_account?.guest_author_id || post.author?.nickname}
-            </span>
+            <span>{getUserName(post)}</span>
             <span className="inline-block w-[1px] h-4 bg-gray-300"></span>
             <span>{new Date(post.created_at).toLocaleString("ko-KR")}</span>
           </div>

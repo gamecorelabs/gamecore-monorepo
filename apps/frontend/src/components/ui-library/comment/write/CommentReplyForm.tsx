@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 interface ReplyFormProps {
-  parentId: number;
+  parentId: number | undefined;
   postId: number;
   onCancel: () => void;
   placeholder?: string;
