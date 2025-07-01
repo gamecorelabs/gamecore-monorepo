@@ -40,6 +40,7 @@ export class Comment extends BaseModel {
     nullable: true,
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "parent_id" })
   parent?: Comment;
 
   @OneToMany(() => Comment, (comment) => comment.parent, {
