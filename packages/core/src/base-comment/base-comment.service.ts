@@ -63,7 +63,7 @@ export class BaseCommentService {
         parent: IsNull(),
         status: CommentStatus.USE,
       },
-      relations: ["author", "children"],
+      relations: ["author", "children", "children.author"],
       order: { created_at: "ASC" },
     });
   }
