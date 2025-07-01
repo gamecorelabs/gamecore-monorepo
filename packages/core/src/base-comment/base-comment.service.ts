@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, UpdateResult } from "typeorm";
+import { Repository, UpdateResult, IsNull } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
@@ -50,7 +50,6 @@ export class BaseCommentService {
     return this.commentRepository.save(commentData);
   }
 
-  // 특정 리소스의 댓글 조회
   async getCommentsByResource(
     resource_type: ResourceType,
     resource_id: number
@@ -61,57 +60,12 @@ export class BaseCommentService {
           resource_type,
           resource_id,
         },
+        parent: IsNull(),
         status: CommentStatus.USE,
       },
-      relations: ["author", "parent", "children"],
-      order: { created_at: "DESC" },
+      relations: ["author", "children"],
+      order: { created_at: "ASC" },
     });
-  }
-
-  async getCommentsByResourceWithLikeCount(
-    resource_type: ResourceType,
-    resource_id: number,
-    id?: number
-  ) {
-    const queryBuilder = this.commentRepository
-      .createQueryBuilder("comment")
-      .leftJoin(
-        "like",
-        "like",
-        `like.resource_id = comment.id
-        AND like.resource_type = :likeResourceType
-        AND like.status = :likeStatus`,
-        {
-          likeResourceType: ResourceType.COMMENT,
-          likeStatus: LikeStatus.SELECTED,
-        }
-      )
-      .leftJoinAndSelect("comment.author", "user_account")
-      .addSelect([
-        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
-        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
-      ])
-      .where("comment.status = :commentStatus", {
-        commentStatus: CommentStatus.USE,
-      })
-      .andWhere("comment.resource_info.resource_id = :commentResourceId", {
-        commentResourceId: resource_id,
-      })
-      .andWhere("comment.resource_info.resource_type = :commentResourceType", {
-        commentResourceType: resource_type,
-      })
-      .groupBy("comment.id")
-      .setParameters({
-        likeType: LikeType.LIKE,
-        dislikeType: LikeType.DISLIKE,
-      });
-
-    if (id) {
-      queryBuilder.andWhere("comment.id = :id", { id });
-    }
-
-    const result = await queryBuilder.getRawAndEntities();
-    return result;
   }
 
   // 댓글 단일 조회
@@ -170,18 +124,136 @@ export class BaseCommentService {
     });
   }
 
-  // 대댓글 생성
-  async createReply(parentId: number, dto: CreateCommentDto): Promise<Comment> {
-    const parent = await this.getCommentById(parentId);
-    if (!parent) {
-      throw new Error("Parent comment not found");
-    }
-
-    const reply = this.commentRepository.create({
-      ...dto,
-      parent,
+  getIdList(comments: Comment[]): number[] {
+    const commentIds = comments.flatMap((comment) => {
+      const ids = [comment.id];
+      if (comment.children && Array.isArray(comment.children)) {
+        ids.push(...comment.children.map((child) => child.id));
+      }
+      return ids;
     });
 
-    return this.commentRepository.save(reply);
+    return commentIds;
+  }
+
+  mergeLikeCount(
+    comments: Comment[],
+    likeCounts: Record<number, { likeCount: number; dislikeCount: number }>
+  ): Comment[] {
+    return comments.map((comment) => {
+      const likeData = likeCounts[comment.id] || {
+        likeCount: 0,
+        dislikeCount: 0,
+      };
+      const childrenWithLikes = comment.children?.map((child) => {
+        const childLikeData = likeCounts[child.id] || {
+          likeCount: 0,
+          dislikeCount: 0,
+        };
+        return {
+          ...child,
+          likeCount: childLikeData.likeCount,
+          dislikeCount: childLikeData.dislikeCount,
+        };
+      });
+
+      return {
+        ...comment,
+        likeCount: likeData.likeCount,
+        dislikeCount: likeData.dislikeCount,
+        children: childrenWithLikes,
+      };
+    });
+  }
+
+  /**
+   * @deprecated Use getCommentsByResource instead
+   */
+  async getCommentsByResourceWithLikeCount(
+    resource_type: ResourceType,
+    resource_id: number,
+    id?: number
+  ) {
+    const queryBuilder = this.commentRepository
+      .createQueryBuilder("comment")
+      .leftJoin(
+        "like",
+        "like",
+        `like.resource_id = comment.id
+        AND like.resource_type = :likeResourceType
+        AND like.status = :likeStatus`,
+        {
+          likeResourceType: ResourceType.COMMENT,
+          likeStatus: LikeStatus.SELECTED,
+        }
+      )
+      .leftJoinAndSelect("comment.author", "user_account")
+      .leftJoinAndSelect("comment.children", "child_comment")
+      .leftJoinAndSelect("child_comment.author", "child_author")
+      .addSelect([
+        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
+        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
+      ])
+      .where("comment.status = :commentStatus", {
+        commentStatus: CommentStatus.USE,
+      })
+      .andWhere("comment.resource_info.resource_id = :commentResourceId", {
+        commentResourceId: resource_id,
+      })
+      .andWhere("comment.resource_info.resource_type = :commentResourceType", {
+        commentResourceType: resource_type,
+      })
+      .groupBy("comment.id")
+      .addGroupBy("child_comment.id")
+      .addGroupBy("child_author.id")
+      .setParameters({
+        likeType: LikeType.LIKE,
+        dislikeType: LikeType.DISLIKE,
+      });
+
+    if (id) {
+      queryBuilder.andWhere("comment.id = :id", { id });
+    }
+
+    const result = await queryBuilder.getRawAndEntities();
+
+    const mapped = result.entities.map((entity) => {
+      const rawResult = result.raw.find((raw) => raw.comment_id === entity.id);
+
+      if (!rawResult) {
+        throw new ConflictException("댓글 데이터 검증 실패");
+      }
+
+      const likeCount = parseInt(rawResult.likeCount, 10) || 0;
+      const dislikeCount = parseInt(rawResult.dislikeCount, 10) || 0;
+
+      // 대댓글 좋아요수 갱신하기
+      const mapped_children = entity.children?.map((child) => {
+        const childRawResult = result.raw.find(
+          (raw) => raw.child_comment_id === child.id
+        );
+        if (!childRawResult) return [];
+
+        const childLikeCount =
+          parseInt(childRawResult.child_likeCount, 10) || 0;
+        const childDislikeCount =
+          parseInt(childRawResult.child_dislikeCount, 10) || 0;
+
+        return {
+          ...child,
+          likeCount: childLikeCount,
+          dislikeCount: childDislikeCount,
+        };
+      });
+
+      return {
+        ...entity,
+        children: mapped_children,
+        likeCount,
+        dislikeCount,
+      };
+    });
+
+    return mapped;
   }
 }

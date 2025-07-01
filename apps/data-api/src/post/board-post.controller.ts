@@ -25,6 +25,7 @@ import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
 
 @Controller(["board-post"])
 export class BoardPostController {
@@ -49,18 +50,34 @@ export class BoardPostController {
     @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
-    // 게시글 정보 & 좋아요수, 댓글 리스트 & 좋아요수
-    const [post, comments] = await Promise.all([
-      this.boardPostService.getPostWithLikeCount(id),
-      this.baseCommentService.getCommentsByResourceWithLikeCount(
-        req.resource_info.resource_type,
-        req.resource_info.resource_id
-      ),
-    ]);
-    return {
-      post,
-      comments,
-    };
+    const post = await this.boardPostService.getPostWithLikeCount(id);
+
+    // FIXME: 댓글 불러오기 로직 분리 해야할 필요가 있음
+    const comments = await this.baseCommentService.getCommentsByResource(
+      req.resource_info.resource_type,
+      req.resource_info.resource_id
+    );
+
+    if (comments && comments.length > 0) {
+      const commentIds = this.baseCommentService.getIdList(comments);
+      const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+        ResourceType.COMMENT,
+        commentIds
+      );
+      const mergedComments = this.baseCommentService.mergeLikeCount(
+        comments,
+        likeCounts
+      );
+      return {
+        post,
+        comments: mergedComments,
+      };
+    } else {
+      return {
+        post,
+        comments: [],
+      };
+    }
   }
 
   @Patch(":id")

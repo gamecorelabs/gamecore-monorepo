@@ -137,4 +137,43 @@ export class BaseLikeService {
       result.affected > 0
     );
   }
+
+  async getLikeCountByResourceInId(
+    resource_type: ResourceType,
+    idList: number[]
+  ) {
+    const rawCounts = await this.likeRepository
+      .createQueryBuilder("like")
+      .select("like.resource_id", "resource_id")
+      .addSelect([
+        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
+        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
+      ])
+      .where("like.resource_type = :resourceType", {
+        resourceType: resource_type,
+      })
+      .andWhere("like.resource_id IN (:...idList)", { idList })
+      .andWhere("like.status = :status", {
+        status: LikeStatus.SELECTED,
+      })
+      .groupBy("like.resource_id")
+      .setParameters({
+        likeType: LikeType.LIKE,
+        dislikeType: LikeType.DISLIKE,
+      })
+      .getRawMany();
+
+    const likeCounts: Record<
+      number,
+      { likeCount: number; dislikeCount: number }
+    > = rawCounts.reduce((acc, row) => {
+      acc[row.resource_id] = {
+        likeCount: parseInt(row.likeCount, 10),
+        dislikeCount: parseInt(row.dislikeCount, 10),
+      };
+      return acc;
+    }, {});
+
+    return likeCounts;
+  }
 }
