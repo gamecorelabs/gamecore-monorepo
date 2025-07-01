@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { useRef } from "react";
 import authApi from "@/utils/common-axios/authApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
@@ -8,7 +8,7 @@ import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 
 const RegisterPage = () => {
   const router = useRouter();
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect_url") || "/";
 

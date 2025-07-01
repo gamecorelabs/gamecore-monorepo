@@ -1,7 +1,7 @@
 "use client";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StatusCodes } from "http-status-codes";
 import { useUserStore } from "@/store/userStore";
 import useHydrated from "@/utils/hooks/useHydrated";
@@ -18,7 +18,7 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
   const currentUser = useUserStore((state) => state.user);
   const hydrated = useHydrated();
   const router = useRouter();
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const handlePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (formRef.current === null) {
