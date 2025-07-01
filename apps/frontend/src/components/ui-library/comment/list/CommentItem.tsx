@@ -21,6 +21,13 @@ export const CommentItem = ({
   const isChildrenComment = type === "child";
   const isReplying = activeReplyId === comment.id;
 
+  const getReplyContentPrefix = () => {
+    if (isChildrenComment && parentId) {
+      return `@${getUserName(comment)} // `;
+    }
+    return "";
+  };
+
   return (
     <div className="mb-3 space-y-4">
       <div className="border-b border-gray-100 pb-4">
@@ -54,6 +61,7 @@ export const CommentItem = ({
           postId={comment.resource_info.resource_id}
           onCancel={() => setActiveReplyId(null)}
           placeholder={`${getUserName(comment)}님에게 답글을 작성하세요...`}
+          defaultValue={getReplyContentPrefix()}
         />
       )}
 

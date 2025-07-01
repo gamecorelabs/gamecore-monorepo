@@ -11,13 +11,14 @@ import {
 } from "@/utils/validation/board/newPostCommentSchema";
 import { StatusCodes } from "http-status-codes";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useEffect, useRef } from "react";
 
 interface ReplyFormProps {
   parentId: number | undefined;
   postId: number;
   onCancel: () => void;
   placeholder?: string;
+  defaultValue?: string;
 }
 
 const CommentReplyForm = ({
@@ -25,10 +26,20 @@ const CommentReplyForm = ({
   postId,
   onCancel,
   placeholder = "답글을 작성하세요...",
+  defaultValue,
 }: ReplyFormProps) => {
   const currentUser = useUserStore((state) => state.user);
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const len = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(len, len);
+      textareaRef.current.focus();
+    }
+  }, []); // mount 시 한 번만 실행
 
   const handleCommentReplySubmit = async (
     e: React.MouseEvent<HTMLButtonElement>
@@ -79,6 +90,7 @@ const CommentReplyForm = ({
       );
 
       if (result.status === StatusCodes.CREATED && result.data.id > 0) {
+        onCancel();
         formRef.current.reset();
         router.refresh();
       }
@@ -97,7 +109,9 @@ const CommentReplyForm = ({
           placeholder={placeholder}
           className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           rows={3}
+          defaultValue={defaultValue}
           autoFocus
+          ref={textareaRef}
         />
         <div className="flex justify-end gap-2">
           <button
