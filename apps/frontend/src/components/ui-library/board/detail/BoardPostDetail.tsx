@@ -1,18 +1,10 @@
 import { getUserName } from "@/utils/helpers/getUsername";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import { Comment } from "@gamecoregg/types/comment/comment.types";
+import { ResourceType } from "@gamecoregg/types/common/resource.types";
 import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import CommentContainer from "@ui-library/comment/CommentContainer";
-import CommentList from "@ui-library/comment/list/CommentList";
-import CommentWriteForm from "@ui-library/comment/write/CommentWriteForm";
 
-const BoardPostDetail = async ({
-  post,
-  comments,
-}: {
-  post: BoardPost;
-  comments?: Comment[];
-}) => {
+const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <header className="mb-6">
@@ -26,14 +18,13 @@ const BoardPostDetail = async ({
           <div className="flex items-center text-sm text-gray-600 space-x-3">
             <span className="flex items-center gap-1">
               <HandThumbUpIcon className="h-4 w-4 text-green-500" />
-              <span className="text-xs text-gray-500">{0}</span>
+              <span className="text-xs text-gray-500">{post.likeCount}</span>
             </span>
             <span className="flex items-center gap-1">
               <HandThumbDownIcon className="h-4 w-4 text-red-500" />
-              <span className="text-xs text-gray-500">{0}</span>
+              <span className="text-xs text-gray-500">{post.dislikeCount}</span>
             </span>
             <span>조회수 {post.view_count || 0}</span>
-            <span>좋아요 {post.view_count || 0}</span>
           </div>
         </div>
       </header>
@@ -46,7 +37,7 @@ const BoardPostDetail = async ({
         <div>
           <button className="text-gray-600 hover:text-blue-600">
             <span className="text-lg font-semibold text-gray-900 mb-4">
-              댓글 {post.comment_count || 0}개
+              댓글 {post.commentCount || 0}개
             </span>
           </button>
         </div>
@@ -57,10 +48,10 @@ const BoardPostDetail = async ({
         </div>
       </div>
 
-      <CommentContainer>
-        <CommentList comments={comments} />
-        <CommentWriteForm postId={post.id} />
-      </CommentContainer>
+      <CommentContainer
+        resourceType={ResourceType.BOARD_POST}
+        resourceId={post.id}
+      />
     </div>
   );
 };

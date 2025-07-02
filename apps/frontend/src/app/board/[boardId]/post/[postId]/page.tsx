@@ -9,15 +9,15 @@ interface BoardPostDetailProps {
 const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
   const { boardId, postId } = await params;
 
-  let data = null;
+  let post = null;
   try {
     const response = await dataApi.get(`/board-post/${postId}`);
-    data = response?.data ?? null;
+    post = response?.data || null;
   } catch (error) {
-    data = null;
+    post = null;
   }
 
-  if (!data) {
+  if (!post) {
     return (
       <FallbackPage
         message="게시글이 존재하지 않습니다. 게시글 리스트로 이동됩니다."
@@ -26,10 +26,7 @@ const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
     );
   }
 
-  const postDetail = data?.post?.entities?.[0];
-  const comments = data?.comments ?? [];
-
-  return <BoardPostDetail post={postDetail} comments={comments} />;
+  return <BoardPostDetail post={post} />;
 };
 
 export default BoardPostDetailPage;

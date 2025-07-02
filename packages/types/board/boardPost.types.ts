@@ -8,8 +8,6 @@ export type BoardPost = {
   updated_at: string;
   ip_address: string;
   status: string;
-  // like_count: number;
-  // comment_count: number;
   view_count: number;
 
   likeCount: number;

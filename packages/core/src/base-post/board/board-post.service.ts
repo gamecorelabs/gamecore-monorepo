@@ -32,7 +32,7 @@ export class BoardPostService {
   ) {}
 
   async getPostList(boardId: number) {
-    const posts = await this.getPosts(boardId);
+    const posts = await this.getPostsPaginate(boardId);
     const postIdList = posts.map((post) => post.id);
 
     const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
@@ -49,72 +49,23 @@ export class BoardPostService {
     return this.mergePostData(posts, likeCounts, commentCounts);
   }
 
-  async getPosts(board_id: number) {
-    // FIXME: pagination 반영
-    const conditions: FindManyOptions<BoardPost> = {
-      where: {
-        status: BoardPostStatus.USE,
-        boardConfig: { id: board_id },
-      },
-      relations: ["author"],
-      order: { created_at: "DESC" },
-    };
+  async getPostDetail(postId: number) {
+    const post = await this.getPostById(postId);
+    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+      ResourceType.BOARD_POST,
+      [post.id]
+    );
 
-    return await this.boardPostRepository.find(conditions);
-  }
+    const commentCounts =
+      await this.baseCommentService.getCommentCountByResourceInId(
+        ResourceType.BOARD_POST,
+        [post.id]
+      );
 
-  async getPostById(id: number) {
-    const post = await this.boardPostRepository.findOne({
-      where: { id, status: BoardPostStatus.USE },
-      relations: ["author"],
-    });
-
-    if (!post) {
-      throw new ConflictException("존재하지 않은 게시글 입니다.");
-    }
-
-    return post;
-  }
-
-  async getPostWithLikeCount(id?: number) {
-    const queryBuilder = this.boardPostRepository
-      .createQueryBuilder("board_post")
-      .leftJoin(
-        "like",
-        "like",
-        `like.resource_id = board_post.id
-          AND like.resource_type = :likeResourceType
-          AND like.status = :likeStatus`,
-        {
-          likeResourceType: ResourceType.BOARD_POST,
-          likeStatus: LikeStatus.SELECTED,
-        }
-      )
-      .addSelect([
-        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
-        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
-      ])
-      .where("board_post.status = :boardPostStatus", {
-        boardPostStatus: BoardPostStatus.USE,
-      })
-      .groupBy("board_post.id")
-      .setParameters({
-        likeType: LikeType.LIKE,
-        dislikeType: LikeType.DISLIKE,
-      });
-
-    if (id) {
-      queryBuilder.andWhere("board_post.id = :id", { id });
-    }
-
-    const result = await queryBuilder.getRawAndEntities();
-    return result;
+    return this.mergePostData(post, likeCounts, commentCounts);
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
-    console.log("savePost dto", dto);
-    console.log("savePost user", user);
-
     const userInfo = await getUserInfo(
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
@@ -196,12 +147,79 @@ export class BoardPostService {
     });
   }
 
+  async getPostById(id: number) {
+    const post = await this.boardPostRepository.findOne({
+      where: { id, status: BoardPostStatus.USE },
+      relations: ["author"],
+    });
+
+    if (!post) {
+      throw new ConflictException("존재하지 않은 게시글 입니다.");
+    }
+
+    return post;
+  }
+
+  async getPostsPaginate(board_id: number) {
+    // FIXME: pagination 반영
+    const conditions: FindManyOptions<BoardPost> = {
+      where: {
+        status: BoardPostStatus.USE,
+        boardConfig: { id: board_id },
+      },
+      relations: ["author"],
+      order: { created_at: "DESC" },
+    };
+
+    return await this.boardPostRepository.find(conditions);
+  }
+
+  /**
+   * @deprecated
+   */
+  async getPostWithLikeCount(id?: number) {
+    const queryBuilder = this.boardPostRepository
+      .createQueryBuilder("board_post")
+      .leftJoin(
+        "like",
+        "like",
+        `like.resource_id = board_post.id
+          AND like.resource_type = :likeResourceType
+          AND like.status = :likeStatus`,
+        {
+          likeResourceType: ResourceType.BOARD_POST,
+          likeStatus: LikeStatus.SELECTED,
+        }
+      )
+      .addSelect([
+        `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
+        `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
+      ])
+      .where("board_post.status = :boardPostStatus", {
+        boardPostStatus: BoardPostStatus.USE,
+      })
+      .groupBy("board_post.id")
+      .setParameters({
+        likeType: LikeType.LIKE,
+        dislikeType: LikeType.DISLIKE,
+      });
+
+    if (id) {
+      queryBuilder.andWhere("board_post.id = :id", { id });
+    }
+
+    const result = await queryBuilder.getRawAndEntities();
+    return result;
+  }
+
   private mergePostData(
-    posts: BoardPost[],
+    posts: BoardPost | BoardPost[],
     likeCounts: Record<number, { likeCount: number; dislikeCount: number }>,
     commentCounts: Record<number, number>
   ) {
-    return posts.map((post) => {
+    const postsArray = Array.isArray(posts) ? posts : [posts];
+
+    const result = postsArray.map((post) => {
       const likeData = likeCounts[post.id] || { likeCount: 0, dislikeCount: 0 };
       const postCommentCount = commentCounts[post.id] || 0;
 
@@ -212,5 +230,7 @@ export class BoardPostService {
         commentCount: postCommentCount,
       };
     });
+
+    return Array.isArray(posts) ? result : result[0];
   }
 }
