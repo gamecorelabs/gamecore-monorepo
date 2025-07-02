@@ -166,6 +166,33 @@ export class BaseCommentService {
     });
   }
 
+  async getCommentCountByResourceInId(
+    resource_type: ResourceType,
+    idList: number[]
+  ) {
+    const rawCounts = await this.commentRepository
+      .createQueryBuilder("comment")
+      .select("comment.resource_info.resource_id", "resource_id")
+      .addSelect("COUNT(comment.id)", "count")
+      .where("comment.resource_info.resource_type = :resourceType", {
+        resourceType: resource_type,
+      })
+      .andWhere("comment.resource_info.resource_id IN (:...idList)", { idList })
+      .andWhere("comment.status = :status", {
+        status: CommentStatus.USE,
+      })
+      .groupBy("comment.resource_info.resource_id")
+      .getRawMany();
+
+    const commentCounts: Record<number, { commentCount: number }> =
+      rawCounts.reduce((acc, row) => {
+        acc[row.resource_id] = parseInt(row.count, 10);
+        return acc;
+      }, {});
+
+    return commentCounts;
+  }
+
   /**
    * @deprecated Use getCommentsByResource instead
    */

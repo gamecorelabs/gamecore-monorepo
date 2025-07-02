@@ -90,6 +90,9 @@ export class BoardPostService {
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
+    console.log("savePost dto", dto);
+    console.log("savePost user", user);
+
     const userInfo = await getUserInfo(
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)

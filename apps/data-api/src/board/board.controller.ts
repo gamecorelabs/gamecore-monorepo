@@ -20,12 +20,17 @@ import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-boa
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { BoardConfigRequest } from "@_core/base-common/types/resource-types";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { BaseLikeService } from "@_core/base-like/base-like.service";
+import { BaseCommentService } from "@_core/base-comment/base-comment.service";
+import { ResourceType } from "@_core/base-common/enum/common.enum";
 
 @Controller("board")
 export class BoardController {
   constructor(
     private readonly baseBoardService: BaseBoardService,
-    private readonly boardPostService: BoardPostService
+    private readonly boardPostService: BoardPostService,
+    private readonly baseLikeService: BaseLikeService,
+    private readonly baseCommentService: BaseCommentService
   ) {}
 
   @Get()
@@ -44,11 +49,27 @@ export class BoardController {
 
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
-  getBoardPost(
+  async getBoardPost(
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
   ) {
-    return this.boardPostService.getPosts(boardId);
+    const posts = await this.boardPostService.getPosts(boardId);
+    const postIdList = posts.map((post) => post.id);
+    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+      ResourceType.BOARD_POST,
+      postIdList
+    );
+    const commentCounts =
+      await this.baseCommentService.getCommentCountByResourceInId(
+        ResourceType.BOARD_POST,
+        postIdList
+      );
+
+    return {
+      posts,
+      likeCounts,
+      commentCounts,
+    };
   }
 
   // 해당 게시판에 글쓰기

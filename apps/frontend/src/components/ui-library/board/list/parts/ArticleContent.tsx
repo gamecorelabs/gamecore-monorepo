@@ -1,23 +1,32 @@
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
+import {
+  ChatBubbleOvalLeftIcon,
+  HandThumbUpIcon,
+  HandThumbDownIcon,
+} from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export const ArticleContent = ({
   boardId,
   post,
+  likeCounts,
+  commentCounts,
 }: {
   boardId: string;
   post: BoardPost;
+  likeCounts: Record<number, { likeCount: number; dislikeCount: number }>;
+  commentCounts: Record<number, number>;
 }) => {
+  const likeData = likeCounts[post.id] || { likeCount: 0, dislikeCount: 0 };
+  const postCommentCount = commentCounts[post.id] || 0;
+
   return (
     <Link
       href={`/board/${boardId}/post/${post.id}`}
       className="block hover:bg-gray-50 transition rounded"
     >
       <div className="flex items-center">
-        <div
-        // className={`mt-1 ${post.thumbnail ? "w-3/5 sm:w-4/5 pr-4" : "w-full pr-0"}`}
-        >
+        <div>
           <span className="inline-block mb-1 px-2 py-0.5 text-[0.6rem] bg-gray-200 text-gray-600 rounded">
             {/* {post.category} */}
           </span>
@@ -25,24 +34,29 @@ export const ArticleContent = ({
             <h3 className="text-base font-semibold line-clamp-2">
               {post.title}
             </h3>
-            <span className="flex items-center gap-1">
-              <ChatBubbleOvalLeftIcon className="h-4 w-4 text-gray-400" />
-              <span className="text-xs text-gray-500">
-                {post.comment_count ?? 0}
+            <div className="flex items-center gap-2 ml-auto">
+              <span className="flex items-center gap-1">
+                <HandThumbUpIcon className="h-4 w-4 text-green-500" />
+                <span className="text-xs text-gray-500">
+                  {likeData.likeCount}
+                </span>
               </span>
-            </span>
+              <span className="flex items-center gap-1">
+                <HandThumbDownIcon className="h-4 w-4 text-red-500" />
+                <span className="text-xs text-gray-500">
+                  {likeData.dislikeCount}
+                </span>
+              </span>
+              <span className="flex items-center gap-1">
+                <ChatBubbleOvalLeftIcon className="h-4 w-4 text-gray-400" />
+                <span className="text-xs text-gray-500">
+                  {postCommentCount}
+                </span>
+              </span>
+            </div>
           </div>
           <p className="text-sm text-gray-700 line-clamp-3">{post.content}</p>
         </div>
-        {/* {post.thumbnail && (
-          <div className="w-2/5 sm:w-1/5 flex justify-end items-center">
-            <img
-              src="https://picsum.photos/seed/picsum/200/200"
-              className="rounded-md w-24 h-24 object-cover"
-              alt="Article Thumbnail"
-            />
-          </div>
-        )} */}
       </div>
     </Link>
   );
