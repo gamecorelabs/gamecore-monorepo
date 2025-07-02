@@ -50,34 +50,7 @@ export class BoardPostController {
     @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
-    const post = await this.boardPostService.getPostWithLikeCount(id);
-
-    // FIXME: 댓글 불러오기 로직 분리 해야할 필요가 있음
-    const comments = await this.baseCommentService.getCommentsByResource(
-      req.resource_info.resource_type,
-      req.resource_info.resource_id
-    );
-
-    if (comments && comments.length > 0) {
-      const commentIds = this.baseCommentService.getIdList(comments);
-      const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
-        ResourceType.COMMENT,
-        commentIds
-      );
-      const mergedComments = this.baseCommentService.mergeLikeCount(
-        comments,
-        likeCounts
-      );
-      return {
-        post,
-        comments: mergedComments,
-      };
-    } else {
-      return {
-        post,
-        comments: [],
-      };
-    }
+    return await this.boardPostService.getPostDetail(id);
   }
 
   @Patch(":id")
@@ -106,14 +79,34 @@ export class BoardPostController {
   // 특정 게시글의 댓글 리스트
   @Get(":id/comments")
   @UseGuards(ResourceExistenceGuard)
-  getCommentsByPostId(
+  async getCommentsByPostId(
     @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
-    return this.baseCommentService.getCommentsByResource(
+    // FIXME: 댓글 불러오기 로직 분리 해야할 필요가 있음
+    const comments = await this.baseCommentService.getCommentsByResource(
       req.resource_info.resource_type,
       req.resource_info.resource_id
     );
+
+    if (comments && comments.length > 0) {
+      const commentIds = this.baseCommentService.getIdList(comments);
+      const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+        ResourceType.COMMENT,
+        commentIds
+      );
+      const mergedComments = this.baseCommentService.mergeLikeCount(
+        comments,
+        likeCounts
+      );
+      return {
+        comments: mergedComments,
+      };
+    } else {
+      return {
+        comments: [],
+      };
+    }
   }
 
   // 특정 게시글 댓글 저장

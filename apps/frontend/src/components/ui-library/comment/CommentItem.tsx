@@ -1,9 +1,7 @@
 "use client";
-
-import { useState } from "react";
 import { getUserName } from "@/utils/helpers/getUsername";
 import { Comment } from "@gamecoregg/types/comment/comment.types";
-import ReplyForm from "@ui-library/comment/write/CommentReplyForm";
+import ReplyForm from "@ui-library/comment/CommentReplyForm";
 
 export const CommentItem = ({
   comment,

@@ -1,9 +1,9 @@
 "use client";
 import { Comment } from "@gamecoregg/types/comment/comment.types";
-import CommentItem from "@ui-library/comment/list/CommentItem";
+import CommentItem from "@ui-library/comment/CommentItem";
 import { useState } from "react";
 
-const CommentList = ({ comments }: { comments?: Comment[] }) => {
+const CommentList = ({ comments }: { comments: Comment[] }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
 
   return comments && comments.length > 0 ? (

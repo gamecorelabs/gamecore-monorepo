@@ -8,17 +8,24 @@ import {
   guestCommentSchema,
   userCommentSchema,
 } from "@/utils/validation/board/newPostCommentSchema";
-import React from "react";
+import React, { useRef } from "react";
 import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
 import { StatusCodes } from "http-status-codes";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
+import { ResourceType } from "@gamecoregg/types/common/resource.types";
 
-const CommentWriteForm = ({ postId }: { postId: number }) => {
+const CommentWriteForm = ({
+  resourceType,
+  resourceId,
+}: {
+  resourceType: ResourceType;
+  resourceId: number;
+}) => {
   const currentUser = useUserStore((state) => state.user);
   const hydrated = useHydrated();
   const router = useRouter();
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleCommentSubmit = async (
     e: React.MouseEvent<HTMLButtonElement>
@@ -60,7 +67,7 @@ const CommentWriteForm = ({ postId }: { postId: number }) => {
 
     try {
       const result = await dataApi.post(
-        `/board-post/${postId}/comment`,
+        `/${resourceType}/${resourceId}/comment`,
         formData,
         {
           headers,
