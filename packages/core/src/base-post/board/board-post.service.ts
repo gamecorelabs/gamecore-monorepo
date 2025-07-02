@@ -17,6 +17,8 @@ import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import { UpdateBoardPostDto } from "./dto/update-board-post.dto";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
+import { BaseLikeService } from "@_core/base-like/base-like.service";
+import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 
 @Injectable()
 export class BoardPostService {
@@ -24,10 +26,31 @@ export class BoardPostService {
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>,
     private readonly postUtilService: PostUtilService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly baseLikeService: BaseLikeService,
+    private readonly baseCommentService: BaseCommentService
   ) {}
 
+  async getPostList(boardId: number) {
+    const posts = await this.getPosts(boardId);
+    const postIdList = posts.map((post) => post.id);
+
+    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+      ResourceType.BOARD_POST,
+      postIdList
+    );
+
+    const commentCounts =
+      await this.baseCommentService.getCommentCountByResourceInId(
+        ResourceType.BOARD_POST,
+        postIdList
+      );
+
+    return this.mergePostData(posts, likeCounts, commentCounts);
+  }
+
   async getPosts(board_id: number) {
+    // FIXME: pagination 반영
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
@@ -37,7 +60,6 @@ export class BoardPostService {
       order: { created_at: "DESC" },
     };
 
-    // FIXME: 관리자인 경우 status와 관계없이 모두 볼 수 있게 조정
     return await this.boardPostRepository.find(conditions);
   }
 
@@ -171,6 +193,24 @@ export class BoardPostService {
   async deletePost(id: number): Promise<UpdateResult> {
     return await this.boardPostRepository.update(id, {
       status: BoardPostStatus.DELETED,
+    });
+  }
+
+  private mergePostData(
+    posts: BoardPost[],
+    likeCounts: Record<number, { likeCount: number; dislikeCount: number }>,
+    commentCounts: Record<number, number>
+  ) {
+    return posts.map((post) => {
+      const likeData = likeCounts[post.id] || { likeCount: 0, dislikeCount: 0 };
+      const postCommentCount = commentCounts[post.id] || 0;
+
+      return {
+        ...post,
+        likeCount: likeData.likeCount,
+        dislikeCount: likeData.dislikeCount,
+        commentCount: postCommentCount,
+      };
     });
   }
 }

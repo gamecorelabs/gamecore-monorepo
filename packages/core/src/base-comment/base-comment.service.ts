@@ -184,11 +184,13 @@ export class BaseCommentService {
       .groupBy("comment.resource_info.resource_id")
       .getRawMany();
 
-    const commentCounts: Record<number, { commentCount: number }> =
-      rawCounts.reduce((acc, row) => {
+    const commentCounts: Record<number, number> = rawCounts.reduce(
+      (acc, row) => {
         acc[row.resource_id] = parseInt(row.count, 10);
         return acc;
-      }, {});
+      },
+      {}
+    );
 
     return commentCounts;
   }

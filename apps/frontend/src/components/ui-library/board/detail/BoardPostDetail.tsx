@@ -1,6 +1,7 @@
 import { getUserName } from "@/utils/helpers/getUsername";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import { Comment } from "@gamecoregg/types/comment/comment.types";
+import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import CommentContainer from "@ui-library/comment/CommentContainer";
 import CommentList from "@ui-library/comment/list/CommentList";
 import CommentWriteForm from "@ui-library/comment/write/CommentWriteForm";
@@ -23,6 +24,14 @@ const BoardPostDetail = async ({
             <span>{new Date(post.created_at).toLocaleString("ko-KR")}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600 space-x-3">
+            <span className="flex items-center gap-1">
+              <HandThumbUpIcon className="h-4 w-4 text-green-500" />
+              <span className="text-xs text-gray-500">{0}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <HandThumbDownIcon className="h-4 w-4 text-red-500" />
+              <span className="text-xs text-gray-500">{0}</span>
+            </span>
             <span>조회수 {post.view_count || 0}</span>
             <span>좋아요 {post.view_count || 0}</span>
           </div>

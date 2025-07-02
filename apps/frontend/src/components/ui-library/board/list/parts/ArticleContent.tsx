@@ -9,17 +9,10 @@ import Link from "next/link";
 export const ArticleContent = ({
   boardId,
   post,
-  likeCounts,
-  commentCounts,
 }: {
   boardId: string;
   post: BoardPost;
-  likeCounts: Record<number, { likeCount: number; dislikeCount: number }>;
-  commentCounts: Record<number, number>;
 }) => {
-  const likeData = likeCounts[post.id] || { likeCount: 0, dislikeCount: 0 };
-  const postCommentCount = commentCounts[post.id] || 0;
-
   return (
     <Link
       href={`/board/${boardId}/post/${post.id}`}
@@ -37,20 +30,18 @@ export const ArticleContent = ({
             <div className="flex items-center gap-2 ml-auto">
               <span className="flex items-center gap-1">
                 <HandThumbUpIcon className="h-4 w-4 text-green-500" />
-                <span className="text-xs text-gray-500">
-                  {likeData.likeCount}
-                </span>
+                <span className="text-xs text-gray-500">{post.likeCount}</span>
               </span>
               <span className="flex items-center gap-1">
                 <HandThumbDownIcon className="h-4 w-4 text-red-500" />
                 <span className="text-xs text-gray-500">
-                  {likeData.dislikeCount}
+                  {post.dislikeCount}
                 </span>
               </span>
               <span className="flex items-center gap-1">
                 <ChatBubbleOvalLeftIcon className="h-4 w-4 text-gray-400" />
                 <span className="text-xs text-gray-500">
-                  {postCommentCount}
+                  {post.commentCount}
                 </span>
               </span>
             </div>

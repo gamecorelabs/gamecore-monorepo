@@ -4,13 +4,17 @@ export type BoardPost = {
   id: number;
   title: string;
   content: string;
-  comment_count: number;
   created_at: string;
   updated_at: string;
   ip_address: string;
-  like_count: number;
   status: string;
+  // like_count: number;
+  // comment_count: number;
   view_count: number;
+
+  likeCount: number;
+  dislikeCount: number;
+  commentCount: number;
 
   author?: UserAccount;
   guest_account?: GuestAccount;

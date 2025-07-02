@@ -5,7 +5,6 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardPostStatus } from "@_core/base-post/board/enum/board-post.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable";
-import { Like } from "@_core/base-like/entity/like.entity";
 
 @Entity()
 export class BoardPost extends BaseModel {
@@ -31,16 +30,6 @@ export class BoardPost extends BaseModel {
   @IsNumber()
   @Column({ type: "int", default: 0 })
   view_count: number = 0;
-
-  // 댓글 수
-  @IsNumber()
-  @Column({ type: "int", default: 0 })
-  comment_count: number;
-
-  // 좋아요 수
-  @IsNumber()
-  @Column({ type: "int", default: 0 })
-  like_count: number;
 
   @ManyToOne(() => BoardConfig, (boardConfig) => boardConfig.boardPosts)
   @JoinColumn({ name: "board_id" })

@@ -7,13 +7,9 @@ import NewPostButton from "../buttons/NewPostButton";
 const ArticleList = ({
   boardId,
   posts,
-  likeCounts,
-  commentCounts,
 }: {
   boardId: string;
   posts?: BoardPost[];
-  likeCounts: Record<number, { likeCount: number; dislikeCount: number }>;
-  commentCounts: Record<number, number>;
 }) => {
   if (!posts || posts.length === 0) {
     return <EmptyArticle />;
@@ -23,12 +19,7 @@ const ArticleList = ({
     <>
       {posts.map((post) => (
         <article key={post.id} className="border-b py-4" data-id={post.id}>
-          <ArticleContent
-            boardId={boardId}
-            post={post}
-            likeCounts={likeCounts}
-            commentCounts={commentCounts}
-          />
+          <ArticleContent boardId={boardId} post={post} />
           <ArticleInfo post={post} />
         </article>
       ))}

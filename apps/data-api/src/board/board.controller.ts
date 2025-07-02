@@ -28,9 +28,7 @@ import { ResourceType } from "@_core/base-common/enum/common.enum";
 export class BoardController {
   constructor(
     private readonly baseBoardService: BaseBoardService,
-    private readonly boardPostService: BoardPostService,
-    private readonly baseLikeService: BaseLikeService,
-    private readonly baseCommentService: BaseCommentService
+    private readonly boardPostService: BoardPostService
   ) {}
 
   @Get()
@@ -53,23 +51,7 @@ export class BoardController {
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
   ) {
-    const posts = await this.boardPostService.getPosts(boardId);
-    const postIdList = posts.map((post) => post.id);
-    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
-      ResourceType.BOARD_POST,
-      postIdList
-    );
-    const commentCounts =
-      await this.baseCommentService.getCommentCountByResourceInId(
-        ResourceType.BOARD_POST,
-        postIdList
-      );
-
-    return {
-      posts,
-      likeCounts,
-      commentCounts,
-    };
+    return await this.boardPostService.getPostList(boardId);
   }
 
   // 해당 게시판에 글쓰기
