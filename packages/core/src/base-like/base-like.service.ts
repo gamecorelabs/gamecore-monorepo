@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  UnauthorizedException,
+  Injectable,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Repository } from "typeorm";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
@@ -69,15 +73,20 @@ export class BaseLikeService {
       },
     };
 
-    const user_id = user.type === "user" ? user.user_account.id : 0;
-
-    if (user_id > 0) {
-      conditions.where["author"] = { id: user_id };
+    switch (user.type) {
+      case "user":
+        conditions.where["author"] = { id: user.user_account.id };
+        break;
+      case "fingerprint":
+        conditions.where["fingerprint"] = user.fingerprint;
+        break;
+      default:
+        throw new UnauthorizedException("식별할 수 없는 회원 타입입니다.");
     }
 
     const existingLike = await this.likeRepository.findOne(conditions);
 
-    // 이미 좋아요 또는 싫어요 한 내역이 있는 상태
+    // // 이미 좋아요 또는 싫어요 한 내역이 있는 상태
     if (existingLike) {
       // 좋아요 또는 싫어요 상태가 선택된 상태인 경우
       if (existingLike.status === LikeStatus.SELECTED) {

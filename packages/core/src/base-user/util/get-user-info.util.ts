@@ -11,6 +11,9 @@ type UserInfo =
         guest_author_id: string;
         guest_author_password: string;
       };
+    }
+  | {
+      fingerprint: string;
     };
 
 export const getUserInfo = async (
@@ -34,6 +37,11 @@ export const getUserInfo = async (
           guest_author_id: user.guest_account.guest_author_id,
           guest_author_password: hash,
         },
+      };
+      break;
+    case "fingerprint":
+      userInfo = {
+        fingerprint: user.fingerprint,
       };
       break;
     default:

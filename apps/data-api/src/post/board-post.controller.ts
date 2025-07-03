@@ -123,8 +123,7 @@ export class BoardPostController {
   // 특정 게시글 좋아요
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
-  // @UseGuards(GuestOrUserTokenGuard)
-  @UseGuards(UserTokenGuard) // 임시
+  @UseGuards(GuestOrUserTokenGuard)
   async toggleLike(
     @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,

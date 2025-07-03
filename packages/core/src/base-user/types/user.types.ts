@@ -14,6 +14,11 @@ export type GuestLoginRequest = ExpressRequest & {
   };
 };
 
+export type FingerprintRequest = ExpressRequest & {
+  type: "fingerprint";
+  fingerprint: string;
+};
+
 export type UserOrGuestLoginRequest = {
   ip_address: string;
-} & (UserLoginRequest | GuestLoginRequest);
+} & (UserLoginRequest | GuestLoginRequest | FingerprintRequest);

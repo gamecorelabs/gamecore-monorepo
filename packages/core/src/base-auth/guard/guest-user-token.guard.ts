@@ -25,25 +25,36 @@ export class GuestUserTokenGuard implements CanActivate {
 
     const extract = this.baseAuthService.extractHeader(rawHeaderToken);
 
-    // 비회원으로 접근시
     if (extract.type === "Basic") {
-      const decoded = this.baseAuthService.decodeBasicToken(extract.token);
-      const [guestAuthorId, guestAuthorPassword] = decoded;
-      if (!guestAuthorId || !guestAuthorPassword) {
-        throw new UnauthorizedException(
-          "비회원으로 입력하신 정보를 찾을 수 없습니다."
-        );
-      }
+      const token = extract.token;
+      const decodedToken = Buffer.from(token, "base64").toString("utf-8");
 
-      request.user = {
-        type: "guest",
-        guest_account: {
-          guest_author_id: guestAuthorId,
-          guest_author_password: guestAuthorPassword,
-        },
-        ip_address:
-          request.headers["x-forwarded-for"] || request.socket.remoteAddress,
-      } as UserOrGuestLoginRequest;
+      if (decodedToken.includes(":")) {
+        const decoded = this.baseAuthService.splitBasicToken(decodedToken);
+        const [guestAuthorId, guestAuthorPassword] = decoded;
+        if (!guestAuthorId || !guestAuthorPassword) {
+          throw new UnauthorizedException(
+            "비회원으로 입력하신 정보를 찾을 수 없습니다."
+          );
+        }
+
+        request.user = {
+          type: "guest",
+          guest_account: {
+            guest_author_id: guestAuthorId,
+            guest_author_password: guestAuthorPassword,
+          },
+          ip_address:
+            request.headers["x-forwarded-for"] || request.socket.remoteAddress,
+        };
+      } else {
+        request.user = {
+          type: "fingerprint",
+          fingerprint: decodedToken,
+          ip_address:
+            request.headers["x-forwarded-for"] || request.socket.remoteAddress,
+        };
+      }
     }
 
     return true;

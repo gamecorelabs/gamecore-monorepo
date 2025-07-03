@@ -18,8 +18,8 @@ export class GuestOrUserTokenGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const rawHeaderToken = request.headers["authorization"] || "";
 
+    const rawHeaderToken = request.headers["authorization"] || "";
     // 비회원 요청시
     if (rawHeaderToken) {
       await this.guestUserTokenGuard.canActivate(context);

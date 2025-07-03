@@ -1,11 +1,14 @@
 "use client";
 import { useUserStore } from "@/store/userStore";
 import dataApi from "@/utils/common-axios/dataApi";
+import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import { useFingerprint } from "@/utils/hooks/useFingerprint";
 import { ResourceType } from "@gamecoregg/types/common/resource.types";
 import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 const LikeDetail = ({
   resourceType,
@@ -20,12 +23,24 @@ const LikeDetail = ({
 }) => {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
+  const fp = useFingerprint();
+  const fingerprint = useMemo(() => {
+    if (currentUser) return "";
+    return fp;
+  }, [currentUser, fp]);
+
   const handleLike = async (type: string) => {
     try {
+      const headers: Record<string, string> = {};
+
+      if (!currentUser && fingerprint) {
+        const encoded = encodeBase64Unicode(`${fingerprint}`);
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
       const result = await dataApi.post(
         `/${resourceType}/${resourceId}/like`,
         { type },
-        { withCredentials: true }
+        { headers, withCredentials: true }
       );
 
       if (result.status === StatusCodes.CREATED) {

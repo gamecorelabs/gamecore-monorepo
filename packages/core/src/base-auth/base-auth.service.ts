@@ -81,22 +81,14 @@ export class BaseAuthService {
     };
   }
 
-  decodeBasicToken(token: string) {
-    const decoded = Buffer.from(token, "base64").toString("utf-8");
-    const splitDecoded = decoded.split(":");
+  splitBasicToken(token: string) {
+    const splitDecoded = token.split(":");
 
     if (splitDecoded.length !== 2) {
       throw new UnauthorizedException("잘못된 유형의 토큰입니다.");
     }
 
     return splitDecoded;
-
-    // const [email, password] = splitDecoded;
-
-    // return {
-    //   email,
-    //   password,
-    // };
   }
 
   // 쿠키에 토큰 설정

@@ -40,4 +40,8 @@ export class Like extends BaseModel {
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
   ip_address?: string;
+
+  @IsString()
+  @Column({ name: "fingerprint", type: "varchar", length: 45, nullable: true })
+  fingerprint?: string;
 }
