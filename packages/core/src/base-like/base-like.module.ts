@@ -8,10 +8,7 @@ import { Like } from "./entity/like.entity";
 import { BasePostModule } from "@_core/base-post/base-post.module";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like]),
-    BasePostModule,
-  ],
+  imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like])],
   providers: [BaseLikeService],
   exports: [BaseLikeService],
 })

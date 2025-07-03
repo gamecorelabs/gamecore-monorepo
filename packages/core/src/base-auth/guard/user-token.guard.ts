@@ -21,6 +21,11 @@ export class UserTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const cookies = request.headers.cookie || "";
+
+    if (!cookies) {
+      throw new UnauthorizedException("로그인이 필요한 서비스입니다");
+    }
+
     const parsedToken = this.parseCookies(cookies);
     const accessToken = parsedToken["accessToken"] || "";
 

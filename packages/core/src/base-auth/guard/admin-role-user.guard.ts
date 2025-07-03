@@ -1,8 +1,8 @@
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
-import { BearerTokenGuard } from "./bearer-token.guard";
 import { UserRoles } from "@_core/base-user/enum/user.enum";
+import { UserTokenGuard } from "./user-token.guard";
 
-export class AdminRoleUserGuard extends BearerTokenGuard {
+export class AdminRoleUserGuard extends UserTokenGuard {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await super.canActivate(context);
 

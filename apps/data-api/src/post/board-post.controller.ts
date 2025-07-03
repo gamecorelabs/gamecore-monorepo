@@ -26,6 +26,7 @@ import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.
 import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { UserTokenGuard } from "@_core/base-auth/guard/user-token.guard";
 
 @Controller(["board-post"])
 export class BoardPostController {
@@ -122,7 +123,8 @@ export class BoardPostController {
   // 특정 게시글 좋아요
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  // @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(UserTokenGuard) // 임시
   async toggleLike(
     @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,

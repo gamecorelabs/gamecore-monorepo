@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Repository } from "typeorm";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
@@ -72,7 +72,7 @@ export class BaseLikeService {
     const user_id = user.type === "user" ? user.user_account.id : 0;
 
     if (user_id > 0) {
-      conditions.where["author"]["id"] = user_id;
+      conditions.where["author"] = { id: user_id };
     }
 
     const existingLike = await this.likeRepository.findOne(conditions);
@@ -82,12 +82,9 @@ export class BaseLikeService {
       // 좋아요 또는 싫어요 상태가 선택된 상태인 경우
       if (existingLike.status === LikeStatus.SELECTED) {
         if (existingLike.type !== dto.type) {
-          // 좋아요 타입이 서로 다른 경우 취소 후 다시 선택하게 유도
-          return {
-            message:
-              "이미 좋아요 또는 싫어요를 한 상태입니다. 취소 후 다시 선택해주세요.",
-            type: existingLike.type,
-          };
+          throw new ConflictException(
+            "이미 좋아요 또는 싫어요를 한 상태입니다. 취소 후 다시 선택해주세요."
+          );
         } else {
           // 좋아요 타입이 서로 같은 경우 취소 상태로 update
           return await this.updateLike(existingLike.id, {
