@@ -15,7 +15,7 @@ const CommentContainer = async ({
     const response = await dataApi.get(
       `/${resourceType}/${resourceId}/comments`
     );
-    comments = response?.data?.comments || null;
+    comments = response?.data || null;
   } catch (error) {
     comments = null;
   }

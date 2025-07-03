@@ -13,6 +13,7 @@ import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
 import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
+import { BaseLikeService } from "@_core/base-like/base-like.service";
 
 @Injectable()
 export class BaseCommentService {
@@ -21,8 +22,24 @@ export class BaseCommentService {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(UserAccount)
     private readonly userAccountRepository: Repository<UserAccount>,
+    private readonly baseLikeService: BaseLikeService,
     private readonly configService: ConfigService
   ) {}
+
+  async getPostCommentList(resourceType: ResourceType, resourceId: number) {
+    const comments = await this.getCommentsByResource(resourceType, resourceId);
+
+    if (comments && comments.length > 0) {
+      const commentIds = this.getIdList(comments);
+      const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
+        ResourceType.COMMENT,
+        commentIds
+      );
+      return this.mergeLikeCount(comments, likeCounts);
+    } else {
+      return [];
+    }
+  }
 
   async saveComment(dto: CreateCommentDto, user: UserOrGuestLoginRequest) {
     const userInfo = await getUserInfo(
