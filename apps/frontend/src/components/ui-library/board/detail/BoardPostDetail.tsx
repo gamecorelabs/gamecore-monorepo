@@ -29,7 +29,7 @@ const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
         </div>
       </header>
 
-      <div className="prose max-w-none mb-6">
+      <div className="max-w-none min-h-48 mb-6 ">
         <div className="text-gray-800 whitespace-pre-wrap">{post.content}</div>
       </div>
 
