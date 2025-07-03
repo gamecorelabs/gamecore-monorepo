@@ -104,6 +104,22 @@ const CommentReplyForm = ({
     <div className="mt-3 ml-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
       <form className="space-y-3" ref={formRef}>
         <input type="hidden" name="parent_id" value={parentId} />
+        {!currentUser && (
+          <div className="flex gap-3 mb-3 w-full md:w-1/2">
+            <input
+              type="text"
+              placeholder="아이디"
+              name="guestAuthorId"
+              className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+            />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              name="guestAuthorPassword"
+              className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+            />
+          </div>
+        )}
         <textarea
           name="content"
           placeholder={placeholder}
