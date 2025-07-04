@@ -69,7 +69,6 @@ export class BaseLikeService {
     let conditions = {
       where: {
         resource_info: dto.resource_info,
-        ip_address: user.ip_address,
       },
     };
 
@@ -96,20 +95,31 @@ export class BaseLikeService {
           );
         } else {
           // 좋아요 타입이 서로 같은 경우 취소 상태로 update
-          return await this.updateLike(existingLike.id, {
+          await this.updateLike(existingLike.id, {
             status: LikeStatus.CANCELED,
           });
+
+          return {
+            canceled: true,
+          };
         }
       } else {
         // 좋아요 또는 싫어요 내역은 있지만 선택하지 않았을 경우 선택으로 update
-        return await this.updateLike(existingLike.id, {
+        await this.updateLike(existingLike.id, {
           type: dto.type,
           status: LikeStatus.SELECTED, // 좋아요/싫어요 취소
         });
+
+        return {
+          selected: dto.type,
+        };
       }
     } else {
       // 좋아요 또는 싫어요 내역 자체가 없는 경우 새로 생성
-      return this.saveLike(dto, user);
+      const result = await this.saveLike(dto, user);
+      return {
+        selected: result.type,
+      };
     }
   }
 
@@ -181,5 +191,33 @@ export class BaseLikeService {
     }, {});
 
     return likeCounts;
+  }
+
+  async checkUserLikeStatus(
+    resource_type: ResourceType,
+    resource_id: number,
+    user: UserOrGuestLoginRequest
+  ): Promise<{ selected: LikeType } | null> {
+    const conditions = {
+      where: {
+        resource_info: { resource_type, resource_id },
+        status: LikeStatus.SELECTED,
+      },
+    };
+
+    switch (user.type) {
+      case "user":
+        conditions.where["author"] = { id: user.user_account.id };
+        break;
+      case "fingerprint":
+        conditions.where["fingerprint"] = user.fingerprint;
+        break;
+      default:
+        throw new UnauthorizedException("식별할 수 없는 회원 타입입니다.");
+    }
+
+    const result = await this.likeRepository.findOne(conditions);
+
+    return result ? { selected: result.type } : null;
   }
 }

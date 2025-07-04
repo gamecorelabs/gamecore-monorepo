@@ -4,11 +4,12 @@ import dataApi from "@/utils/common-axios/dataApi";
 import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
 import { useFingerprint } from "@/utils/hooks/useFingerprint";
 import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { LikeType } from "@gamecoregg/types/like/like.types";
 import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
-import { AxiosError } from "axios";
+import { AxiosError, HttpStatusCode } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const LikeDetail = ({
   resourceType,
@@ -28,15 +29,41 @@ const LikeDetail = ({
     if (currentUser) return "";
     return fp;
   }, [currentUser, fp]);
+  const [selected, setSelected] = useState<LikeType | null>(null);
+
+  const headers = useMemo(() => {
+    const h: Record<string, string> = {};
+
+    if (!currentUser && fingerprint) {
+      const encoded = encodeBase64Unicode(`${fingerprint}`);
+      h["Authorization"] = `Basic ${encoded}`;
+    }
+
+    return h;
+  }, [currentUser, fingerprint]);
+
+  useEffect(() => {
+    if (!currentUser && !headers["Authorization"]) return;
+
+    const fetchCheckLike = async () => {
+      const result = await dataApi.get(
+        `/${resourceType}/${resourceId}/like/check`,
+        {
+          headers,
+          withCredentials: true,
+        }
+      );
+
+      if (result.status === StatusCodes.OK && result.data.selected) {
+        setSelected(result.data.selected);
+      }
+    };
+
+    fetchCheckLike();
+  }, [headers]);
 
   const handleLike = async (type: string) => {
     try {
-      const headers: Record<string, string> = {};
-
-      if (!currentUser && fingerprint) {
-        const encoded = encodeBase64Unicode(`${fingerprint}`);
-        headers["Authorization"] = `Basic ${encoded}`;
-      }
       const result = await dataApi.post(
         `/${resourceType}/${resourceId}/like`,
         { type },
@@ -44,6 +71,14 @@ const LikeDetail = ({
       );
 
       if (result.status === StatusCodes.CREATED) {
+        if (result.data.canceled) {
+          setSelected(null);
+        }
+
+        if (result.data.selected) {
+          setSelected(result.data.selected);
+        }
+
         router.refresh();
       }
     } catch (error) {
@@ -59,15 +94,17 @@ const LikeDetail = ({
   return (
     <div className="flex justify-center items-center gap-8 py-8">
       <button
-        className="flex flex-row items-center gap-2 px-6 py-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-        onClick={() => handleLike("1")}
+        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2  hover:bg-gray-50 transition-colors duration-200
+            ${selected === LikeType.LIKE ? "border-red-600 border-2" : "border-gray-200"}`}
+        onClick={() => handleLike(LikeType.LIKE)}
       >
         <HandThumbUpIcon className="h-8 w-8 text-green-500" />
         <span className="text-lg font-medium text-gray-700">{likeCount}</span>
       </button>
       <button
-        className="flex flex-row items-center gap-2 px-6 py-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-        onClick={() => handleLike("0")}
+        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 hover:bg-gray-50 transition-colors duration-200
+          ${selected === LikeType.DISLIKE ? "border-red-600 border-2" : "border-gray-200"}`}
+        onClick={() => handleLike(LikeType.DISLIKE)}
       >
         <HandThumbDownIcon className="h-8 w-8 text-red-500" />
         <span className="text-lg font-medium text-gray-700">

@@ -107,16 +107,19 @@ export class BoardPostController {
     return this.baseCommentService.saveComment(dto, user);
   }
 
-  // 특정 게시글의 좋아요 갯수
-  @Get(":id/like/count")
+  // 특정 게시글에 좋아요 누른 여부
+  @Get(":id/like/check")
   @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
   getLikeCountByPostId(
     @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
-    return this.baseLikeService.getLikeCountByResource(
+    return this.baseLikeService.checkUserLikeStatus(
       req.resource_info.resource_type,
-      req.resource_info.resource_id
+      req.resource_info.resource_id,
+      user
     );
   }
 
