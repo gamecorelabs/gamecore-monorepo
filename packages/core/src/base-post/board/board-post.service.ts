@@ -141,10 +141,16 @@ export class BoardPostService {
   }
 
   // 댓글 삭제 (soft-delete)
-  async deletePost(id: number): Promise<UpdateResult> {
-    return await this.boardPostRepository.update(id, {
+  async deletePost(id: number): Promise<boolean> {
+    const result = await this.boardPostRepository.update(id, {
       status: BoardPostStatus.DELETED,
     });
+
+    if (result.affected === 0) {
+      throw new InternalServerErrorException("게시글 삭제에 실패했습니다.");
+    }
+
+    return true;
   }
 
   async getPostById(id: number) {

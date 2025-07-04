@@ -25,8 +25,6 @@ import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
-import { UserTokenGuard } from "@_core/base-auth/guard/user-token.guard";
 
 @Controller(["board-post"])
 export class BoardPostController {

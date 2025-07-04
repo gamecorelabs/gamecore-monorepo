@@ -26,7 +26,7 @@ const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
     );
   }
 
-  return <BoardPostDetail post={post} />;
+  return <BoardPostDetail boardId={boardId} post={post} />;
 };
 
 export default BoardPostDetailPage;

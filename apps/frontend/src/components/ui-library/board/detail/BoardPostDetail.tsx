@@ -1,11 +1,17 @@
 import { getUserName } from "@/utils/helpers/getUsername";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import { ResourceType } from "@gamecoregg/types/common/resource.types";
-import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import CommentContainer from "@ui-library/comment/CommentContainer";
 import LikeDetail from "../../like/LikeDetail";
+import BottomSection from "./parts/BottomSection";
 
-const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
+const BoardPostDetail = async ({
+  boardId,
+  post,
+}: {
+  boardId: string;
+  post: BoardPost;
+}) => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="mb-6">
@@ -33,20 +39,7 @@ const BoardPostDetail = async ({ post }: { post: BoardPost }) => {
         dislikeCount={post.dislikeCount}
       />
 
-      <div className="flex justify-between items-center pb-4 border-b border-gray-200 space-x-4">
-        <div>
-          <button className=" hover:text-blue-600">
-            <span className="text-lg font-semibold text-gray-900 mb-4">
-              댓글 {post.commentCount || 0}개
-            </span>
-          </button>
-        </div>
-        <div className="flex gap-3">
-          <button className="text-sm">수정</button>
-          <button className="text-sm">삭제</button>
-          <button className="text-sm">공유하기</button>
-        </div>
-      </div>
+      <BottomSection boardId={boardId} post={post} />
 
       <CommentContainer
         resourceType={ResourceType.BOARD_POST}
