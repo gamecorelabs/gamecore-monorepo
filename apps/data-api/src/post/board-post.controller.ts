@@ -35,13 +35,6 @@ export class BoardPostController {
     private readonly baseCommentService: BaseCommentService
   ) {}
 
-  // 게시글 보기 (사용안함)
-  // @Get(":id")
-  // @UseGuards(ResourceExistenceGuard)
-  // getPostById(@Param("id", ParseIntPipe) id: number) {
-  //   return this.boardPostService.getPostById(id);
-  // }
-
   // 게시글 상세히 보기
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
@@ -136,5 +129,16 @@ export class BoardPostController {
     };
 
     return this.baseLikeService.toggleLike(dto, user);
+  }
+
+  @Get(":id/owner-check")
+  @UseGuards(ResourceExistenceGuard)
+  @UseGuards(GuestOrUserTokenGuard)
+  async getOwnerCheck(
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    return this.boardPostService.checkOwnerPost(id, user);
   }
 }

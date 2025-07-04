@@ -34,7 +34,9 @@ const BottomSection = ({
       setPendingAction("edit");
       setShowPasswordModal(true);
     } else {
-      router.replace(`/board/${boardId}/post/${post.id}/edit`);
+      if (isPostOwner) {
+        postEdit();
+      }
     }
   };
 
@@ -50,31 +52,42 @@ const BottomSection = ({
   };
 
   const handlePasswordSubmit = async (password: string) => {
-    try {
-      const data = { password: encodeBase64Unicode(password) };
-      // 비밀번호 검증 성공 후 해당 액션 실행
-      if (pendingAction === "edit") {
-        const result = await dataApi.post(
-          `/board-post/${post.id}/guest-password-verify`,
-          data
-        );
-        if (result.status === StatusCodes.CREATED && result.data) {
-          router.replace(`/board/${boardId}/post/${post.id}/edit`);
-        }
-      } else if (pendingAction === "delete") {
-        postDelete(password);
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const msg = error.response.data?.message;
-        window.alert(msg);
-      }
+    if (pendingAction === "edit") {
+      postEdit(password);
+    } else if (pendingAction === "delete") {
+      postDelete(password);
+    } else {
+      throw new Error("정의되지 않은 액션입니다.");
     }
   };
 
-  const handleModalClose = () => {
-    setShowPasswordModal(false);
-    setPendingAction(null);
+  const postEdit = async (password?: string) => {
+    if (password) {
+      const headers: Record<string, string> = {};
+      const encoded = encodeBase64Unicode(
+        `${post.guest_account?.guest_author_id}:${password}`
+      );
+      headers["Authorization"] = `Basic ${encoded}`;
+      try {
+        const result = await dataApi.get(`/board-post/${post.id}/owner-check`, {
+          headers,
+        });
+
+        if (result.status !== StatusCodes.OK || !result.data) {
+          window.alert("게시글 수정 권한이 없습니다.");
+          handleModalClose();
+          return false;
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const msg = error.response.data?.message || "서버 오류";
+          window.alert(msg);
+          return false;
+        }
+      }
+    }
+
+    router.replace(`/board/${boardId}/post/${post.id}/edit`);
   };
 
   const postDelete = async (password?: string) => {
@@ -99,7 +112,17 @@ const BottomSection = ({
         handleModalClose();
         throw new Error("잘못된 비밀번호 입니다.");
       }
-    } catch (error) {}
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message || "서버 오류";
+        window.alert(msg);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowPasswordModal(false);
+    setPendingAction(null);
   };
 
   return (
