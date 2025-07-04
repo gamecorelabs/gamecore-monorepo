@@ -99,7 +99,7 @@ const LikeDetail = ({
         onClick={() => handleLike(LikeType.LIKE)}
       >
         <HandThumbUpIcon className="h-8 w-8 text-green-500" />
-        <span className="text-lg font-medium text-gray-700">{likeCount}</span>
+        <span className="text-lg font-medium">{likeCount}</span>
       </button>
       <button
         className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 hover:bg-gray-50 transition-colors duration-200
@@ -107,9 +107,7 @@ const LikeDetail = ({
         onClick={() => handleLike(LikeType.DISLIKE)}
       >
         <HandThumbDownIcon className="h-8 w-8 text-red-500" />
-        <span className="text-lg font-medium text-gray-700">
-          {dislikeCount}
-        </span>
+        <span className="text-lg font-medium">{dislikeCount}</span>
       </button>
     </div>
   );
