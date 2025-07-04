@@ -26,8 +26,7 @@ export class GuestUserTokenGuard implements CanActivate {
     const extract = this.baseAuthService.extractHeader(rawHeaderToken);
 
     if (extract.type === "Basic") {
-      const token = extract.token;
-      const decodedToken = Buffer.from(token, "base64").toString("utf-8");
+      const decodedToken = this.baseAuthService.decodeBasicToken(extract.token);
 
       if (decodedToken.includes(":")) {
         const decoded = this.baseAuthService.splitBasicToken(decodedToken);

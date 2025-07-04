@@ -20,7 +20,8 @@ export class BasicTokenGuard implements CanActivate {
     }
 
     const extract = this.baseAuthService.extractHeader(rawHeaderToken);
-    const decoded = this.baseAuthService.decodeBasicToken(extract.token);
+    const token = this.baseAuthService.decodeBasicToken(extract.token);
+    const decoded = this.baseAuthService.splitBasicToken(token);
 
     request.decoded = decoded;
 

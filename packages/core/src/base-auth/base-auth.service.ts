@@ -81,6 +81,13 @@ export class BaseAuthService {
     };
   }
 
+  decodeBasicToken(token: string) {
+    if (!token || !token.match(/^[A-Za-z0-9+/]+={0,2}$/)) {
+      throw new UnauthorizedException("잘못된 형식의 토큰입니다.");
+    }
+    return Buffer.from(token, "base64").toString("utf-8");
+  }
+
   splitBasicToken(token: string) {
     const splitDecoded = token.split(":");
 
