@@ -87,7 +87,7 @@ const BottomSection = ({
       }
     }
 
-    router.replace(`/board/${boardId}/post/${post.id}/edit`);
+    router.push(`/board/${boardId}/post/${post.id}/edit`);
   };
 
   const postDelete = async (password?: string) => {
@@ -147,13 +147,13 @@ const BottomSection = ({
         ) : null}
         <button
           className="text-sm"
-          onClick={() => router.replace(`/board/${boardId}/post`)}
+          onClick={() => router.push(`/board/${boardId}/post`)}
         >
           목록
         </button>
         <button
           className="text-sm"
-          onClick={() => router.replace(`/board/${boardId}/post/new`)}
+          onClick={() => router.push(`/board/${boardId}/post/new`)}
         >
           글쓰기
         </button>
