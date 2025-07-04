@@ -145,7 +145,18 @@ const BottomSection = ({
             </button>
           </>
         ) : null}
-        <button className="text-sm">공유하기</button>
+        <button
+          className="text-sm"
+          onClick={() => router.replace(`/board/${boardId}/post`)}
+        >
+          목록
+        </button>
+        <button
+          className="text-sm"
+          onClick={() => router.replace(`/board/${boardId}/post/new`)}
+        >
+          글쓰기
+        </button>
       </div>
 
       <PasswordModal
