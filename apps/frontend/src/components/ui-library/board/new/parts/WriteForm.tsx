@@ -1,7 +1,7 @@
 "use client";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { StatusCodes } from "http-status-codes";
 import { useUserStore } from "@/store/userStore";
 import useHydrated from "@/utils/hooks/useHydrated";
@@ -11,47 +11,31 @@ import {
   guestBoardPostSchema,
 } from "@/utils/validation/board/newBoardPostSchema";
 import type { ZodIssue } from "zod";
-import {
-  encodeBase64Unicode,
-  decodeBase64Unicode,
-} from "@/utils/helpers/base64Unicode";
+import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import GuestAuthorFields from "./parts/GuestAuthorFields";
-import PostFields from "./parts/PostFields";
+import GuestAuthorFields from "./GuestAuthorFields";
+import PostFields from "./PostFields";
 
-const NewBoardPost = ({
+const WriteForm = ({
   boardId,
+  guestMode,
   post,
+  guestInfo,
 }: {
   boardId: string;
+  guestMode: boolean;
   post?: BoardPost;
+  guestInfo?: {
+    guestAuthorId: string;
+    guestAuthorPassword: string;
+  };
 }) => {
   const isEditMode = !!post;
   const currentUser = useUserStore((state) => state.user);
-  const [guestMode, setGuestMode] = useState<boolean>(!currentUser);
-  const [guestInfo, setGuestInfo] = useState<{
-    guestAuthorId: string;
-    guestAuthorPassword: string;
-  } | null>(null);
   const hydrated = useHydrated();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (post && isEditMode) {
-      const guestInfo = sessionStorage.getItem(
-        `post_edit_guest_auth_${post?.id}`
-      );
-
-      if (guestInfo) {
-        const decoded = decodeBase64Unicode(guestInfo);
-        const [guestAuthorId, guestAuthorPassword] = decoded.split(":");
-        setGuestInfo({ guestAuthorId, guestAuthorPassword });
-        setGuestMode(true);
-      }
-    }
-  }, [post]);
 
   const handlePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -160,4 +144,4 @@ const NewBoardPost = ({
   );
 };
 
-export default NewBoardPost;
+export default WriteForm;

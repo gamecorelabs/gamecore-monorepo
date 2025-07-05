@@ -3,7 +3,10 @@ const GuestAuthorFields = ({
   guestInfo,
 }: {
   isEditMode: boolean;
-  guestInfo: { guestAuthorId: string; guestAuthorPassword: string } | null;
+  guestInfo?: {
+    guestAuthorId: string;
+    guestAuthorPassword: string;
+  };
 }) => {
   return (
     <div className="flex mb-4 w-full gap-4 flex-col xs:flex-row">
