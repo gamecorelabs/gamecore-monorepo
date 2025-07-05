@@ -2,7 +2,7 @@
 
 import { useUserStore } from "@/store/userStore";
 import dataApi from "@/utils/common-axios/dataApi";
-import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import {

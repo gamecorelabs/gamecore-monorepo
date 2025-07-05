@@ -9,7 +9,7 @@ import {
   userCommentSchema,
 } from "@/utils/validation/board/newPostCommentSchema";
 import React, { useRef } from "react";
-import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { StatusCodes } from "http-status-codes";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
