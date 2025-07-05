@@ -9,6 +9,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
@@ -25,6 +26,7 @@ import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
 @Controller(["board-post"])
 export class BoardPostController {
@@ -48,6 +50,7 @@ export class BoardPostController {
   @Patch(":id")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(AnyFilesInterceptor())
   async patchPost(
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserOrGuestLoginRequest,

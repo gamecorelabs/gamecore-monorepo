@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import PasswordModal from "@ui-library/modal/PasswordModal";
 import dataApi from "@/utils/common-axios/dataApi";
 import { StatusCodes } from "http-status-codes";
-import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import axios from "axios";
 
 const BottomSection = ({
@@ -78,6 +78,8 @@ const BottomSection = ({
           handleModalClose();
           return false;
         }
+
+        sessionStorage.setItem(`post_edit_guest_auth_${post.id}`, encoded);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           const msg = error.response.data?.message || "서버 오류";

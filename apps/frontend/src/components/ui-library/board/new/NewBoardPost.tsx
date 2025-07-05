@@ -11,14 +11,48 @@ import {
   guestBoardPostSchema,
 } from "@/utils/validation/board/newBoardPostSchema";
 import type { ZodIssue } from "zod";
-import { encodeBase64Unicode } from "@/utils/helpers/encodeBase64Unicode";
+import {
+  encodeBase64Unicode,
+  decodeBase64Unicode,
+} from "@/utils/helpers/base64Unicode";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
+import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import GuestAuthorFields from "./parts/GuestAuthorFields";
+import PostFields from "./parts/PostFields";
 
-const NewBoardPost = ({ boardId }: { boardId: string }) => {
+const NewBoardPost = ({
+  boardId,
+  post,
+}: {
+  boardId: string;
+  post?: BoardPost;
+}) => {
+  const isEditMode = !!post;
   const currentUser = useUserStore((state) => state.user);
+  const [guestMode, setGuestMode] = useState<boolean>(!currentUser);
+  const [guestInfo, setGuestInfo] = useState<{
+    guestAuthorId: string;
+    guestAuthorPassword: string;
+  } | null>(null);
   const hydrated = useHydrated();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (post && isEditMode) {
+      const guestInfo = sessionStorage.getItem(
+        `post_edit_guest_auth_${post?.id}`
+      );
+
+      if (guestInfo) {
+        const decoded = decodeBase64Unicode(guestInfo);
+        const [guestAuthorId, guestAuthorPassword] = decoded.split(":");
+        setGuestInfo({ guestAuthorId, guestAuthorPassword });
+        setGuestMode(true);
+      }
+    }
+  }, [post]);
+
   const handlePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (formRef.current === null) {
@@ -29,7 +63,8 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     const formData = new FormData(formRef.current);
     const formObject = formDataToObject(formData);
 
-    const schema = currentUser ? userBoardPostSchema : guestBoardPostSchema;
+    const schema =
+      currentUser && !guestMode ? userBoardPostSchema : guestBoardPostSchema;
     const validation = schema.safeParse(formObject);
 
     if (!validation.success) {
@@ -43,7 +78,7 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     };
 
     if (
-      !currentUser &&
+      guestMode &&
       formObject.guestAuthorId &&
       formObject.guestAuthorPassword
     ) {
@@ -55,6 +90,17 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
       formData.delete("guestAuthorPassword");
     }
 
+    if (isEditMode && post) {
+      editPost(post.id, headers, formData);
+    } else {
+      newPost(headers, formData);
+    }
+  };
+
+  const newPost = async (
+    headers: Record<string, string>,
+    formData: FormData
+  ) => {
     try {
       const result = await dataApi.post(`/board/${boardId}/post`, formData, {
         headers,
@@ -70,6 +116,26 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
     }
   };
 
+  const editPost = async (
+    postId: number,
+    headers: Record<string, string>,
+    formData: FormData
+  ) => {
+    try {
+      const result = await dataApi.patch(`/board-post/${postId}`, formData, {
+        headers,
+        withCredentials: true,
+      });
+
+      if (result.status === StatusCodes.OK && result.data.id > 0) {
+        router.push(`/board/${boardId}/post`);
+      }
+    } catch (error) {
+      window.alert("게시글 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+      return;
+    }
+  };
+
   if (!hydrated) return null;
 
   return (
@@ -77,71 +143,12 @@ const NewBoardPost = ({ boardId }: { boardId: string }) => {
       className="flex flex-col items-center justify-center h-full w-full mx-auto p-6 bg-white rounded shadow"
       ref={formRef}
     >
-      {!currentUser && (
-        <div className="flex mb-4 w-full gap-4 flex-col xs:flex-row">
-          <div className="flex-1">
-            <label
-              htmlFor="guestAuthorId"
-              className="block text-gray-700 font-semibold mb-2"
-            >
-              아이디 (비회원)
-            </label>
-            <input
-              id="guestAuthorId"
-              name="guestAuthorId"
-              type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-2"
-              placeholder="아이디를 입력하세요"
-            />
-          </div>
-          <div className="flex-1">
-            <label
-              htmlFor="guestAuthorPassword"
-              className="block text-gray-700 font-semibold mb-2"
-            >
-              비밀번호 (비회원)
-            </label>
-            <input
-              id="guestAuthorPassword"
-              name="guestAuthorPassword"
-              type="password"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="비밀번호를 입력하세요"
-            />
-          </div>
-        </div>
+      {guestMode && (
+        <GuestAuthorFields isEditMode={isEditMode} guestInfo={guestInfo} />
       )}
 
-      <div className="w-full mb-4">
-        <label
-          htmlFor="title"
-          className="block text-gray-700 font-semibold mb-2"
-        >
-          제목
-        </label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="제목을 입력하세요"
-        />
-      </div>
-      <div className="w-full mb-4">
-        <label
-          htmlFor="content"
-          className="block text-gray-700 font-semibold mb-2"
-        >
-          내용
-        </label>
-        <textarea
-          id="content"
-          name="content"
-          rows={6}
-          className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="내용을 입력하세요"
-        />
-      </div>
+      <PostFields post={post} />
+
       <button
         type="submit"
         className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
