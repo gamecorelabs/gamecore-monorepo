@@ -19,6 +19,8 @@ import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
+import { BaseCommonService } from "@_core/base-common/base-common.service";
+import { BoardPostPaginateDto } from "./const/board-post-paginate.dto";
 
 @Injectable()
 export class BoardPostService {
@@ -28,11 +30,14 @@ export class BoardPostService {
     private readonly postUtilService: PostUtilService,
     private readonly configService: ConfigService,
     private readonly baseLikeService: BaseLikeService,
-    private readonly baseCommentService: BaseCommentService
+    private readonly baseCommentService: BaseCommentService,
+    private readonly commonService: BaseCommonService
   ) {}
 
-  async getPostList(boardId: number) {
-    const posts = await this.getPostsPaginate(boardId);
+  async getPostList(boardId: number, dto: BoardPostPaginateDto) {
+    const result = await this.getPostsPaginate(boardId, dto);
+    const { data: posts, total: totalPost } = result;
+
     const postIdList = posts.map((post) => post.id);
 
     const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
@@ -46,7 +51,7 @@ export class BoardPostService {
         postIdList
       );
 
-    return this.mergePostData(posts, likeCounts, commentCounts);
+    return this.mergePostData(posts, likeCounts, commentCounts, totalPost);
   }
 
   async getPostDetail(postId: number) {
@@ -166,8 +171,7 @@ export class BoardPostService {
     return post;
   }
 
-  async getPostsPaginate(board_id: number) {
-    // FIXME: pagination 반영
+  async getPostsPaginate(board_id: number, dto: BoardPostPaginateDto) {
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
@@ -177,7 +181,10 @@ export class BoardPostService {
       order: { created_at: "DESC" },
     };
 
-    return await this.boardPostRepository.find(conditions);
+    return this.commonService.paginate(dto, this.boardPostRepository, {
+      ...conditions,
+    });
+    // return await this.boardPostRepository.find(conditions);
   }
 
   /**
@@ -221,7 +228,8 @@ export class BoardPostService {
   private mergePostData(
     posts: BoardPost | BoardPost[],
     likeCounts: Record<number, { likeCount: number; dislikeCount: number }>,
-    commentCounts: Record<number, number>
+    commentCounts: Record<number, number>,
+    totalPost?: number
   ) {
     const postsArray = Array.isArray(posts) ? posts : [posts];
 
@@ -234,6 +242,7 @@ export class BoardPostService {
         likeCount: likeData.likeCount,
         dislikeCount: likeData.dislikeCount,
         commentCount: postCommentCount,
+        totalPost: totalPost || 0,
       };
     });
 

@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Request,
   UseGuards,
   UseInterceptors,
@@ -23,6 +24,7 @@ import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { BoardPostPaginateDto } from "@_core/base-post/board/const/board-post-paginate.dto";
 
 @Controller("board")
 export class BoardController {
@@ -49,9 +51,10 @@ export class BoardController {
   @UseGuards(ResourceExistenceGuard)
   async getBoardPost(
     @Request() req: BoardConfigRequest,
-    @Param("id", ParseIntPipe) boardId: number
+    @Param("id", ParseIntPipe) boardId: number,
+    @Query() query: BoardPostPaginateDto
   ) {
-    return await this.boardPostService.getPostList(boardId);
+    return await this.boardPostService.getPostList(boardId, query);
   }
 
   // 해당 게시판에 글쓰기
