@@ -3,6 +3,15 @@ import { ArticleInfo } from "./parts/ArticleInfo";
 import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import NewPostButton from "../buttons/NewPostButton";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const ArticleList = ({
   boardId,
@@ -23,6 +32,30 @@ const ArticleList = ({
           <ArticleInfo post={post} />
         </article>
       ))}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
       <NewPostButton link={`/board/${boardId}/post/new`} />
     </>
   );
