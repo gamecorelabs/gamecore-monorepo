@@ -42,12 +42,7 @@ export class CommentController {
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserOrGuestLoginRequest
   ) {
-    const checked = await this.baseCommentService.checkOwnerComment(id, user);
-
-    if (!checked) {
-      throw new InternalServerErrorException("댓글 작성자가 아닙니다.");
-    }
-
+    await this.baseCommentService.checkOwnerComment(id, user);
     return this.baseCommentService.deleteComment(id);
   }
 

@@ -2,6 +2,14 @@
 import { getUserName } from "@/utils/helpers/getUsername";
 import { Comment } from "@gamecoregg/types/comment/comment.types";
 import ReplyForm from "@ui-library/comment/CommentReplyForm";
+import PasswordModal from "../modal/PasswordModal";
+import { useState } from "react";
+import { useUserStore } from "@/store/userStore";
+import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
+import dataApi from "@/utils/common-axios/dataApi";
+import { StatusCodes } from "http-status-codes";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export const CommentItem = ({
   comment,
@@ -17,13 +25,76 @@ export const CommentItem = ({
   setActiveReplyId: (id: number | null) => void;
 }) => {
   const isChildrenComment = type === "child";
+  const router = useRouter();
+  const currentUser = useUserStore((state) => state.user);
   const isReplying = activeReplyId === comment.id;
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"delete" | null>(null);
+  const isGuestAuthorComment = !!comment.guest_account?.guest_author_id;
+  const isCommentOwner =
+    currentUser && currentUser.type === "user"
+      ? currentUser.user_account.id === comment.author?.id
+      : false;
 
   const getReplyContentPrefix = () => {
     if (isChildrenComment && parentId) {
       return `@${getUserName(comment)} // `;
     }
     return "";
+  };
+
+  const handleDelete = () => {
+    if (isGuestAuthorComment) {
+      setPendingAction("delete");
+      setShowPasswordModal(true);
+    } else {
+      if (isCommentOwner && window.confirm("댓글을 정말 삭제하시겠습니까?")) {
+        commentDelete();
+      }
+    }
+  };
+
+  const handlePasswordSubmit = async (password: string) => {
+    if (pendingAction === "delete") {
+      commentDelete(password);
+    } else {
+      throw new Error("정의되지 않은 액션입니다.");
+    }
+  };
+
+  const commentDelete = async (password?: string) => {
+    try {
+      let result = null;
+      const headers: Record<string, string> = {};
+      if (password) {
+        const encoded = encodeBase64Unicode(
+          `${comment.guest_account?.guest_author_id}:${password}`
+        );
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
+      result = await dataApi.delete(`/comment/${comment.id}`, {
+        headers,
+        withCredentials: true,
+      });
+
+      if (result.status === StatusCodes.OK && result.data) {
+        window.alert("댓글 삭제가 완료 되었습니다.");
+        router.refresh();
+      } else {
+        handleModalClose();
+        throw new Error("잘못된 비밀번호 입니다.");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data?.message || "서버 오류";
+        window.alert(msg);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowPasswordModal(false);
+    setPendingAction(null);
   };
 
   return (
@@ -43,11 +114,25 @@ export const CommentItem = ({
             >
               답글
             </button>
-            <button className="text-sm">삭제</button>
+            {isGuestAuthorComment || isCommentOwner ? (
+              <>
+                <button className="text-sm" onClick={handleDelete}>
+                  삭제
+                </button>
+              </>
+            ) : null}
           </div>
         </div>
         <p className="text-gray-800 whitespace-pre-wrap">{comment.content}</p>
       </div>
+
+      <PasswordModal
+        isOpen={showPasswordModal}
+        onClose={handleModalClose}
+        onSubmit={handlePasswordSubmit}
+        title={pendingAction === "delete" ? "댓글 삭제" : ""}
+        description={`댓글을 ${pendingAction === "delete" ? "삭제" : ""}하려면 비밀번호를 입력해주세요.`}
+      />
 
       {isReplying && (
         <ReplyForm
