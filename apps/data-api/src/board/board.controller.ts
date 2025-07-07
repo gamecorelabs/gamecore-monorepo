@@ -24,7 +24,7 @@ import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
-import { BoardPostPaginateDto } from "@_core/base-post/board/const/board-post-paginate.dto";
+import { BoardPostPaginationDto } from "@_core/base-post/board/const/board-post-pagination.dto";
 
 @Controller("board")
 export class BoardController {
@@ -52,7 +52,7 @@ export class BoardController {
   async getBoardPost(
     @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
-    @Query() query: BoardPostPaginateDto
+    @Query() query: BoardPostPaginationDto
   ) {
     return await this.boardPostService.getPostList(boardId, query);
   }

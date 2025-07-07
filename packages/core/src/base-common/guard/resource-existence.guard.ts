@@ -30,7 +30,7 @@ export class ResourceExistenceGuard implements CanActivate {
     const fullPath = request.route.path;
 
     const apiResourceType =
-      request.params.resource_type || fullPath.split("/").filter(Boolean)[0];
+      fullPath.split("/").filter(Boolean)[0] || request.params.resource_type;
 
     if (
       !apiResourceType ||
