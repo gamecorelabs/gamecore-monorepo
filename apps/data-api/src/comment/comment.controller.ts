@@ -39,11 +39,12 @@ export class CommentController {
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   async deleteComment(
+    @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserOrGuestLoginRequest
   ) {
     await this.baseCommentService.checkOwnerComment(id, user);
-    return this.baseCommentService.deleteComment(id);
+    return this.baseCommentService.deleteComment(id, req);
   }
 
   // 특정 댓글 좋아요/싫어요

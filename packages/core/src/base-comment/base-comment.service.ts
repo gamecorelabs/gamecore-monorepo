@@ -14,6 +14,9 @@ import * as bcrpyt from "bcrypt";
 import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
+import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
+import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
+import { CommonRequest } from "@_core/base-common/types/resource-types";
 
 @Injectable()
 export class BaseCommentService {
@@ -23,7 +26,8 @@ export class BaseCommentService {
     @InjectRepository(UserAccount)
     private readonly userAccountRepository: Repository<UserAccount>,
     private readonly baseLikeService: BaseLikeService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly resourceRepositoryService: ResourceRepositoryService
   ) {}
 
   async getPostCommentList(resourceType: ResourceType, resourceId: number) {
@@ -63,8 +67,11 @@ export class BaseCommentService {
     if (dto.parent_id) {
       commentData.parent = this.commentRepository.create({ id: dto.parent_id });
     }
+    // FIXME: transaction
+    const result = await this.commentRepository.save(commentData);
+    await this.refreshCommentCount(dto.resource_info, "increment");
 
-    return this.commentRepository.save(commentData);
+    return result;
   }
 
   async getCommentsByResource(
@@ -135,10 +142,13 @@ export class BaseCommentService {
   }
 
   // 댓글 삭제 (soft-delete)
-  async deleteComment(id: number): Promise<UpdateResult> {
-    return await this.commentRepository.update(id, {
+  async deleteComment(id: number, req: CommonRequest): Promise<UpdateResult> {
+    // FIXME: transaction
+    const result = await this.commentRepository.update(id, {
       status: CommentStatus.DELETED,
     });
+    await this.refreshCommentCount(req.resource_info, "decrement");
+    return result;
   }
 
   getIdList(comments: Comment[]): number[] {
@@ -301,5 +311,23 @@ export class BaseCommentService {
     });
 
     return mapped;
+  }
+
+  private async refreshCommentCount(
+    resource_info: ResourceInfo,
+    action: "increment" | "decrement"
+  ): Promise<void> {
+    const { resource_type, resource_id } = resource_info;
+
+    const repository =
+      this.resourceRepositoryService.getRepository(resource_type);
+
+    if (!repository) {
+      throw new ConflictException(
+        `지원하지 않는 리소스 타입입니다: ${resource_type}`
+      );
+    }
+
+    await repository[action]({ id: resource_id }, "comment_count", 1);
   }
 }

@@ -59,6 +59,11 @@ export class CommentInPostGuard implements CanActivate {
       throw new NotFoundException(`더이상 이용할 수 없는 게시판입니다.`);
     }
 
+    request.resource_info = {
+      resource_type: comment.resource_info.resource_type,
+      resource_id: comment.resource_info.resource_id,
+    };
+
     return true;
   }
 }
