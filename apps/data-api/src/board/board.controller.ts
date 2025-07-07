@@ -17,7 +17,7 @@ import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-toke
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import { BoardConfigRequest } from "@_core/base-common/types/resource-types";
+import { BoardConfigRequest } from "@_core/base-board/types/request-types";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { BoardPostPaginationDto } from "@_core/base-post/board/const/board-post-pagination.dto";
 

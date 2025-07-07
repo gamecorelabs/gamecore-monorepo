@@ -17,10 +17,8 @@ import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
-import {
-  BoardPostRequest,
-  CommonRequest,
-} from "@_core/base-common/types/resource-types";
+import { CommonRequest } from "@_core/base-common/types/request-types";
+import { BoardPostRequest } from "@_core/base-post/board/types/request-types";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
