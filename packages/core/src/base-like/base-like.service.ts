@@ -4,7 +4,7 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
@@ -15,6 +15,7 @@ import { LikeStatus, LikeType } from "./enum/like.enum";
 import { UpdateLikeDto } from "./dto/update-like.dto";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
+import { SelectedLikeDto } from "./dto/selected-like.dto";
 @Injectable()
 export class BaseLikeService {
   private readonly countFieldMap: Record<LikeType, string> = {
@@ -228,13 +229,15 @@ export class BaseLikeService {
   }
 
   async checkUserLikeStatus(
-    resource_type: ResourceType,
-    resource_id: number,
+    dto: SelectedLikeDto,
     user: UserOrGuestLoginRequest
-  ): Promise<{ selected: LikeType } | null> {
+  ): Promise<Record<number, { type: LikeType } | null>> {
     const conditions = {
       where: {
-        resource_info: { resource_type, resource_id },
+        resource_info: {
+          resource_type: dto.resource_type,
+          resource_id: In(dto.resource_ids),
+        },
         status: LikeStatus.SELECTED,
       },
     };
@@ -250,8 +253,19 @@ export class BaseLikeService {
         throw new UnauthorizedException("식별할 수 없는 회원 타입입니다.");
     }
 
-    const result = await this.likeRepository.findOne(conditions);
+    const results = await this.likeRepository.find(conditions);
 
-    return result ? { selected: result.type } : null;
+    // 결과를 resource_id별로 매핑
+    const likeStatusMap: Record<number, { type: LikeType } | null> = {};
+
+    // 모든 요청된 ID를 null로 초기화
+    resource_ids.forEach((id) => (likeStatusMap[id] = null));
+
+    // 실제 결과로 업데이트
+    results.forEach((like) => {
+      likeStatusMap[like.resource_info.resource_id] = { type: like.type };
+    });
+
+    return likeStatusMap;
   }
 }

@@ -16,11 +16,13 @@ const LikeDetail = ({
   resourceId,
   likeCount,
   dislikeCount,
+  selectedMap,
 }: {
   resourceType: ResourceType;
   resourceId: number;
   likeCount: number;
   dislikeCount: number;
+  selectedMap: Record<number, { type: LikeType | null }>;
 }) => {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
@@ -30,7 +32,6 @@ const LikeDetail = ({
     return fp;
   }, [currentUser, fp]);
   const [selected, setSelected] = useState<LikeType | null>(null);
-
   const headers = useMemo(() => {
     const h: Record<string, string> = {};
 
@@ -43,24 +44,12 @@ const LikeDetail = ({
   }, [currentUser, fingerprint]);
 
   useEffect(() => {
-    if (!currentUser && !headers["Authorization"]) return;
-
-    const fetchCheckLike = async () => {
-      const result = await dataApi.get(
-        `/${resourceType}/${resourceId}/like/check`,
-        {
-          headers,
-          withCredentials: true,
-        }
-      );
-
-      if (result.status === StatusCodes.OK && result.data.selected) {
-        setSelected(result.data.selected);
-      }
-    };
-
-    fetchCheckLike();
-  }, [headers]);
+    if (selectedMap && resourceId in selectedMap) {
+      setSelected(selectedMap[resourceId]?.type || null);
+    } else {
+      setSelected(null);
+    }
+  }, []);
 
   const handleLike = async (type: string) => {
     try {

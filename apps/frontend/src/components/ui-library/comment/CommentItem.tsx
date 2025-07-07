@@ -10,6 +10,9 @@ import dataApi from "@/utils/common-axios/dataApi";
 import { StatusCodes } from "http-status-codes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import LikeDetail from "../like/LikeDetail";
+import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { LikeType } from "@gamecoregg/types/like/like.types";
 
 export const CommentItem = ({
   comment,
@@ -17,12 +20,14 @@ export const CommentItem = ({
   parentId,
   activeReplyId,
   setActiveReplyId,
+  selectedMap,
 }: {
   comment: Comment;
   type: "parent" | "child";
   parentId?: number;
   activeReplyId: number | null;
   setActiveReplyId: (id: number | null) => void;
+  selectedMap: Record<number, { type: LikeType | null }>;
 }) => {
   const isChildrenComment = type === "child";
   const router = useRouter();
@@ -108,6 +113,14 @@ export const CommentItem = ({
             </span>
           </div>
           <div className="flex gap-2">
+            <LikeDetail
+              resourceType={ResourceType.COMMENT}
+              resourceId={comment.id}
+              likeCount={0}
+              dislikeCount={0}
+              selectedMap={selectedMap}
+            />
+
             <button
               onClick={() => setActiveReplyId(isReplying ? null : comment.id)}
               className="text-sm"

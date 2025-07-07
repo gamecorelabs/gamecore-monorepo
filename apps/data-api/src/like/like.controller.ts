@@ -1,16 +1,10 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { LikeService } from "./like.service";
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
 import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
-import {
-  CreateLikeDto,
-  CreateRequestLikeDto,
-} from "@_core/base-like/dto/create-like.dto";
-import { Request as ExpressRequest } from "express";
-import { CommonRequest } from "@_core/base-common/types/resource-types";
+import { SelectedLikeDto } from "@_core/base-like/dto/selected-like.dto";
 
 @Controller("like")
 export class LikeController {
@@ -18,4 +12,14 @@ export class LikeController {
     private readonly likeService: LikeService,
     private readonly baseLikeService: BaseLikeService
   ) {}
+
+  // 특정 게시글에 좋아요 누른 여부
+  @Post("selected")
+  @UseGuards(GuestOrUserTokenGuard)
+  checkSelectedLike(
+    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Body() dto: SelectedLikeDto
+  ) {
+    return this.baseLikeService.checkUserLikeStatus(dto, user);
+  }
 }

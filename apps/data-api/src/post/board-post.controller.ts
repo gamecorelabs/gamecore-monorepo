@@ -101,22 +101,6 @@ export class BoardPostController {
     return this.baseCommentService.saveComment(dto, user);
   }
 
-  // 특정 게시글에 좋아요 누른 여부
-  @Get(":id/like/check")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
-  getLikeCountByPostId(
-    @Request() req: CommonRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
-    @Param("id", ParseIntPipe) id: number
-  ) {
-    return this.baseLikeService.checkUserLikeStatus(
-      req.resource_info.resource_type,
-      req.resource_info.resource_id,
-      user
-    );
-  }
-
   // 특정 게시글 좋아요
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
