@@ -232,11 +232,12 @@ export class BaseLikeService {
     dto: SelectedLikeDto,
     user: UserOrGuestLoginRequest
   ): Promise<Record<number, { type: LikeType } | null>> {
+    const { resource_type, resource_ids } = dto;
     const conditions = {
       where: {
         resource_info: {
-          resource_type: dto.resource_type,
-          resource_id: In(dto.resource_ids),
+          resource_type: resource_type,
+          resource_id: In(resource_ids),
         },
         status: LikeStatus.SELECTED,
       },

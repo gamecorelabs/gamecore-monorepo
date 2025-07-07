@@ -16,7 +16,7 @@ import { UserAccount } from "@_core/base-user/entity/user-account.entity";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
 import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
-import { CommonRequest } from "@_core/base-common/types/resource-types";
+import { CommentRequest } from "@_core/base-comment/types/request-types";
 
 @Injectable()
 export class BaseCommentService {
@@ -142,11 +142,12 @@ export class BaseCommentService {
   }
 
   // 댓글 삭제 (soft-delete)
-  async deleteComment(id: number, req: CommonRequest): Promise<UpdateResult> {
+  async deleteComment(id: number, req: CommentRequest): Promise<UpdateResult> {
+    const resource_info = req.comment.resource_info;
     const result = await this.commentRepository.update(id, {
       status: CommentStatus.DELETED,
     });
-    await this.refreshCommentCount(req.resource_info, "decrement");
+    await this.refreshCommentCount(resource_info, "decrement");
     return result;
   }
 

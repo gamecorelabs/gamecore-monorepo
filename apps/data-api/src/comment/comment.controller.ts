@@ -16,10 +16,8 @@ import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import {
-  BoardPostRequest,
-  CommonRequest,
-} from "@_core/base-common/types/resource-types";
+import { CommonRequest } from "@_core/base-common/types/resource-types";
+import { CommentRequest } from "@_core/base-comment/types/request-types";
 import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 
@@ -39,7 +37,7 @@ export class CommentController {
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   async deleteComment(
-    @Request() req: CommonRequest,
+    @Request() req: CommentRequest,
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserOrGuestLoginRequest
   ) {

@@ -42,8 +42,8 @@ export const useLikeSelection = (
       const { data } = await dataApi.post(
         `/like/selected`,
         {
-          type: resourceType,
-          ids: resourceIds,
+          resource_type: resourceType,
+          resource_ids: resourceIds,
         },
         {
           headers,
