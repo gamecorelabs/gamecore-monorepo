@@ -38,36 +38,11 @@ export class BoardPostService {
     const result = await this.getPostsPaginate(boardId, dto);
     const { data: posts, total: totalPost } = result;
 
-    const postIdList = posts.map((post) => post.id);
-
-    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
-      ResourceType.BOARD_POST,
-      postIdList
-    );
-
-    const commentCounts =
-      await this.baseCommentService.getCommentCountByResourceInId(
-        ResourceType.BOARD_POST,
-        postIdList
-      );
-
-    return this.mergePostData(posts, likeCounts, commentCounts, totalPost);
+    return { posts, totalPost };
   }
 
   async getPostDetail(postId: number) {
-    const post = await this.getPostById(postId);
-    const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
-      ResourceType.BOARD_POST,
-      [post.id]
-    );
-
-    const commentCounts =
-      await this.baseCommentService.getCommentCountByResourceInId(
-        ResourceType.BOARD_POST,
-        [post.id]
-      );
-
-    return this.mergePostData(post, likeCounts, commentCounts);
+    return await this.getPostById(postId);
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {

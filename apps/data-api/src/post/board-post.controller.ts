@@ -40,11 +40,11 @@ export class BoardPostController {
   // 게시글 상세히 보기
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
-  async getPostDetail(
+  getPostDetail(
     @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
-    return await this.boardPostService.getPostDetail(id);
+    return this.boardPostService.getPostDetail(id);
   }
 
   @Patch(":id")

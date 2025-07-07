@@ -30,18 +30,18 @@ export const ArticleContent = ({
             <div className="flex items-center gap-2 ml-auto">
               <span className="flex items-center gap-1">
                 <HandThumbUpIcon className="h-4 w-4 text-green-500" />
-                <span className="text-xs text-gray-500">{post.likeCount}</span>
+                <span className="text-xs text-gray-500">{post.like_count}</span>
               </span>
               <span className="flex items-center gap-1">
                 <HandThumbDownIcon className="h-4 w-4 text-red-500" />
                 <span className="text-xs text-gray-500">
-                  {post.dislikeCount}
+                  {post.dislike_count}
                 </span>
               </span>
               <span className="flex items-center gap-1">
                 <ChatBubbleOvalLeftIcon className="h-4 w-4 text-gray-400" />
                 <span className="text-xs text-gray-500">
-                  {post.commentCount}
+                  {post.comment_count}
                 </span>
               </span>
             </div>

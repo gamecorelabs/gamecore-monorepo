@@ -143,7 +143,6 @@ export class BaseCommentService {
 
   // 댓글 삭제 (soft-delete)
   async deleteComment(id: number, req: CommonRequest): Promise<UpdateResult> {
-    // FIXME: transaction
     const result = await this.commentRepository.update(id, {
       status: CommentStatus.DELETED,
     });

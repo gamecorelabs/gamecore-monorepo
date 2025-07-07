@@ -35,8 +35,8 @@ const BoardPostDetail = async ({
       <LikeDetail
         resourceType={ResourceType.BOARD_POST}
         resourceId={post.id}
-        likeCount={post.likeCount}
-        dislikeCount={post.dislikeCount}
+        likeCount={post.like_count}
+        dislikeCount={post.dislike_count}
       />
 
       <BottomSection boardId={boardId} post={post} />

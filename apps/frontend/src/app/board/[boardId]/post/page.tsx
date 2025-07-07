@@ -10,6 +10,7 @@ interface BoardPostProps {
 
 const BoardPostPage = async ({ params, searchParams }: BoardPostProps) => {
   let posts = null;
+  let totalPost = 0;
 
   const { boardId } = await params;
   const qstring = await searchParams;
@@ -24,7 +25,8 @@ const BoardPostPage = async ({ params, searchParams }: BoardPostProps) => {
 
   try {
     const response = await dataApi.get(`/board/${boardId}/post${queryString}`);
-    posts = response?.data ?? [];
+    posts = response?.data.posts || [];
+    totalPost = response?.data.totalPost || 0;
   } catch (error) {
     posts = [];
   }

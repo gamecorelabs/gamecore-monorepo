@@ -10,9 +10,9 @@ export type BoardPost = {
   status: string;
   view_count: number;
 
-  likeCount: number;
-  dislikeCount: number;
-  commentCount: number;
+  like_count: number;
+  dislike_count: number;
+  comment_count: number;
 
   author?: UserAccount;
   guest_account?: GuestAccount;

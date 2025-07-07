@@ -132,7 +132,7 @@ const BottomSection = ({
       <div>
         <button className=" hover:text-blue-600">
           <span className="text-lg font-semibold text-gray-900 mb-4">
-            댓글 {post.commentCount || 0}개
+            댓글 {post.comment_count || 0}개
           </span>
         </button>
       </div>

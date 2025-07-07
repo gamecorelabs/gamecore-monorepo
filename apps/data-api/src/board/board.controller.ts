@@ -10,8 +10,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
-import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
 import { BaseBoardService } from "@_core/base-board/base-board.service";
 import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
 import { BoardPostService } from "@_core/base-post/board/board-post.service";
@@ -21,9 +19,6 @@ import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-boa
 import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
 import { BoardConfigRequest } from "@_core/base-common/types/resource-types";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
-import { BaseCommentService } from "@_core/base-comment/base-comment.service";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { BoardPostPaginationDto } from "@_core/base-post/board/const/board-post-pagination.dto";
 
 @Controller("board")
