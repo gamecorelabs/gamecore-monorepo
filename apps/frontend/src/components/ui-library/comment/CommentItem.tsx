@@ -1,6 +1,6 @@
 "use client";
 import { getUserName } from "@/utils/helpers/getUsername";
-import { Comment } from "@gamecoregg/types/comment/comment.types";
+import { Comment } from "@/types/comment/comment.types";
 import ReplyForm from "@ui-library/comment/CommentReplyForm";
 import PasswordModal from "../modal/PasswordModal";
 import { useState } from "react";
@@ -11,8 +11,8 @@ import { StatusCodes } from "http-status-codes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import LikeDetail from "../like/LikeDetail";
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
-import { LikeType } from "@gamecoregg/types/like/like.types";
+import { ResourceType } from "@/types/common/resource.types";
+import { LikeType } from "@/types/like/like.types";
 
 export const CommentItem = ({
   comment,

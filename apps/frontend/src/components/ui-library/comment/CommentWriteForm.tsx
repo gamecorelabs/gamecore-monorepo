@@ -13,7 +13,7 @@ import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { StatusCodes } from "http-status-codes";
 import dataApi from "@/utils/common-axios/dataApi";
 import { useRouter } from "next/navigation";
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { ResourceType } from "@/types/common/resource.types";
 
 const CommentWriteForm = ({
   resourceType,

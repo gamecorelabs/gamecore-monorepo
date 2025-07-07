@@ -1,8 +1,8 @@
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { BoardPost } from "@/types/board/boardPost.types";
+import { ResourceType } from "@/types/common/resource.types";
 import CommentContainer from "@ui-library/comment/CommentContainer";
 import BottomSection from "./parts/BottomSection";
-import DetailContent from "./parts/detailContent";
+import DetailContent from "./parts/DetailContent";
 import DetailHeader from "./parts/DetailHeader";
 
 const BoardPostDetail = ({

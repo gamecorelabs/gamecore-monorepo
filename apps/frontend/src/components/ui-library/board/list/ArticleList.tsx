@@ -1,6 +1,6 @@
 import { ArticleContent } from "./parts/ArticleContent";
 import { ArticleInfo } from "./parts/ArticleInfo";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import NewPostButton from "../buttons/NewPostButton";
 import {

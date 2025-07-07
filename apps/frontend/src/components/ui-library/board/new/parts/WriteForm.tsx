@@ -13,7 +13,7 @@ import {
 import type { ZodIssue } from "zod";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 import GuestAuthorFields from "./GuestAuthorFields";
 import PostFields from "./PostFields";
 

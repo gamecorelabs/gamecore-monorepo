@@ -1,5 +1,5 @@
 "use client";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { decodeBase64Unicode } from "@/utils/helpers/base64Unicode";

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useUserStore } from "@/store/userStore";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 import { useRouter } from "next/navigation";
 import PasswordModal from "@ui-library/modal/PasswordModal";
 import dataApi from "@/utils/common-axios/dataApi";

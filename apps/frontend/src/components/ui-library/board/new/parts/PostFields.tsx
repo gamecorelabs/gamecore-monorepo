@@ -1,4 +1,4 @@
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 
 const PostFields = ({ post }: { post?: BoardPost }) => {
   return (

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import authApi from "@/utils/common-axios/authApi";
 import { useUserStore } from "@/store/userStore";
-import { User } from "@gamecoregg/types/user/user.types";
+import { User } from "@/types/user/user.types";
 
 export default function SessionRefresher({
   user,

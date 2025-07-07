@@ -1,4 +1,4 @@
-import { GuestAccount, UserAccount } from "@gamecoregg/types/user/user.types";
+import { GuestAccount, UserAccount } from "@/types/user/user.types";
 
 export const getUserName = (user: {
   guest_account?: GuestAccount;

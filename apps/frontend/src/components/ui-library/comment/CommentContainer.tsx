@@ -1,4 +1,4 @@
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { ResourceType } from "@/types/common/resource.types";
 import CommentList from "./CommentList";
 import CommentWriteForm from "./CommentWriteForm";
 import dataApi from "@/utils/common-axios/dataApi";

@@ -1,6 +1,6 @@
 // /store/userStore.ts
 import { create } from "zustand";
-import { User } from "@gamecoregg/types/user/user.types";
+import { User } from "@/types/user/user.types";
 
 interface UserStore {
   user: User | null;

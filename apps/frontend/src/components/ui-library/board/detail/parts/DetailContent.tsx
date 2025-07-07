@@ -1,8 +1,8 @@
 "use client";
 import LikeDetail from "@/components/ui-library/like/LikeDetail";
 import { useLikeSelection } from "@/utils/hooks/useLikeSelection";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { BoardPost } from "@/types/board/boardPost.types";
+import { ResourceType } from "@/types/common/resource.types";
 import { useMemo } from "react";
 
 const DetailContent = ({ post }: { post: BoardPost }) => {

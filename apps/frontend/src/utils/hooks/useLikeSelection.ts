@@ -2,8 +2,8 @@ import { useUserStore } from "@/store/userStore";
 import dataApi from "@/utils/common-axios/dataApi";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { useFingerprint } from "@/utils/hooks/useFingerprint";
-import { LikeType } from "@gamecoregg/types/like/like.types";
-import { ResourceType } from "@gamecoregg/types/common/resource.types";
+import { LikeType } from "@/types/like/like.types";
+import { ResourceType } from "@/types/common/resource.types";
 import { useEffect, useMemo, useState } from "react";
 
 type SelectedMap = Record<number, { type: LikeType | null }>;

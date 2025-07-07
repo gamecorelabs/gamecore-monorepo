@@ -1,5 +1,5 @@
 import { getUserName } from "@/utils/helpers/getUsername";
-import { BoardPost } from "@gamecoregg/types/board/boardPost.types";
+import { BoardPost } from "@/types/board/boardPost.types";
 
 export const ArticleInfo = ({ post }: { post: BoardPost }) => (
   <div className="flex justify-between text-sm text-gray-500 mt-2">
