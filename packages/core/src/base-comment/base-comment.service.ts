@@ -31,18 +31,7 @@ export class BaseCommentService {
   ) {}
 
   async getPostCommentList(resourceType: ResourceType, resourceId: number) {
-    const comments = await this.getCommentsByResource(resourceType, resourceId);
-
-    if (comments && comments.length > 0) {
-      const commentIds = this.getIdList(comments);
-      const likeCounts = await this.baseLikeService.getLikeCountByResourceInId(
-        ResourceType.COMMENT,
-        commentIds
-      );
-      return this.mergeLikeCount(comments, likeCounts);
-    } else {
-      return [];
-    }
+    return await this.getCommentsByResource(resourceType, resourceId);
   }
 
   async saveComment(dto: CreateCommentDto, user: UserOrGuestLoginRequest) {

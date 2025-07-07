@@ -116,8 +116,8 @@ export const CommentItem = ({
             <LikeDetail
               resourceType={ResourceType.COMMENT}
               resourceId={comment.id}
-              likeCount={0}
-              dislikeCount={0}
+              likeCount={comment.like_count || 0}
+              dislikeCount={comment.dislike_count || 0}
               selectedMap={selectedMap}
             />
 

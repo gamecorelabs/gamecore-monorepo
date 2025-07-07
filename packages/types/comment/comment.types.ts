@@ -11,7 +11,7 @@ export type Comment = {
   author?: UserAccount;
   guest_account?: GuestAccount;
   ip_address: string;
-  likeCount: number;
-  dislikeCount: number;
+  like_count: number;
+  dislike_count: number;
   children?: Comment[];
 };
