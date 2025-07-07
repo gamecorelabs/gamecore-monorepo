@@ -5,7 +5,6 @@ import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
 import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
 import { Comment } from "@_core/base-comment/entity/comment.entity";
 import { Like } from "./entity/like.entity";
-import { BasePostModule } from "@_core/base-post/base-post.module";
 
 @Module({
   imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like])],

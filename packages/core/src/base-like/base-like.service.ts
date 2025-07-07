@@ -14,13 +14,19 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { LikeStatus, LikeType } from "./enum/like.enum";
 import { UpdateLikeDto } from "./dto/update-like.dto";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
-
+import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
 @Injectable()
 export class BaseLikeService {
+  private readonly countFieldMap: Record<LikeType, string> = {
+    [LikeType.LIKE]: "like_count",
+    [LikeType.DISLIKE]: "dislike_count",
+  };
+
   constructor(
     @InjectRepository(Like)
     private readonly likeRepository: Repository<Like>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly resourceRepositoryService: ResourceRepositoryService
   ) {}
 
   async getLikeCountByResource(
@@ -65,7 +71,32 @@ export class BaseLikeService {
     }, {});
   }
 
+  private async refreshLikeCount(
+    dto: CreateLikeDto,
+    action: "increment" | "decrement"
+  ): Promise<void> {
+    const { resource_type, resource_id } = dto.resource_info;
+
+    const repository =
+      this.resourceRepositoryService.getRepository(resource_type);
+
+    if (!repository) {
+      throw new ConflictException(
+        `지원하지 않는 리소스 타입입니다: ${resource_type}`
+      );
+    }
+    const field = this.countFieldMap[dto.type];
+    if (!field) {
+      throw new ConflictException(
+        `지원하지 않는 좋아요 타입입니다: ${dto.type}`
+      );
+    }
+
+    await repository[action]({ id: resource_id }, field, 1);
+  }
+
   async toggleLike(dto: CreateLikeDto, user: UserOrGuestLoginRequest) {
+    // FIXME: transaction 적용
     let conditions = {
       where: {
         resource_info: dto.resource_info,
@@ -98,6 +129,7 @@ export class BaseLikeService {
           await this.updateLike(existingLike.id, {
             status: LikeStatus.CANCELED,
           });
+          await this.refreshLikeCount(dto, "decrement");
 
           return {
             canceled: true,
@@ -109,6 +141,7 @@ export class BaseLikeService {
           type: dto.type,
           status: LikeStatus.SELECTED, // 좋아요/싫어요 취소
         });
+        await this.refreshLikeCount(dto, "increment");
 
         return {
           selected: dto.type,
@@ -117,6 +150,7 @@ export class BaseLikeService {
     } else {
       // 좋아요 또는 싫어요 내역 자체가 없는 경우 새로 생성
       const result = await this.saveLike(dto, user);
+      await this.refreshLikeCount(dto, "increment");
       return {
         selected: result.type,
       };

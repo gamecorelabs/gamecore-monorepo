@@ -31,6 +31,21 @@ export class BoardPost extends BaseModel {
   @Column({ type: "int", default: 0 })
   view_count: number = 0;
 
+  // 좋아요 수
+  @IsNumber()
+  @Column({ type: "int", default: 0 })
+  like_count: number = 0;
+
+  // 싫어요 수
+  @IsNumber()
+  @Column({ type: "int", default: 0 })
+  dislike_count: number = 0;
+
+  // 댓글 수
+  @IsNumber()
+  @Column({ type: "int", default: 0 })
+  comment_count: number = 0;
+
   @ManyToOne(() => BoardConfig, (boardConfig) => boardConfig.boardPosts)
   @JoinColumn({ name: "board_id" })
   boardConfig: BoardConfig;
