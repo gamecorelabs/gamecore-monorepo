@@ -18,9 +18,9 @@ export class BasePaginationDto {
   where__id__less_than?: number;
 
   // 생성시간 기준 정렬
-  @IsIn(["ASC", "DESC"])
+  @IsIn(["ASC", "DESC", "asc", "desc"])
   @IsOptional()
-  order__createdAt?: "ASC" | "DESC" = "ASC";
+  order__created_at?: "ASC" | "DESC" | "asc" | "desc" = "DESC";
 
   @IsNumber()
   @IsOptional()

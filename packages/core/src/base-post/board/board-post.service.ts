@@ -20,7 +20,7 @@ import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { BaseCommonService } from "@_core/base-common/base-common.service";
-import { BoardPostPaginateDto } from "./const/board-post-paginate.dto";
+import { BoardPostPaginationDto } from "./const/board-post-pagination.dto";
 
 @Injectable()
 export class BoardPostService {
@@ -34,7 +34,7 @@ export class BoardPostService {
     private readonly commonService: BaseCommonService
   ) {}
 
-  async getPostList(boardId: number, dto: BoardPostPaginateDto) {
+  async getPostList(boardId: number, dto: BoardPostPaginationDto) {
     const result = await this.getPostsPaginate(boardId, dto);
     const { data: posts, total: totalPost } = result;
 
@@ -171,20 +171,18 @@ export class BoardPostService {
     return post;
   }
 
-  async getPostsPaginate(board_id: number, dto: BoardPostPaginateDto) {
+  async getPostsPaginate(board_id: number, dto: BoardPostPaginationDto) {
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
         boardConfig: { id: board_id },
       },
       relations: ["author"],
-      order: { created_at: "DESC" },
     };
 
     return this.commonService.paginate(dto, this.boardPostRepository, {
       ...conditions,
     });
-    // return await this.boardPostRepository.find(conditions);
   }
 
   /**
