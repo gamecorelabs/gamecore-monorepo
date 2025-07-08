@@ -89,9 +89,11 @@ export class BoardPostController {
   @Post(":id/comment")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
   postComment(
     @Request() req: BoardPostRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: RequestCreateCommentDto
   ) {
     const dto = {
@@ -99,7 +101,7 @@ export class BoardPostController {
       ...body,
     };
 
-    return this.baseCommentService.saveComment(dto, user);
+    return this.baseCommentService.saveComment(dto, user, qr);
   }
 
   // 특정 게시글 좋아요
@@ -110,8 +112,8 @@ export class BoardPostController {
   async toggleLike(
     @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: CreateRequestLikeDto,
-    @CurrentQueryRunner() qr: QueryRunner
+    @CurrentQueryRunner() qr: QueryRunner,
+    @Body() body: CreateRequestLikeDto
   ) {
     const dto = {
       ...body,

@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, UpdateResult, IsNull } from "typeorm";
+import { Repository, UpdateResult, IsNull, QueryRunner } from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
@@ -17,6 +17,7 @@ import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
 import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
 import { CommentRequest } from "@_core/base-comment/types/request-types";
+import { CommonTransactionService } from "@_core/base-common/service/common-transaction.service";
 
 @Injectable()
 export class BaseCommentService {
@@ -27,14 +28,19 @@ export class BaseCommentService {
     private readonly userAccountRepository: Repository<UserAccount>,
     private readonly baseLikeService: BaseLikeService,
     private readonly configService: ConfigService,
-    private readonly resourceRepositoryService: ResourceRepositoryService
+    private readonly resourceRepositoryService: ResourceRepositoryService,
+    private readonly commonTransactionService: CommonTransactionService
   ) {}
 
   async getPostCommentList(resourceType: ResourceType, resourceId: number) {
     return await this.getCommentsByResource(resourceType, resourceId);
   }
 
-  async saveComment(dto: CreateCommentDto, user: UserOrGuestLoginRequest) {
+  async saveComment(
+    dto: CreateCommentDto,
+    user: UserOrGuestLoginRequest,
+    qr?: QueryRunner
+  ) {
     const userInfo = await getUserInfo(
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
@@ -56,8 +62,13 @@ export class BaseCommentService {
     if (dto.parent_id) {
       commentData.parent = this.commentRepository.create({ id: dto.parent_id });
     }
-    // FIXME: transaction
-    const result = await this.commentRepository.save(commentData);
+
+    const manager = this.commonTransactionService.getManagerRepository<Comment>(
+      Comment,
+      this.commentRepository,
+      qr
+    );
+    const result = await manager.save(commentData);
     await this.refreshCommentCount(dto.resource_info, "increment");
 
     return result;

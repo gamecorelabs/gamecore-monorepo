@@ -16,7 +16,7 @@ import { UpdateLikeDto } from "./dto/update-like.dto";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
 import { SelectedLikeDto } from "./dto/selected-like.dto";
-import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { CommonTransactionService } from "@_core/base-common/service/common-transaction.service";
 @Injectable()
 export class BaseLikeService {
   private readonly countFieldMap: Record<LikeType, string> = {
@@ -28,7 +28,8 @@ export class BaseLikeService {
     @InjectRepository(Like)
     private readonly likeRepository: Repository<Like>,
     private readonly configService: ConfigService,
-    private readonly resourceRepositoryService: ResourceRepositoryService
+    private readonly resourceRepositoryService: ResourceRepositoryService,
+    private readonly commonTransactionService: CommonTransactionService
   ) {}
 
   async getLikeCountByResource(
@@ -177,14 +178,6 @@ export class BaseLikeService {
     }
   }
 
-  private getManagerRepository<T extends {}>(
-    entity: new () => T,
-    repository: Repository<T>,
-    qr?: QueryRunner
-  ): Repository<T> {
-    return qr ? qr.manager.getRepository<T>(entity) : repository;
-  }
-
   protected async saveLike(
     dto: CreateLikeDto,
     user: UserOrGuestLoginRequest,
@@ -195,7 +188,7 @@ export class BaseLikeService {
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
     );
 
-    const manager = this.getManagerRepository<Like>(
+    const manager = this.commonTransactionService.getManagerRepository<Like>(
       Like,
       this.likeRepository,
       qr
@@ -215,7 +208,7 @@ export class BaseLikeService {
     qr?: QueryRunner
   ): Promise<boolean> {
     // const result = await this.likeRepository.update({ id }, update)
-    const manager = this.getManagerRepository<Like>(
+    const manager = this.commonTransactionService.getManagerRepository<Like>(
       Like,
       this.likeRepository,
       qr
