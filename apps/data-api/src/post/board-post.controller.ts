@@ -25,6 +25,9 @@ import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.
 import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { QueryRunnerTransactionInterceptor } from "@_core/base-common/interceptor/query-runner-transaction.interceptor";
+import { CurrentQueryRunner } from "@_core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunner } from "typeorm";
 
 @Controller(["board-post"])
 export class BoardPostController {
@@ -103,17 +106,19 @@ export class BoardPostController {
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
     @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: CreateRequestLikeDto
+    @Body() body: CreateRequestLikeDto,
+    @CurrentQueryRunner() qr: QueryRunner
   ) {
     const dto = {
       ...body,
       resource_info: req.resource_info,
     };
 
-    return this.baseLikeService.toggleLike(dto, user);
+    return this.baseLikeService.toggleLike(dto, user, qr);
   }
 
   @Get(":id/owner-check")

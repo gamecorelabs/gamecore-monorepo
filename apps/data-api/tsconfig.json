@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@_core/*": ["../../packages/core/src/*"],
-      "@_src/*": ["./src/*"]
+      "@_src/*": ["./src/*"],
+      "typeorm": ["./node_modules/typeorm"]
     }
   }
 }

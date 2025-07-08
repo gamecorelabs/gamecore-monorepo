@@ -4,7 +4,7 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Repository, In } from "typeorm";
+import { Repository, In, QueryRunner } from "typeorm";
 import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
 import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
 import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
@@ -16,6 +16,7 @@ import { UpdateLikeDto } from "./dto/update-like.dto";
 import { ResourceType } from "@_core/base-common/enum/common.enum";
 import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
 import { SelectedLikeDto } from "./dto/selected-like.dto";
+import { BaseModel } from "@_core/base-common/entity/base.entity";
 @Injectable()
 export class BaseLikeService {
   private readonly countFieldMap: Record<LikeType, string> = {
@@ -74,7 +75,8 @@ export class BaseLikeService {
 
   private async refreshLikeCount(
     dto: CreateLikeDto,
-    action: "increment" | "decrement"
+    action: "increment" | "decrement",
+    qr?: QueryRunner
   ): Promise<void> {
     const { resource_type, resource_id } = dto.resource_info;
 
@@ -92,12 +94,21 @@ export class BaseLikeService {
         `지원하지 않는 좋아요 타입입니다: ${dto.type}`
       );
     }
+    const targetEntity = repository.metadata.target as new () => any;
 
-    await repository[action]({ id: resource_id }, field, 1);
+    if (qr) {
+      const manager = qr.manager.getRepository(targetEntity);
+      await manager[action]({ id: resource_id }, field, 1);
+    } else {
+      await repository[action]({ id: resource_id }, field, 1);
+    }
   }
 
-  async toggleLike(dto: CreateLikeDto, user: UserOrGuestLoginRequest) {
-    // FIXME: transaction 적용
+  async toggleLike(
+    dto: CreateLikeDto,
+    user: UserOrGuestLoginRequest,
+    qr?: QueryRunner
+  ) {
     let conditions = {
       where: {
         resource_info: dto.resource_info,
@@ -127,10 +138,14 @@ export class BaseLikeService {
           );
         } else {
           // 좋아요 타입이 서로 같은 경우 취소 상태로 update
-          await this.updateLike(existingLike.id, {
-            status: LikeStatus.CANCELED,
-          });
-          await this.refreshLikeCount(dto, "decrement");
+          await this.updateLike(
+            existingLike.id,
+            {
+              status: LikeStatus.CANCELED,
+            },
+            qr
+          );
+          await this.refreshLikeCount(dto, "decrement", qr);
 
           return {
             canceled: true,
@@ -138,11 +153,15 @@ export class BaseLikeService {
         }
       } else {
         // 좋아요 또는 싫어요 내역은 있지만 선택하지 않았을 경우 선택으로 update
-        await this.updateLike(existingLike.id, {
-          type: dto.type,
-          status: LikeStatus.SELECTED, // 좋아요/싫어요 취소
-        });
-        await this.refreshLikeCount(dto, "increment");
+        await this.updateLike(
+          existingLike.id,
+          {
+            type: dto.type,
+            status: LikeStatus.SELECTED, // 좋아요/싫어요 취소
+          },
+          qr
+        );
+        await this.refreshLikeCount(dto, "increment", qr);
 
         return {
           selected: dto.type,
@@ -150,23 +169,37 @@ export class BaseLikeService {
       }
     } else {
       // 좋아요 또는 싫어요 내역 자체가 없는 경우 새로 생성
-      const result = await this.saveLike(dto, user);
-      await this.refreshLikeCount(dto, "increment");
+      const result = await this.saveLike(dto, user, qr);
+      await this.refreshLikeCount(dto, "increment", qr);
       return {
         selected: result.type,
       };
     }
   }
 
+  private getManagerRepository<T extends {}>(
+    entity: new () => T,
+    repository: Repository<T>,
+    qr?: QueryRunner
+  ): Repository<T> {
+    return qr ? qr.manager.getRepository<T>(entity) : repository;
+  }
+
   protected async saveLike(
     dto: CreateLikeDto,
-    user: UserOrGuestLoginRequest
+    user: UserOrGuestLoginRequest,
+    qr?: QueryRunner
   ): Promise<Like> {
     const userInfo = await getUserInfo(
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
     );
 
+    const manager = this.getManagerRepository<Like>(
+      Like,
+      this.likeRepository,
+      qr
+    );
     const like = this.likeRepository.create({
       ...dto,
       ...userInfo,
@@ -178,9 +211,17 @@ export class BaseLikeService {
 
   protected async updateLike(
     id: number,
-    update: UpdateLikeDto
+    update: UpdateLikeDto,
+    qr?: QueryRunner
   ): Promise<boolean> {
-    const result = await this.likeRepository.update({ id }, update);
+    // const result = await this.likeRepository.update({ id }, update)
+    const manager = this.getManagerRepository<Like>(
+      Like,
+      this.likeRepository,
+      qr
+    );
+
+    const result = await manager.update({ id }, update);
 
     return !!(
       result &&

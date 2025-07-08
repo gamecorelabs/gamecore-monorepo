@@ -8,6 +8,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
@@ -20,6 +21,9 @@ import { CommonRequest } from "@_core/base-common/types/request-types";
 import { CommentRequest } from "@_core/base-comment/types/request-types";
 import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
 import { BaseLikeService } from "@_core/base-like/base-like.service";
+import { QueryRunner } from "typeorm";
+import { CurrentQueryRunner } from "@_core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunnerTransactionInterceptor } from "@_core/base-common/interceptor/query-runner-transaction.interceptor";
 
 @Controller("comment")
 export class CommentController {
@@ -49,16 +53,18 @@ export class CommentController {
   @Post(":id/like")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
     @Request() req: CommonRequest,
     @CurrentUser() user: UserOrGuestLoginRequest,
-    @Body() body: CreateRequestLikeDto
+    @Body() body: CreateRequestLikeDto,
+    @CurrentQueryRunner() qr: QueryRunner
   ) {
     const dto = {
       ...body,
       resource_info: req.resource_info,
     };
 
-    return this.baseLikeService.toggleLike(dto, user);
+    return this.baseLikeService.toggleLike(dto, user, qr);
   }
 }
