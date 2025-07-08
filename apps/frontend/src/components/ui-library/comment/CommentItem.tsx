@@ -167,6 +167,7 @@ export const CommentItem = ({
               type="child"
               activeReplyId={activeReplyId}
               setActiveReplyId={setActiveReplyId}
+              selectedMap={selectedMap}
             />
           ))}
         </div>

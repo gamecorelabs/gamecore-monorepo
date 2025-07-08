@@ -12,7 +12,18 @@ import { useEffect, useMemo, useState } from "react";
 
 const CommentList = ({ comments }: { comments: Comment[] }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
-  const commentIds = useMemo(() => comments.map((c) => c.id), [comments]);
+  const commentIds = useMemo(() => {
+    const ids: number[] = [];
+    comments.forEach((comment) => {
+      ids.push(comment.id);
+      if (comment.children && comment.children?.length > 0) {
+        comment.children.forEach((childComment) => {
+          ids.push(childComment.id);
+        });
+      }
+    });
+    return ids;
+  }, [comments]);
 
   const { selectedMap, isLoading } = useLikeSelection(
     ResourceType.COMMENT,
