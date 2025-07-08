@@ -1,6 +1,12 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, UpdateResult, IsNull, QueryRunner } from "typeorm";
+import {
+  Repository,
+  UpdateResult,
+  IsNull,
+  QueryRunner,
+  Brackets,
+} from "typeorm";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
@@ -78,18 +84,47 @@ export class BaseCommentService {
     resource_type: ResourceType,
     resource_id: number
   ): Promise<Comment[]> {
-    return this.commentRepository.find({
-      where: {
-        resource_info: {
-          resource_type,
-          resource_id,
-        },
-        parent: IsNull(),
-        status: CommentStatus.USE,
-      },
-      relations: ["author", "children", "children.author"],
-      order: { created_at: "ASC" },
-    });
+    // return this.commentRepository.find({
+    //   where: {
+    //     resource_info: {
+    //       resource_type,
+    //       resource_id,
+    //     },
+    //     parent: IsNull(),
+    //     status: CommentStatus.USE,
+    //   },
+    //   relations: ["author", "children", "children.author"],
+    //   order: { created_at: "ASC" },
+    // });
+
+    const result = await this.commentRepository
+      .createQueryBuilder("comment")
+      .leftJoinAndSelect("comment.author", "author")
+      .leftJoinAndSelect("comment.children", "children")
+      .leftJoinAndSelect("children.author", "childAuthor")
+      .where("comment.resource_type = :resource_type", {
+        resource_type,
+      })
+      .andWhere("comment.resource_id = :resource_id", {
+        resource_id,
+      })
+      .andWhere("comment.parent_id IS NULL")
+      .andWhere(
+        new Brackets((qb) => {
+          /**
+           * USE 상태이거나, 답글이 하나 이상 존재하는 경우
+           * 답글이 존재하는 경우는 부모 댓글이 삭제 되어도 자식 댓글이 노출되어야 하기 때문
+           * */
+          qb.where("comment.status = :status", {
+            status: CommentStatus.USE,
+          }).orWhere("children.id IS NOT NULL");
+        })
+      )
+      .orderBy("comment.created_at", "ASC")
+      .getMany();
+
+    console.log("result", result);
+    return result;
   }
 
   // 댓글 단일 조회

@@ -1,9 +1,9 @@
 "use client";
 import { getUserName } from "@/utils/helpers/getUsername";
-import { Comment } from "@/types/comment/comment.types";
+import { Comment, CommentStatus } from "@/types/comment/comment.types";
 import ReplyForm from "@ui-library/comment/CommentReplyForm";
 import PasswordModal from "../modal/PasswordModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import dataApi from "@/utils/common-axios/dataApi";
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import LikeDetail from "../like/LikeDetail";
 import { ResourceType } from "@/types/common/resource.types";
 import { LikeType } from "@/types/like/like.types";
+import HideCommentItem from "./HideCommentItem";
 
 export const CommentItem = ({
   comment,
@@ -30,6 +31,11 @@ export const CommentItem = ({
   selectedMap: Record<number, { type: LikeType | null }>;
 }) => {
   const isChildrenComment = type === "child";
+  const isParentComment =
+    type === "parent" && comment.children && comment.children.length > 0;
+  const isHideComponent =
+    (isParentComment && comment.status !== CommentStatus.USE) ||
+    (isChildrenComment && comment.status !== CommentStatus.USE);
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
   const isReplying = activeReplyId === comment.id;
@@ -105,38 +111,48 @@ export const CommentItem = ({
   return (
     <div className="mb-3 space-y-4">
       <div className="border-b border-gray-100 pb-4">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex items-center space-x-2">
-            <span className="font-medium">{getUserName(comment)}</span>
-            <span className="text-sm">
-              {new Date(comment.created_at).toLocaleString("ko-KR")}
-            </span>
-          </div>
-          <div className="flex gap-2">
-            <LikeDetail
-              resourceType={ResourceType.COMMENT}
-              resourceId={comment.id}
-              likeCount={comment.like_count || 0}
-              dislikeCount={comment.dislike_count || 0}
-              selectedMap={selectedMap}
-            />
+        {isHideComponent ? (
+          <HideCommentItem status={comment.status} />
+        ) : (
+          <>
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex items-center space-x-2">
+                <span className="font-medium">{getUserName(comment)}</span>
+                <span className="text-sm">
+                  {new Date(comment.created_at).toLocaleString("ko-KR")}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                {/* <LikeDetail
+                  resourceType={ResourceType.COMMENT}
+                  resourceId={comment.id}
+                  likeCount={comment.like_count || 0}
+                  dislikeCount={comment.dislike_count || 0}
+                  selectedMap={selectedMap}
+                /> */}
 
-            <button
-              onClick={() => setActiveReplyId(isReplying ? null : comment.id)}
-              className="text-sm"
-            >
-              답글
-            </button>
-            {isGuestAuthorComment || isCommentOwner ? (
-              <>
-                <button className="text-sm" onClick={handleDelete}>
-                  삭제
+                <button
+                  onClick={() =>
+                    setActiveReplyId(isReplying ? null : comment.id)
+                  }
+                  className="text-sm"
+                >
+                  답글
                 </button>
-              </>
-            ) : null}
-          </div>
-        </div>
-        <p className="text-gray-800 whitespace-pre-wrap">{comment.content}</p>
+                {isGuestAuthorComment || isCommentOwner ? (
+                  <>
+                    <button className="text-sm" onClick={handleDelete}>
+                      삭제
+                    </button>
+                  </>
+                ) : null}
+              </div>
+            </div>
+            <p className="text-gray-800 whitespace-pre-wrap">
+              {comment.content}
+            </p>
+          </>
+        )}
       </div>
 
       <PasswordModal

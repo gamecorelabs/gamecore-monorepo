@@ -15,3 +15,10 @@ export type Comment = {
   dislike_count: number;
   children?: Comment[];
 };
+
+export enum CommentStatus {
+  DELETED = "0",
+  USE = "1",
+  HOLD = "2",
+  ADMIN_DELETED = "99",
+}
