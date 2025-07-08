@@ -123,7 +123,6 @@ export class BaseCommentService {
       .orderBy("comment.created_at", "ASC")
       .getMany();
 
-    console.log("result", result);
     return result;
   }
 

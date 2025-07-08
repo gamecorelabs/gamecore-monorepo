@@ -14,6 +14,7 @@ import LikeDetail from "../like/LikeDetail";
 import { ResourceType } from "@/types/common/resource.types";
 import { LikeType } from "@/types/like/like.types";
 import HideCommentItem from "./HideCommentItem";
+import { formatDate } from "@/utils/helpers/formatDate";
 
 export const CommentItem = ({
   comment,
@@ -119,38 +120,32 @@ export const CommentItem = ({
               <div className="flex items-center space-x-2">
                 <span className="font-medium">{getUserName(comment)}</span>
                 <span className="text-sm">
-                  {new Date(comment.created_at).toLocaleString("ko-KR")}
+                  {formatDate(comment.created_at)}
                 </span>
-              </div>
-              <div className="flex gap-2">
-                {/* <LikeDetail
-                  resourceType={ResourceType.COMMENT}
-                  resourceId={comment.id}
-                  likeCount={comment.like_count || 0}
-                  dislikeCount={comment.dislike_count || 0}
-                  selectedMap={selectedMap}
-                /> */}
-
-                <button
-                  onClick={() =>
-                    setActiveReplyId(isReplying ? null : comment.id)
-                  }
-                  className="text-sm"
-                >
-                  답글
-                </button>
                 {isGuestAuthorComment || isCommentOwner ? (
-                  <>
-                    <button className="text-sm" onClick={handleDelete}>
-                      삭제
-                    </button>
-                  </>
+                  <button className="text-sm" onClick={handleDelete}>
+                    삭제
+                  </button>
                 ) : null}
               </div>
+              <div className="flex gap-2"></div>
             </div>
-            <p className="text-gray-800 whitespace-pre-wrap">
-              {comment.content}
-            </p>
+            <div className="text-gray-800 whitespace-pre-wrap">
+              <div className="flex justify-between items-end">
+                <p className="pr-4">{comment.content}</p>
+
+                <div className="shrink-0">
+                  <button
+                    onClick={() =>
+                      setActiveReplyId(isReplying ? null : comment.id)
+                    }
+                    className="text-sm"
+                  >
+                    답글
+                  </button>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>

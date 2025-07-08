@@ -1,5 +1,6 @@
 import { getUserName } from "@/utils/helpers/getUsername";
 import { BoardPost } from "@/types/board/boardPost.types";
+import { formatDate } from "@/utils/helpers/formatDate";
 
 const DetailHeader = ({ post }: { post: BoardPost }) => {
   return (
@@ -10,7 +11,7 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
           <div className="flex gap-3">
             <span>{getUserName(post)}</span>
             <span className="inline-block w-[1px] h-4 bg-gray-300"></span>
-            <span>{new Date(post.created_at).toLocaleString("ko-KR")}</span>
+            <span>{formatDate(post.created_at, { year: "numeric" })}</span>
           </div>
           <div className="flex items-center text-sm  space-x-3">
             <span>조회수 {post.view_count || 0}</span>
