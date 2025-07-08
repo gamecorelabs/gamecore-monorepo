@@ -69,7 +69,7 @@ export class BaseCommentService {
       qr
     );
     const result = await manager.save(commentData);
-    await this.refreshCommentCount(dto.resource_info, "increment");
+    await this.refreshCommentCount(dto.resource_info, "increment", qr);
 
     return result;
   }
@@ -142,12 +142,21 @@ export class BaseCommentService {
   }
 
   // 댓글 삭제 (soft-delete)
-  async deleteComment(id: number, req: CommentRequest): Promise<UpdateResult> {
+  async deleteComment(
+    id: number,
+    req: CommentRequest,
+    qr?: QueryRunner
+  ): Promise<UpdateResult> {
     const resource_info = req.comment.resource_info;
-    const result = await this.commentRepository.update(id, {
+    const manager = this.commonTransactionService.getManagerRepository<Comment>(
+      Comment,
+      this.commentRepository,
+      qr
+    );
+    const result = await manager.update(id, {
       status: CommentStatus.DELETED,
     });
-    await this.refreshCommentCount(resource_info, "decrement");
+    await this.refreshCommentCount(resource_info, "decrement", qr);
     return result;
   }
 
@@ -315,7 +324,8 @@ export class BaseCommentService {
 
   private async refreshCommentCount(
     resource_info: ResourceInfo,
-    action: "increment" | "decrement"
+    action: "increment" | "decrement",
+    qr?: QueryRunner
   ): Promise<void> {
     const { resource_type, resource_id } = resource_info;
 
@@ -328,6 +338,13 @@ export class BaseCommentService {
       );
     }
 
-    await repository[action]({ id: resource_id }, "comment_count", 1);
+    const targetEntity = repository.metadata.target as new () => any;
+
+    if (qr) {
+      const manager = qr.manager.getRepository(targetEntity);
+      await manager[action]({ id: resource_id }, "comment_count", 1);
+    } else {
+      await repository[action]({ id: resource_id }, "comment_count", 1);
+    }
   }
 }

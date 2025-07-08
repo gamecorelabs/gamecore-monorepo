@@ -40,13 +40,15 @@ export class CommentController {
   @Delete(":id")
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
   async deleteComment(
     @Request() req: CommentRequest,
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserOrGuestLoginRequest
+    @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentQueryRunner() qr: QueryRunner
   ) {
     await this.baseCommentService.checkOwnerComment(id, user);
-    return this.baseCommentService.deleteComment(id, req);
+    return this.baseCommentService.deleteComment(id, req, qr);
   }
 
   // 특정 댓글 좋아요/싫어요
