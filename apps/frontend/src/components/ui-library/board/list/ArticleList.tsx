@@ -6,27 +6,18 @@ import { ArticleInfo } from "./parts/ArticleInfo";
 import { BoardPost } from "@/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import PaginationContainer from "@ui-library/common/PaginationContainer";
+import { PaginationInfo } from "@/types/common/pagination-types";
 
 const ArticleList = ({
   boardId,
   posts,
-  pagination,
+  paginationInfo,
 }: {
   boardId: string;
   posts: BoardPost[];
-  pagination: {
-    currentPage: number;
-    visiblePageCount: number;
-    totalCount: number;
-    totalPages: number;
-    hasPrevPage: number;
-    hasNextPage: number;
-    prevPage: number;
-    nextPage: number;
-  };
+  paginationInfo: PaginationInfo;
 }) => {
   const router = useRouter();
-  const originalUrl = `/board/${boardId}/post`;
 
   if (!posts || posts.length === 0) {
     return <EmptyArticle />;
@@ -42,7 +33,7 @@ const ArticleList = ({
       ))}
 
       <PaginationContainer
-        {...pagination}
+        {...paginationInfo}
         onPageChange={(page) => {
           router.push(`/board/${boardId}/post?page=${page}`);
         }}
