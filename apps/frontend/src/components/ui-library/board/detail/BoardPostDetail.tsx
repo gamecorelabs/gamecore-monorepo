@@ -13,7 +13,7 @@ const BoardPostDetail = ({
   post: BoardPost;
 }) => {
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto py-4 px-1 bg-white rounded-lg shadow-md">
       <DetailHeader post={post} />
       <DetailContent post={post} />
       <BottomSection boardId={boardId} post={post} />

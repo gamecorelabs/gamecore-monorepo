@@ -6,7 +6,7 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{post.title}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{post.title}</h1>
         <div className="flex items-center text-sm  space-x-3 justify-between">
           <div className="flex gap-3">
             <span>{getUserName(post)}</span>
