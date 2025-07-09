@@ -7,6 +7,7 @@ import { BoardPost } from "@/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import PaginationContainer from "@ui-library/common/PaginationContainer";
 import { PaginationInfo } from "@/types/common/pagination-types";
+import SearchList from "./parts/SearchInput";
 
 const ArticleList = ({
   boardId,
@@ -20,7 +21,13 @@ const ArticleList = ({
   const router = useRouter();
 
   if (!posts || posts.length === 0) {
-    return <EmptyArticle />;
+    return (
+      <>
+        <EmptyArticle />
+        <SearchList />
+        <NewPostButton link={`/board/${boardId}/post/new`} />
+      </>
+    );
   }
 
   return (
@@ -38,6 +45,8 @@ const ArticleList = ({
           router.push(`/board/${boardId}/post?page=${page}`);
         }}
       />
+
+      <SearchList />
 
       <NewPostButton link={`/board/${boardId}/post/new`} />
     </>

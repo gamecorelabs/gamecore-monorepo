@@ -1,18 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter, useSearchParams } from "next/navigation";
 import { userLogin } from "@/utils/auth/login";
-import React from "react";
+import React, { useRef } from "react";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
 import { userLoginSchema } from "@/utils/validation/user/userLoginSchema";
@@ -22,7 +16,7 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const router = useRouter();
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect_url") || "/";
 
