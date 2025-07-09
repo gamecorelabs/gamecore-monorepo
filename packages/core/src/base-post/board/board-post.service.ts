@@ -36,9 +36,9 @@ export class BoardPostService {
 
   async getPostList(boardId: number, dto: BoardPostPaginationDto) {
     const result = await this.getPostsPaginate(boardId, dto);
-    const { data: posts, total: totalPost } = result;
+    const { data: posts, total: totalCount } = result;
 
-    return { posts, totalPost };
+    return { posts, totalCount };
   }
 
   async getPostDetail(postId: number) {

@@ -1,25 +1,33 @@
+"use client";
+import { useRouter } from "next/navigation";
+import NewPostButton from "../buttons/NewPostButton";
 import { ArticleContent } from "./parts/ArticleContent";
 import { ArticleInfo } from "./parts/ArticleInfo";
 import { BoardPost } from "@/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
-import NewPostButton from "../buttons/NewPostButton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import PaginationContainer from "@ui-library/common/PaginationContainer";
 
 const ArticleList = ({
   boardId,
   posts,
+  pagination,
 }: {
   boardId: string;
-  posts?: BoardPost[];
+  posts: BoardPost[];
+  pagination: {
+    currentPage: number;
+    visiblePageCount: number;
+    totalCount: number;
+    totalPages: number;
+    hasPrevPage: number;
+    hasNextPage: number;
+    prevPage: number;
+    nextPage: number;
+  };
 }) => {
+  const router = useRouter();
+  const originalUrl = `/board/${boardId}/post`;
+
   if (!posts || posts.length === 0) {
     return <EmptyArticle />;
   }
@@ -32,30 +40,14 @@ const ArticleList = ({
           <ArticleInfo post={post} />
         </article>
       ))}
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+
+      <PaginationContainer
+        {...pagination}
+        onPageChange={(page) => {
+          router.push(`/board/${boardId}/post?page=${page}`);
+        }}
+      />
+
       <NewPostButton link={`/board/${boardId}/post/new`} />
     </>
   );
