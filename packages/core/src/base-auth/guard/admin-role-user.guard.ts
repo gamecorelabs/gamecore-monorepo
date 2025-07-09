@@ -1,5 +1,5 @@
 import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
-import { UserRoles } from "@_core/base-user/enum/user.enum";
+import { UserRoles } from "@gamecoregg/nestjs-core/base-user/enum/user.enum";
 import { UserTokenGuard } from "./user-token.guard";
 
 export class AdminRoleUserGuard extends UserTokenGuard {

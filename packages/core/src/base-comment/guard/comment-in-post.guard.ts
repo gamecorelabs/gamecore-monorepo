@@ -9,11 +9,11 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
-import { BoardPostStatus } from "@_core/base-post/board/enum/board-post.enum";
-import { BoardStatus } from "@_core/base-board/enum/board-config.enum";
-import { Comment } from "@_core/base-comment/entity/comment.entity";
-import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
+import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { BoardPostStatus } from "@gamecoregg/nestjs-core/base-post/board/enum/board-post.enum";
+import { BoardStatus } from "@gamecoregg/nestjs-core/base-board/enum/board-config.enum";
+import { Comment } from "@gamecoregg/nestjs-core/base-comment/entity/comment.entity";
+import { CommentStatus } from "@gamecoregg/nestjs-core/base-comment/enum/comment.enum";
 
 @Injectable()
 export class CommentInPostGuard implements CanActivate {

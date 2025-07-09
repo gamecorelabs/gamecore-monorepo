@@ -5,18 +5,18 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Repository, In, QueryRunner } from "typeorm";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
-import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
+import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { getUserInfo } from "@gamecoregg/nestjs-core/base-user/util/get-user-info.util";
+import { ENV_HASH_ROUNDS } from "@gamecoregg/nestjs-core/base-common/const/env-keys.const";
 import { CreateLikeDto } from "./dto/create-like.dto";
 import { Like } from "./entity/like.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LikeStatus, LikeType } from "./enum/like.enum";
 import { UpdateLikeDto } from "./dto/update-like.dto";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
-import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
+import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
+import { ResourceRepositoryService } from "@gamecoregg/nestjs-core/base-common/service/resource-repository.service";
 import { SelectedLikeDto } from "./dto/selected-like.dto";
-import { CommonTransactionService } from "@_core/base-common/service/common-transaction.service";
+import { CommonTransactionService } from "@gamecoregg/nestjs-core/base-common/service/common-transaction.service";
 @Injectable()
 export class BaseLikeService {
   private readonly countFieldMap: Record<LikeType, string> = {

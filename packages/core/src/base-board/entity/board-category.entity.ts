@@ -1,7 +1,7 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
-import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { BoardConfig } from "@gamecoregg/nestjs-core/base-board/entity/board-config.entity";
+import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
 import { BoardCategoryStatus } from "../enum/board-category.enum";
 
 @Entity()

@@ -6,12 +6,12 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
 import { IsBoolean, IsEnum, IsString } from "class-validator";
-import { UserAccount } from "@_core/base-user/entity/user-account.entity";
-import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
-import { Comment } from "@_core/base-comment/entity/comment.entity";
-import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
+import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { Comment } from "@gamecoregg/nestjs-core/base-comment/entity/comment.entity";
+import { ResourceInfo } from "@gamecoregg/nestjs-core/base-common/entity/resource-info.embeddable";
 import { Transform } from "class-transformer";
 import { LikeStatus, LikeType } from "../enum/like.enum";
 

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { BaseAuthService } from "./base-auth.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserAccount } from "@_core/base-user/entity/user-account.entity";
-import { BaseUserModule } from "@_core/base-user/base-user.module";
+import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { BaseUserModule } from "@gamecoregg/nestjs-core/base-user/base-user.module";
 import { JwtModule } from "@nestjs/jwt";
 import { GuestUserTokenGuard } from "./guard/guest-user-token.guard";
 import { UserTokenGuard } from "./guard/user-token.guard";

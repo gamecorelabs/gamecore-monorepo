@@ -1,4 +1,4 @@
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
 import { InternalServerErrorException } from "@nestjs/common";
 import * as bcrpyt from "bcrypt";
 

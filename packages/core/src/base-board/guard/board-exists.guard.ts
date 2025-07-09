@@ -8,8 +8,8 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
-import { BoardStatus } from "@_core/base-board/enum/board-config.enum";
+import { BoardConfig } from "@gamecoregg/nestjs-core/base-board/entity/board-config.entity";
+import { BoardStatus } from "@gamecoregg/nestjs-core/base-board/enum/board-config.enum";
 
 @Injectable()
 export class BoardExistsGuard implements CanActivate {

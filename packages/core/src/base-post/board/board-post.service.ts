@@ -4,24 +4,27 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
-import { CreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
+import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { CreateBoardPostDto } from "@gamecoregg/nestjs-core/base-post/board/dto/create-board-post.dto";
 import { FindManyOptions, Repository, UpdateResult } from "typeorm";
 import { PostUtilService } from "../util/post-util.service";
 import { BoardPostStatus } from "./enum/board-post.enum";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
 import * as bcrpyt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
-import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
-import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
+import { ENV_HASH_ROUNDS } from "@gamecoregg/nestjs-core/base-common/const/env-keys.const";
+import { getUserInfo } from "@gamecoregg/nestjs-core/base-user/util/get-user-info.util";
 import { UpdateBoardPostDto } from "./dto/update-board-post.dto";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
-import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
-import { BaseCommentService } from "@_core/base-comment/base-comment.service";
-import { BaseCommonService } from "@_core/base-common/base-common.service";
+import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
+import {
+  LikeStatus,
+  LikeType,
+} from "@gamecoregg/nestjs-core/base-like/enum/like.enum";
+import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
+import { BaseCommentService } from "@gamecoregg/nestjs-core/base-comment/base-comment.service";
+import { BaseCommonService } from "@gamecoregg/nestjs-core/base-common/base-common.service";
 import { BoardPostPaginationDto } from "./const/board-post-pagination.dto";
-import { CommonPaginationService } from "@_core/base-common/service/common-pagination.service";
+import { CommonPaginationService } from "@gamecoregg/nestjs-core/base-common/service/common-pagination.service";
 
 @Injectable()
 export class BoardPostService {

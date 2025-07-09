@@ -1,4 +1,4 @@
-import { ResourceType } from "@_core/base-common/enum/common.enum";
+import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
 import { IsNumber, IsString } from "class-validator";
 
 export class SelectedLikeDto {

@@ -10,20 +10,23 @@ import {
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
-import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
+import { CommentStatus } from "@gamecoregg/nestjs-core/base-comment/enum/comment.enum";
+import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
 import { ConfigService } from "@nestjs/config";
-import { ENV_HASH_ROUNDS } from "@_core/base-common/const/env-keys.const";
-import { ResourceType } from "@_core/base-common/enum/common.enum";
-import { getUserInfo } from "@_core/base-user/util/get-user-info.util";
+import { ENV_HASH_ROUNDS } from "@gamecoregg/nestjs-core/base-common/const/env-keys.const";
+import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
+import { getUserInfo } from "@gamecoregg/nestjs-core/base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
-import { LikeStatus, LikeType } from "@_core/base-like/enum/like.enum";
-import { UserAccount } from "@_core/base-user/entity/user-account.entity";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
-import { ResourceRepositoryService } from "@_core/base-common/service/resource-repository.service";
-import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
-import { CommentRequest } from "@_core/base-comment/types/request-types";
-import { CommonTransactionService } from "@_core/base-common/service/common-transaction.service";
+import {
+  LikeStatus,
+  LikeType,
+} from "@gamecoregg/nestjs-core/base-like/enum/like.enum";
+import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
+import { ResourceRepositoryService } from "@gamecoregg/nestjs-core/base-common/service/resource-repository.service";
+import { ResourceInfo } from "@gamecoregg/nestjs-core/base-common/entity/resource-info.embeddable";
+import { CommentRequest } from "@gamecoregg/nestjs-core/base-comment/types/request-types";
+import { CommonTransactionService } from "@gamecoregg/nestjs-core/base-common/service/common-transaction.service";
 
 @Injectable()
 export class BaseCommentService {

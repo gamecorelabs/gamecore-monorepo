@@ -6,14 +6,14 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { BaseModel } from "@_core/base-common/entity/base.entity";
+import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
 import { IsEnum, IsString, IsNumber } from "class-validator";
-import { CommentStatus } from "@_core/base-comment/enum/comment.enum";
-import { UserAccount } from "@_core/base-user/entity/user-account.entity";
-import { ResourceInfo } from "@_core/base-common/entity/resource-info.embeddable";
-import { GuestAccount } from "@_core/base-common/entity/guest-account.embeddable";
-import { Like } from "@_core/base-like/entity/like.entity";
-import { BoardPost } from "@_core/base-post/board/entity/board-post.entity";
+import { CommentStatus } from "@gamecoregg/nestjs-core/base-comment/enum/comment.enum";
+import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { ResourceInfo } from "@gamecoregg/nestjs-core/base-common/entity/resource-info.embeddable";
+import { GuestAccount } from "@gamecoregg/nestjs-core/base-common/entity/guest-account.embeddable";
+import { Like } from "@gamecoregg/nestjs-core/base-like/entity/like.entity";
+import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
 
 @Index("IDX_resource", [
   "resource_info.resource_type",

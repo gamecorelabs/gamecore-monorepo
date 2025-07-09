@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { BaseAuthService } from "@_core/base-auth/base-auth.service";
-import { BaseUserService } from "@_core/base-user/base-user.service";
+import { BaseAuthService } from "@gamecoregg/nestjs-core/base-auth/base-auth.service";
+import { BaseUserService } from "@gamecoregg/nestjs-core/base-user/base-user.service";
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
