@@ -8,16 +8,17 @@ import {
 } from "typeorm";
 import { FILTER_MAPPER } from "../const/filter-mapper.const";
 import { BasePaginationDto } from "../dto/base-pagination.dto";
+import { PaginationInfo } from "../types/pagination-types";
 
 @Injectable()
-export class CommonPaginateService {
+export class CommonPaginationService {
   async pagePaginate<T extends BaseModel>(
     dto: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {}
   ): Promise<{
     data: T[];
-    total: number;
+    paginationInfo: PaginationInfo;
   }> {
     const findOptions = this.composeFindOptions<T>(dto);
 
@@ -37,7 +38,12 @@ export class CommonPaginateService {
 
     return {
       data,
-      total: count,
+      paginationInfo: {
+        totalCount: count,
+        currentPage: dto?.page || 1,
+        takeByPage: dto?.take || 5, // 페이지 당 데이터 갯수 FIXME: 게시판 설정화
+        visiblePageCount: 5, // 보여질 페이지 링크 갯수 FIXME: 게시판 옵션 설정화
+      },
     };
   }
 

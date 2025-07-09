@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { BaseCommonService } from "./base-common.service";
-import { CommonPaginateService } from "./service/common-paginate.service";
+import { CommonPaginationService } from "./service/common-pagination.service";
 import { ResourceRepositoryService } from "./service/resource-repository.service";
 import { CommonTransactionService } from "./service/common-transaction.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -13,13 +13,13 @@ import { Like } from "@_core/base-like/entity/like.entity";
   imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, Comment, Like])],
   providers: [
     BaseCommonService,
-    CommonPaginateService,
+    CommonPaginationService,
     ResourceRepositoryService,
     CommonTransactionService,
   ],
   exports: [
     BaseCommonService,
-    CommonPaginateService,
+    CommonPaginationService,
     ResourceRepositoryService,
     CommonTransactionService,
   ],

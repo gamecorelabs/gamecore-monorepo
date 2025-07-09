@@ -21,6 +21,7 @@ import { BaseLikeService } from "@_core/base-like/base-like.service";
 import { BaseCommentService } from "@_core/base-comment/base-comment.service";
 import { BaseCommonService } from "@_core/base-common/base-common.service";
 import { BoardPostPaginationDto } from "./const/board-post-pagination.dto";
+import { CommonPaginationService } from "@_core/base-common/service/common-pagination.service";
 
 @Injectable()
 export class BoardPostService {
@@ -31,14 +32,14 @@ export class BoardPostService {
     private readonly configService: ConfigService,
     private readonly baseLikeService: BaseLikeService,
     private readonly baseCommentService: BaseCommentService,
-    private readonly commonService: BaseCommonService
+    private readonly commonPaginationService: CommonPaginationService
   ) {}
 
   async getPostList(boardId: number, dto: BoardPostPaginationDto) {
     const result = await this.getPostsPaginate(boardId, dto);
-    const { data: posts, total: totalCount } = result;
+    const { data: posts, paginationInfo } = result;
 
-    return { posts, totalCount };
+    return { posts, paginationInfo };
   }
 
   async getPostDetail(postId: number) {
@@ -155,9 +156,13 @@ export class BoardPostService {
       relations: ["author"],
     };
 
-    return this.commonService.paginate(dto, this.boardPostRepository, {
-      ...conditions,
-    });
+    return this.commonPaginationService.pagePaginate(
+      dto,
+      this.boardPostRepository,
+      {
+        ...conditions,
+      }
+    );
   }
 
   /**

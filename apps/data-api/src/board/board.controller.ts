@@ -49,24 +49,14 @@ export class BoardController {
     @Param("id", ParseIntPipe) boardId: number,
     @Query() query: BoardPostPaginationDto
   ) {
-    const { posts, totalCount } = await this.boardPostService.getPostList(
+    const { posts, paginationInfo } = await this.boardPostService.getPostList(
       boardId,
       query
     );
 
-    // FIXME: 추후 페이지 갯수 등 게시판 설정으로 변경
-    const currentPage = query?.page || 1;
-    const visiblePageCount = 5;
-    const takeByPage = query?.take || 5;
-
     return {
       posts,
-      pagination: {
-        totalCount,
-        currentPage,
-        visiblePageCount,
-        takeByPage,
-      },
+      paginationInfo,
     };
   }
 
