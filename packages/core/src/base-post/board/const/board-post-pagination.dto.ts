@@ -1,5 +1,5 @@
 import { IsString, IsNumber, IsOptional } from "class-validator";
-import { BasePaginationDto } from "@gamecoregg/nestjs-core/base-common/dto/base-pagination.dto";
+import { BasePaginationDto } from "@base-common/dto/base-pagination.dto";
 
 export class BoardPostPaginationDto extends BasePaginationDto {
   @IsNumber()

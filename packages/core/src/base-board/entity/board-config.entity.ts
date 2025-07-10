@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
+import { BaseModel } from "@base-common/entity/base.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { DomainConfig } from "@gamecoregg/nestjs-core/base-domain/entity/domain-config.entity";
-import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { DomainConfig } from "@base-domain/entity/domain-config.entity";
+import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { BoardType, BoardStatus } from "../enum/board-config.enum";
-import { BoardCategory } from "@gamecoregg/nestjs-core/base-board/entity/board-category.entity";
+import { BoardCategory } from "@base-board/entity/board-category.entity";
 
 @Entity()
 export class BoardConfig extends BaseModel {

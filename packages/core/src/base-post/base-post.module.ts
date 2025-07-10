@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { BasePostService } from "./base-post.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BoardPost } from "./board/entity/board-post.entity";
-import { BoardConfig } from "@gamecoregg/nestjs-core/base-board/entity/board-config.entity";
+import { BoardConfig } from "@base-board/entity/board-config.entity";
 import { BoardPostService } from "./board/board-post.service";
 import { PostUtilService } from "./util/post-util.service";
-import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { UserAccount } from "@base-user/entity/user-account.entity";
 import { PostInBoardGuard } from "./board/guard/post-in-board.guard";
 
 @Module({

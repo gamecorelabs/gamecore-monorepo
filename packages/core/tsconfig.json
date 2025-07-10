@@ -16,8 +16,17 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@gamecoregg/nestjs-core/*": ["./*"]
-    }
+      "@/*": ["./*"],
+      "@base-auth/*": ["./base-auth/*"],
+      "@base-board/*": ["./base-board/*"],
+      "@base-comment/*": ["./base-comment/*"],
+      "@base-common/*": ["./base-common/*"],
+      "@base-domain/*": ["./base-domain/*"],
+      "@base-like/*": ["./base-like/*"],
+      "@base-post/*": ["./base-post/*"],
+      "@base-user/*": ["./base-user/*"]
+    },
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]

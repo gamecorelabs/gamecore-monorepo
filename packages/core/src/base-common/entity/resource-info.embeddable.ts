@@ -1,5 +1,5 @@
 import { Column } from "typeorm";
-import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
+import { ResourceType } from "@base-common/enum/common.enum";
 import { IsEnum, IsNumber } from "class-validator";
 
 /**

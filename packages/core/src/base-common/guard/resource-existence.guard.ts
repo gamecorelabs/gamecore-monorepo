@@ -1,7 +1,7 @@
-import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
-import { BoardExistsGuard } from "@gamecoregg/nestjs-core/base-board/guard/board-exists.guard";
-import { PostInBoardGuard } from "@gamecoregg/nestjs-core/base-post/board/guard/post-in-board.guard";
-import { CommentInPostGuard } from "@gamecoregg/nestjs-core/base-comment/guard/comment-in-post.guard";
+import { ResourceType } from "@base-common/enum/common.enum";
+import { BoardExistsGuard } from "@base-board/guard/board-exists.guard";
+import { PostInBoardGuard } from "@base-post/board/guard/post-in-board.guard";
+import { CommentInPostGuard } from "@base-comment/guard/comment-in-post.guard";
 import {
   BadRequestException,
   CanActivate,

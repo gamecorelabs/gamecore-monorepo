@@ -7,9 +7,9 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { BaseAuthService } from "../base-auth.service";
-import { BaseUserService } from "@gamecoregg/nestjs-core/base-user/base-user.service";
+import { BaseUserService } from "@base-user/base-user.service";
 import { AUTH_HTTP_STATUS_CODE } from "../const/auth.const";
-import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { UserOrGuestLoginRequest } from "@base-user/types/user.types";
 
 @Injectable()
 export class UserTokenGuard implements CanActivate {

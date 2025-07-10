@@ -8,9 +8,9 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { BoardPostStatus } from "../enum/board-post.enum";
-import { BoardStatus } from "@gamecoregg/nestjs-core/base-board/enum/board-config.enum";
+import { BoardStatus } from "@base-board/enum/board-config.enum";
 
 @Injectable()
 export class PostInBoardGuard implements CanActivate {

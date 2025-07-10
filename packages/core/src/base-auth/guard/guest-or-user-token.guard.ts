@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { BaseAuthService } from "../base-auth.service";
-import { BaseUserService } from "@gamecoregg/nestjs-core/base-user/base-user.service";
+import { BaseUserService } from "@base-user/base-user.service";
 import { GuestUserTokenGuard } from "./guest-user-token.guard";
 import { UserTokenGuard } from "./user-token.guard";
 

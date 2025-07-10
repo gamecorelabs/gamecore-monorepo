@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { UserAccount } from "@base-user/entity/user-account.entity";
 import { CreateUserAccountDto } from "./dto/create-user-account.dto";
 
 @Injectable()

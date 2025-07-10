@@ -1,11 +1,11 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
-import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
-import { BoardConfig } from "@gamecoregg/nestjs-core/base-board/entity/board-config.entity";
+import { BaseModel } from "@base-common/entity/base.entity";
+import { BoardConfig } from "@base-board/entity/board-config.entity";
 import {
   DomainCategory,
   DomainStatus,
-} from "@gamecoregg/nestjs-core/base-domain/enum/domain.enum";
+} from "@base-domain/enum/domain.enum";
 
 @Entity()
 export class DomainConfig extends BaseModel {

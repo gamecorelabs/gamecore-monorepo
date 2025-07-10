@@ -1,7 +1,7 @@
-import { ENV_JWT_SECRET } from "@gamecoregg/nestjs-core/base-common/const/env-keys.const";
+import { ENV_JWT_SECRET } from "@base-common/const/env-keys.const";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
+import { UserAccount } from "@base-user/entity/user-account.entity";
 import { TOKEN_EXPIRE } from "./const/auth.const";
 import { JwtService } from "@nestjs/jwt";
 import { Response as ExpressResponse } from "express";

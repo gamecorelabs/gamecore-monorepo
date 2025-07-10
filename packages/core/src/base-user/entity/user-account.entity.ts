@@ -1,13 +1,13 @@
 import { IsEmail, IsString, Length } from "class-validator";
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseModel } from "@gamecoregg/nestjs-core/base-common/entity/base.entity";
-import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
-import { stringValidationMessage } from "@gamecoregg/nestjs-core/base-common/validation/string-validation-mesage";
-import { emailValidationMessage } from "@gamecoregg/nestjs-core/base-common/validation/email-validation.message";
-import { lengthValidationMessage } from "@gamecoregg/nestjs-core/base-common/validation/length-validation.message";
+import { BaseModel } from "@base-common/entity/base.entity";
+import { BoardPost } from "@base-post/board/entity/board-post.entity";
+import { stringValidationMessage } from "@base-common/validation/string-validation-mesage";
+import { emailValidationMessage } from "@base-common/validation/email-validation.message";
+import { lengthValidationMessage } from "@base-common/validation/length-validation.message";
 import { UserGrade, UserRoles } from "../enum/user.enum";
 import { Exclude } from "class-transformer";
-import { Comment } from "@gamecoregg/nestjs-core/base-comment/entity/comment.entity";
+import { Comment } from "@base-comment/entity/comment.entity";
 
 @Entity()
 export class UserAccount extends BaseModel {

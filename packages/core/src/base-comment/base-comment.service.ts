@@ -10,23 +10,23 @@ import {
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { Comment } from "./entity/comment.entity";
 
-import { CommentStatus } from "@gamecoregg/nestjs-core/base-comment/enum/comment.enum";
-import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { CommentStatus } from "@base-comment/enum/comment.enum";
+import { UserOrGuestLoginRequest } from "@base-user/types/user.types";
 import { ConfigService } from "@nestjs/config";
-import { ENV_HASH_ROUNDS } from "@gamecoregg/nestjs-core/base-common/const/env-keys.const";
-import { ResourceType } from "@gamecoregg/nestjs-core/base-common/enum/common.enum";
-import { getUserInfo } from "@gamecoregg/nestjs-core/base-user/util/get-user-info.util";
+import { ENV_HASH_ROUNDS } from "@base-common/const/env-keys.const";
+import { ResourceType } from "@base-common/enum/common.enum";
+import { getUserInfo } from "@base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
 import {
   LikeStatus,
   LikeType,
-} from "@gamecoregg/nestjs-core/base-like/enum/like.enum";
-import { UserAccount } from "@gamecoregg/nestjs-core/base-user/entity/user-account.entity";
-import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
-import { ResourceRepositoryService } from "@gamecoregg/nestjs-core/base-common/service/resource-repository.service";
-import { ResourceInfo } from "@gamecoregg/nestjs-core/base-common/entity/resource-info.embeddable";
-import { CommentRequest } from "@gamecoregg/nestjs-core/base-comment/types/request-types";
-import { CommonTransactionService } from "@gamecoregg/nestjs-core/base-common/service/common-transaction.service";
+} from "@base-like/enum/like.enum";
+import { UserAccount } from "@base-user/entity/user-account.entity";
+import { BaseLikeService } from "@base-like/base-like.service";
+import { ResourceRepositoryService } from "@base-common/service/resource-repository.service";
+import { ResourceInfo } from "@base-common/entity/resource-info.embeddable";
+import { CommentRequest } from "@base-comment/types/request-types";
+import { CommonTransactionService } from "@base-common/service/common-transaction.service";
 
 @Injectable()
 export class BaseCommentService {
@@ -164,6 +164,13 @@ export class BaseCommentService {
     if ("author" in userInfo && comment.author) {
       return comment.author.id === userInfo.author.id;
     } else if ("guest_account" in userInfo && user.type === "guest") {
+      if (
+        !comment.guest_account?.guest_author_password ||
+        !user.guest_account?.guest_author_password
+      ) {
+        throw new ConflictException("비밀번호 정보가 확인되지 않습니다.");
+      }
+
       const isPasswordValid = await bcrpyt.compare(
         user.guest_account.guest_author_password,
         comment.guest_account.guest_author_password

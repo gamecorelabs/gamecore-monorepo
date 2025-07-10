@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { BaseUserService } from "./base-user.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserAccount } from "./entity/user-account.entity";
-import { BoardPost } from "@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity";
+import { BoardPost } from "@base-post/board/entity/board-post.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserAccount, BoardPost])],

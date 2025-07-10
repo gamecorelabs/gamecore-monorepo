@@ -1,19 +1,17 @@
 {
   "name": "@gamecoregg/nestjs-core",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "private": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    "./*": "./dist/*"
-  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gamecoregg/gamecoregg"
+    "url": "https://github.com/gamecoregg/gamecoregg-monorepo"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -23,6 +21,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^6.0.0",
@@ -36,6 +35,8 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^22.10.7",
-    "typescript": "^5.0.0"
+    "ts-patch": "^3.3.0",
+    "typescript": "^5.0.0",
+    "typescript-transform-paths": "^3.5.5"
   }
 }
