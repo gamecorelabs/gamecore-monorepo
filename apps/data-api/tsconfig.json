@@ -18,7 +18,6 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@_src/*": ["./src/*"],
       "typeorm": ["./node_modules/typeorm"],
 
       "@gamecoregg/nestjs-core/*": ["../../packages/core/src/*"],
