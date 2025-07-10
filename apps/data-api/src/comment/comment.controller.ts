@@ -11,19 +11,18 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
-import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
-import { BaseCommentService } from "@_core/base-comment/base-comment.service";
-import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import { CommonRequest } from "@_core/base-common/types/request-types";
-import { CommentRequest } from "@_core/base-comment/types/request-types";
-import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
+import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
+import { BaseCommentService } from "@gamecoregg/nestjs-core/base-comment/base-comment.service";
+import { ResourceExistenceGuard } from "@gamecoregg/nestjs-core/base-common/guard/resource-existence.guard";
+import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import * as CommonRequestTypes from "@gamecoregg/nestjs-core/base-common/types/request-types";
+import * as CommentRequestTypes from "@gamecoregg/nestjs-core/base-comment/types/request-types";
+import { CreateRequestLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/create-like.dto";
+import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
 import { QueryRunner } from "typeorm";
-import { CurrentQueryRunner } from "@_core/base-common/decorator/current-query-runner.decorator";
-import { QueryRunnerTransactionInterceptor } from "@_core/base-common/interceptor/query-runner-transaction.interceptor";
+import { CurrentQueryRunner } from "@gamecoregg/nestjs-core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunnerTransactionInterceptor } from "@gamecoregg/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
 
 @Controller("comment")
 export class CommentController {
@@ -42,9 +41,9 @@ export class CommentController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async deleteComment(
-    @Request() req: CommentRequest,
+    @Request() req: CommentRequestTypes.CommentRequest,
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner
   ) {
     await this.baseCommentService.checkOwnerComment(id, user);
@@ -57,8 +56,8 @@ export class CommentController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
-    @Request() req: CommonRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Request() req: CommonRequestTypes.CommonRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @Body() body: CreateRequestLikeDto,
     @CurrentQueryRunner() qr: QueryRunner
   ) {

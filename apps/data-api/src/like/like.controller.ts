@@ -1,10 +1,10 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { LikeService } from "./like.service";
-import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
-import { SelectedLikeDto } from "@_core/base-like/dto/selected-like.dto";
+import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
+import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
+import { SelectedLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/selected-like.dto";
 
 @Controller("like")
 export class LikeController {
@@ -17,7 +17,7 @@ export class LikeController {
   @Post("selected")
   @UseGuards(GuestOrUserTokenGuard)
   checkSelectedLike(
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @Body() dto: SelectedLikeDto
   ) {
     return this.baseLikeService.checkUserLikeStatus(dto, user);

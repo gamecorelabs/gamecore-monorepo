@@ -10,16 +10,16 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { BaseBoardService } from "@_core/base-board/base-board.service";
-import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { BoardPostService } from "@_core/base-post/board/board-post.service";
-import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import { BoardConfigRequest } from "@_core/base-board/types/request-types";
+import { BaseBoardService } from "@gamecoregg/nestjs-core/base-board/base-board.service";
+import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
+import { BoardPostService } from "@gamecoregg/nestjs-core/base-post/board/board-post.service";
+import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import * as UserTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { RequestCreateBoardPostDto } from "@gamecoregg/nestjs-core/base-post/board/dto/create-board-post.dto";
+import { ResourceExistenceGuard } from "@gamecoregg/nestjs-core/base-common/guard/resource-existence.guard";
+import * as RequestTypes from "@gamecoregg/nestjs-core/base-board/types/request-types";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { BoardPostPaginationDto } from "@_core/base-post/board/const/board-post-pagination.dto";
+import { BoardPostPaginationDto } from "@gamecoregg/nestjs-core/base-post/board/const/board-post-pagination.dto";
 
 @Controller("board")
 export class BoardController {
@@ -36,7 +36,7 @@ export class BoardController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   async getBoardById(
-    @Request() req: BoardConfigRequest,
+    @Request() req: RequestTypes.BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
   ) {
     return req.boardConfig;
@@ -45,7 +45,7 @@ export class BoardController {
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
   async getBoardPost(
-    @Request() req: BoardConfigRequest,
+    @Request() req: RequestTypes.BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
     @Query() query: BoardPostPaginationDto
   ) {
@@ -66,9 +66,9 @@ export class BoardController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseInterceptors(AnyFilesInterceptor()) // 파일 없어도 formData 파싱을 위해 필요
   postBoardPost(
-    @Request() req: BoardConfigRequest,
+    @Request() req: RequestTypes.BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentUser() user: UserTypes.UserOrGuestLoginRequest,
     @Body() body: RequestCreateBoardPostDto
   ) {
     const dto = {

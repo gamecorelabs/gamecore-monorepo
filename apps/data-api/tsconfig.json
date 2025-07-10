@@ -18,9 +18,20 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@_core/*": ["../../packages/core/src/*"],
       "@_src/*": ["./src/*"],
-      "typeorm": ["./node_modules/typeorm"]
+      "typeorm": ["./node_modules/typeorm"],
+
+      "@gamecoregg/nestjs-core/*": ["../../packages/core/src/*"],
+      "@gamecoregg/nestjs-core": ["../../packages/core/src/index.ts"],
+
+      "@base-auth/*": ["../../packages/core/src/base-auth/*"],
+      "@base-board/*": ["../../packages/core/src/base-board/*"],
+      "@base-comment/*": ["../../packages/core/src/base-comment/*"],
+      "@base-common/*": ["../../packages/core/src/base-common/*"],
+      "@base-domain/*": ["../../packages/core/src/base-domain/*"],
+      "@base-like/*": ["../../packages/core/src/base-like/*"],
+      "@base-post/*": ["../../packages/core/src/base-post/*"],
+      "@base-user/*": ["../../packages/core/src/base-user/*"]
     }
   }
 }

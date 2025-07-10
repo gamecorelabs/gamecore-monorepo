@@ -12,21 +12,21 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
-import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { BoardPostService } from "@_core/base-post/board/board-post.service";
-import { BaseLikeService } from "@_core/base-like/base-like.service";
-import { CommonRequest } from "@_core/base-common/types/request-types";
-import { BoardPostRequest } from "@_core/base-post/board/types/request-types";
-import { ResourceExistenceGuard } from "@_core/base-common/guard/resource-existence.guard";
-import { CreateRequestLikeDto } from "@_core/base-like/dto/create-like.dto";
-import { RequestCreateCommentDto } from "@_core/base-comment/dto/create-comment.dto";
-import { UpdateBoardPostDto } from "@_core/base-post/board/dto/update-board-post.dto";
-import { BaseCommentService } from "@_core/base-comment/base-comment.service";
+import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
+import { BoardPostService } from "@gamecoregg/nestjs-core/base-post/board/board-post.service";
+import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
+import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import * as CommonRequestTypes from "@gamecoregg/nestjs-core/base-common/types/request-types";
+import * as BoardRequestTypes from "@gamecoregg/nestjs-core/base-post/board/types/request-types";
+import { ResourceExistenceGuard } from "@gamecoregg/nestjs-core/base-common/guard/resource-existence.guard";
+import { CreateRequestLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/create-like.dto";
+import { RequestCreateCommentDto } from "@gamecoregg/nestjs-core/base-comment/dto/create-comment.dto";
+import { UpdateBoardPostDto } from "@gamecoregg/nestjs-core/base-post/board/dto/update-board-post.dto";
+import { BaseCommentService } from "@gamecoregg/nestjs-core/base-comment/base-comment.service";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { QueryRunnerTransactionInterceptor } from "@_core/base-common/interceptor/query-runner-transaction.interceptor";
-import { CurrentQueryRunner } from "@_core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunnerTransactionInterceptor } from "@gamecoregg/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
+import { CurrentQueryRunner } from "@gamecoregg/nestjs-core/base-common/decorator/current-query-runner.decorator";
 import { QueryRunner } from "typeorm";
 
 @Controller(["board-post"])
@@ -42,7 +42,7 @@ export class BoardPostController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   getPostDetail(
-    @Request() req: CommonRequest,
+    @Request() req: CommonRequestTypes.CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.boardPostService.getPostDetail(id);
@@ -54,7 +54,7 @@ export class BoardPostController {
   @UseInterceptors(AnyFilesInterceptor())
   async patchPost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @Body() body: UpdateBoardPostDto
   ) {
     await this.boardPostService.checkOwnerPost(id, user);
@@ -66,7 +66,7 @@ export class BoardPostController {
   @UseGuards(GuestOrUserTokenGuard)
   async deletePost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserOrGuestLoginRequest
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest
   ) {
     await this.boardPostService.checkOwnerPost(id, user);
     return this.boardPostService.deletePost(id);
@@ -76,7 +76,7 @@ export class BoardPostController {
   @Get(":id/comments")
   @UseGuards(ResourceExistenceGuard)
   async getCommentsByPostId(
-    @Request() req: CommonRequest,
+    @Request() req: CommonRequestTypes.CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return await this.baseCommentService.getPostCommentList(
@@ -91,8 +91,8 @@ export class BoardPostController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   postComment(
-    @Request() req: BoardPostRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Request() req: BoardRequestTypes.BoardPostRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: RequestCreateCommentDto
   ) {
@@ -110,8 +110,8 @@ export class BoardPostController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
-    @Request() req: CommonRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Request() req: CommonRequestTypes.CommonRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: CreateRequestLikeDto
   ) {
@@ -127,8 +127,8 @@ export class BoardPostController {
   @UseGuards(ResourceExistenceGuard)
   @UseGuards(GuestOrUserTokenGuard)
   async getOwnerCheck(
-    @Request() req: CommonRequest,
-    @CurrentUser() user: UserOrGuestLoginRequest,
+    @Request() req: CommonRequestTypes.CommonRequest,
+    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.boardPostService.checkOwnerPost(id, user);

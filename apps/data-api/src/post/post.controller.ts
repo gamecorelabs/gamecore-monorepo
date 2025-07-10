@@ -8,13 +8,13 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
-import { GuestOrUserTokenGuard } from "@_core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@_core/base-user/decorator/current-user.decorator";
-import { RequestCreateBoardPostDto } from "@_core/base-post/board/dto/create-board-post.dto";
-import { BoardExistsPipe } from "@_core/base-board/pipe/board-exists.pipe";
-import { UserOrGuestLoginRequest } from "@_core/base-user/types/user.types";
-import { BoardConfig } from "@_core/base-board/entity/board-config.entity";
-import { BoardPostService } from "@_core/base-post/board/board-post.service";
+import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
+import { RequestCreateBoardPostDto } from "@gamecoregg/nestjs-core/base-post/board/dto/create-board-post.dto";
+import { BoardExistsPipe } from "@gamecoregg/nestjs-core/base-board/pipe/board-exists.pipe";
+import { UserOrGuestLoginRequest } from "@gamecoregg/nestjs-core/base-user/types/user.types";
+import { BoardConfig } from "@gamecoregg/nestjs-core/base-board/entity/board-config.entity";
+import { BoardPostService } from "@gamecoregg/nestjs-core/base-post/board/board-post.service";
 
 @Controller(["post"])
 export class PostController {
