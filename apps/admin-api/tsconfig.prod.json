@@ -1,0 +1,9 @@
+// apps/admin-api/tsconfig.prod.json (배포용)
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@_src/*": ["./src/*"]
+    }
+  }
+}

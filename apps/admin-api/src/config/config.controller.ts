@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { CreateDomainConfigDto } from '@_core/base-board/dto/create-domain-config.dto';
-import { CreateBoardConfigDto } from '@_core/base-board/dto/create-board-config.dto';
-import { AdminRoleUserGuard } from '@_core/base-auth/guard/admin-role-user.guard';
+import { CreateDomainConfigDto } from '@gamecoregg/nestjs-core/base-board/dto/create-domain-config.dto';
+import { CreateBoardConfigDto } from '@gamecoregg/nestjs-core/base-board/dto/create-board-config.dto';
+import { AdminRoleUserGuard } from '@gamecoregg/nestjs-core/base-auth/guard/admin-role-user.guard';
 
 @Controller('config')
 export class ConfigController {
