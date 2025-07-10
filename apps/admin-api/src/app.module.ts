@@ -9,8 +9,6 @@ import { DomainConfig } from '@gamecoregg/nestjs-core/base-domain/entity/domain-
 import { BoardPost } from '@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity';
 import { UserAccount } from '@gamecoregg/nestjs-core/base-user/entity/user-account.entity';
 import { Comment } from '@gamecoregg/nestjs-core/base-comment/entity/comment.entity';
-import { BaseAuthModule } from '@gamecoregg/nestjs-core/base-auth/base-auth.module';
-import { BaseUserModule } from '@gamecoregg/nestjs-core/base-user/base-user.module';
 import { BoardCategory } from '@gamecoregg/nestjs-core/base-board/entity/board-category.entity';
 
 @Module({
