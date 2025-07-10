@@ -7,18 +7,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
-import { BaseAuthService } from '@_core/base-auth/base-auth.service';
-import { BasicUserTokenGuard } from '@_core/base-auth/guard/basic-user-token.guard';
-import { RefreshTokenGuard } from '@_core/base-auth/guard/refresh-token.guard';
-import { AccessTokenGuard } from '@_core/base-auth/guard/access-token.guard';
+import { CreateUserAccountDto } from '@gamecoregg/nestjs-core/base-user/dto/create-user-account.dto';
+import { BaseAuthService } from '@gamecoregg/nestjs-core/base-auth/base-auth.service';
+import { BasicUserTokenGuard } from '@gamecoregg/nestjs-core/base-auth/guard/basic-user-token.guard';
+import { RefreshTokenGuard } from '@gamecoregg/nestjs-core/base-auth/guard/refresh-token.guard';
+import { AccessTokenGuard } from '@gamecoregg/nestjs-core/base-auth/guard/access-token.guard';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
-import { UserAccount } from '@_core/base-user/entity/user-account.entity';
-import { UserLoginRequest } from '@_core/base-user/types/user.types';
-import { CurrentUser } from '@_core/base-user/decorator/current-user.decorator';
+import { UserAccount } from '@gamecoregg/nestjs-core/base-user/entity/user-account.entity';
+// import { UserLoginRequest } from '@gamecoregg/nestjs-core/base-user/types/user.types';
+import * as userTypes from '@gamecoregg/nestjs-core/base-user/types/user.types';
+import { CurrentUser } from '@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
@@ -34,7 +35,7 @@ export class AuthController {
   @Post('token/access')
   @UseGuards(RefreshTokenGuard)
   async accessToken(
-    @CurrentUser() user: UserLoginRequest,
+    @CurrentUser() user: userTypes.UserLoginRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const tokenData = this.baseAuthService.getIssuanceToken(
@@ -79,7 +80,7 @@ export class AuthController {
 
   @Post('me')
   @UseGuards(AccessTokenGuard)
-  async getMe(@CurrentUser() user: UserLoginRequest) {
+  async getMe(@CurrentUser() user: userTypes.UserLoginRequest) {
     return user;
   }
 }

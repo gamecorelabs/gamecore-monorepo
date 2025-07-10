@@ -1,9 +1,9 @@
-import { BaseAuthService } from '@_core/base-auth/base-auth.service';
-import { TOKEN_EXPIRE } from '@_core/base-auth/const/auth.const';
-import { ENV_HASH_ROUNDS } from '@_core/base-common/const/env-keys.const';
-import { BaseUserService } from '@_core/base-user/base-user.service';
-import { CreateUserAccountDto } from '@_core/base-user/dto/create-user-account.dto';
-import { UserAccount } from '@_core/base-user/entity/user-account.entity';
+import { BaseAuthService } from '@gamecoregg/nestjs-core/base-auth/base-auth.service';
+import { TOKEN_EXPIRE } from '@gamecoregg/nestjs-core/base-auth/const/auth.const';
+import { ENV_HASH_ROUNDS } from '@gamecoregg/nestjs-core/base-common/const/env-keys.const';
+import { BaseUserService } from '@gamecoregg/nestjs-core/base-user/base-user.service';
+import { CreateUserAccountDto } from '@gamecoregg/nestjs-core/base-user/dto/create-user-account.dto';
+import { UserAccount } from '@gamecoregg/nestjs-core/base-user/entity/user-account.entity';
 import {
   Injectable,
   InternalServerErrorException,
