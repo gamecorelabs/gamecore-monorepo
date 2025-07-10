@@ -1,12 +1,12 @@
 {
   "name": "@gamecoregg/nestjs-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": false,
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^22.10.7",
     "ts-patch": "^3.3.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.0.0",
     "typescript-transform-paths": "^3.5.5"
   }

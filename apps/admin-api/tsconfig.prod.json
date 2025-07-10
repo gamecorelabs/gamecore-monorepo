@@ -1,9 +1,17 @@
-// apps/admin-api/tsconfig.prod.json (배포용)
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "paths": {
-      "@_src/*": ["./src/*"]
+      "@_src/*": ["src/*"],
+      "@gamecoregg/nestjs-core": ["node_modules/@gamecoregg/nestjs-core/dist"],
+      "@gamecoregg/nestjs-core/*": [
+        "node_modules/@gamecoregg/nestjs-core/dist/*"
+      ]
     }
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["test", "**/*.spec.ts", "node_modules"]
 }
