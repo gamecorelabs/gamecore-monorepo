@@ -14,6 +14,22 @@ services:
     networks:
       - app-net
 
+  traefik:
+    image: traefik:v2.11
+    container_name: traefik
+    command:
+      - "--configFile=/etc/traefik/traefik.yml"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080" # Traefik 대시보드
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/certs:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+    networks:
+      - app-net
+
   data-api:
     build:
       context: ./apps/data-api
@@ -21,15 +37,21 @@ services:
     volumes:
       - ./apps/data-api:/apps/data-api
       - ./packages/core:/packages/core
-      - ./cert:/cert
-    ports:
-      - "4000:3000"
     env_file:
       - ./apps/data-api/.env.dev
     depends_on:
       - mysql
     networks:
       - app-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dataapi.rule=Host(`dev.data-api.gamecore.co.kr`)"
+      - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dataapi.entrypoints=websecure"
+      - "traefik.http.routers.dataapi.tls=true"
+      - "traefik.http.routers.dataapi-insecure.rule=Host(`dev.data-api.gamecore.co.kr`)"
+      - "traefik.http.routers.dataapi-insecure.entrypoints=web"
+      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https"
 
   admin-api:
     build:
@@ -38,15 +60,21 @@ services:
     volumes:
       - ./apps/admin-api:/apps/admin-api
       - ./packages/core:/packages/core
-      - ./cert:/cert
-    ports:
-      - "4200:3000"
     env_file:
       - ./apps/admin-api/.env.dev
     depends_on:
       - mysql
     networks:
       - app-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminapi.rule=Host(`dev.admin-api.gamecore.co.kr`)"
+      - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
+      - "traefik.http.routers.adminapi.entrypoints=websecure"
+      - "traefik.http.routers.adminapi.tls=true"
+      - "traefik.http.routers.adminapi-insecure.rule=Host(`dev.admin-api.gamecore.co.kr`)"
+      - "traefik.http.routers.adminapi-insecure.entrypoints=web"
+      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https"
 
   auth-api:
     build:
@@ -55,24 +83,28 @@ services:
     volumes:
       - ./apps/auth-api:/apps/auth-api
       - ./packages/core:/packages/core
-      - ./cert:/cert
-    ports:
-      - "4400:3000"
     env_file:
       - ./apps/auth-api/.env.dev
     depends_on:
       - mysql
     networks:
       - app-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authapi.rule=Host(`dev.auth-api.gamecore.co.kr`)"
+      - "traefik.http.services.authapi.loadbalancer.server.port=3000"
+      - "traefik.http.routers.authapi.entrypoints=websecure"
+      - "traefik.http.routers.authapi.tls=true"
+      - "traefik.http.routers.authapi-insecure.rule=Host(`dev.auth-api.gamecore.co.kr`)"
+      - "traefik.http.routers.authapi-insecure.entrypoints=web"
+      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https"
 
   frontend:
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
     volumes:
-      - ./apps/frontend:/app/frontend
-    ports:
-      - "3000:3000"
+      - ./apps/frontend:/apps/frontend
     env_file:
       - ./apps/frontend/.env.dev
     depends_on:
@@ -81,6 +113,15 @@ services:
       - data-api
     networks:
       - app-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`dev.gamecore.co.kr`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend-insecure.rule=Host(`dev.gamecore.co.kr`)"
+      - "traefik.http.routers.frontend-insecure.entrypoints=web"
+      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https"
 
 volumes:
   mysql_data:

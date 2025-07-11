@@ -1,0 +1,31 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+serversTransports:
+  insecure:
+    insecureSkipVerify: true
+
+# HTTP to HTTPS redirect middleware
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+tls:
+  certificates:
+    - certFile: /certs/dev.gamecore.co.kr+3.pem
+      keyFile: /certs/dev.gamecore.co.kr+3-key.pem

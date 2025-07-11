@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_EXTRA_CA_CERTS=\"/cert/rootCA.pem\" next dev --experimental-https --experimental-https-key /cert/localhost-key.pem --experimental-https-cert /cert/localhost.pem",
+    "dev": "next dev",
+    "dev:https": "cross-env NODE_EXTRA_CA_CERTS=\"/cert/rootCA.pem\" next dev --experimental-https --experimental-https-key /cert/localhost-key.pem --experimental-https-cert /cert/localhost.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

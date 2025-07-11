@@ -1,12 +1,6 @@
 import { createBaseApi } from "./baseApi";
 
-const isServer = typeof window === "undefined";
-
-const baseURL = isServer
-  ? process.env.AUTH_API_URL
-  : process.env.NEXT_PUBLIC_AUTH_API_URL;
-
-const authApi = createBaseApi(baseURL as string, {
+const authApi = createBaseApi(process.env.NEXT_PUBLIC_AUTH_API_URL as string, {
   withCredentials: true,
 });
 

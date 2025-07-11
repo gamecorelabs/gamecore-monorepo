@@ -1,22 +1,15 @@
-import * as fs from 'fs';
 import * as cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('/cert/localhost-key.pem'),
-    cert: fs.readFileSync('/cert/localhost.pem'),
-  };
-  const app = await NestFactory.create(AppModule, {
-    httpsOptions,
-  });
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
 
-  // FIXME: 개발중 임시 허용
+  // CORS 설정 - 개발 환경
   app.enableCors({
-    origin: ['https://localhost:3000'],
+    origin: ['https://dev.gamecore.co.kr', 'https://localhost:3000'],
     credentials: true,
   });
 
