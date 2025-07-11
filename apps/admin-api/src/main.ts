@@ -5,6 +5,8 @@ import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 
 async function bootstrap() {
+  const isDev = process.env.NODE_ENV !== 'production';
+  const port = process.env.PORT || 3000;
   const httpsOptions = {
     key: fs.readFileSync('../../cert/localhost-key.pem'),
     cert: fs.readFileSync('../../cert/localhost.pem'),
@@ -32,6 +34,10 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 4200);
+  if (isDev) {
+    await app.listen(port, '0.0.0.0');
+  } else {
+    await app.listen(port);
+  }
 }
 bootstrap();

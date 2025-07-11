@@ -17,7 +17,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   imports: [
     CM.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       //데이터베이스 타입

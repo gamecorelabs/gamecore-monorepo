@@ -1,7 +1,7 @@
 FROM node:22-alpine
 
-
-WORKDIR /apps/data-api
+# 컨테이너 내 작업 디렉토리 설정
+WORKDIR /apps/auth-api
 
 COPY package*.json ./
 

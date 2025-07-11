@@ -15,7 +15,6 @@ import { BoardCategory } from '@gamecoregg/nestjs-core/base-board/entity/board-c
   imports: [
     CM.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       //데이터베이스 타입

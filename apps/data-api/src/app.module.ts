@@ -16,12 +16,10 @@ import { LikeModule } from "./like/like.module";
 import { CoreModule } from "@gamecoregg/nestjs-core/core.module";
 import { BoardCategory } from "@gamecoregg/nestjs-core/base-board/entity/board-category.entity";
 import { APP_INTERCEPTOR } from "@nestjs/core";
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env",
     }),
     TypeOrmModule.forRoot({
       //데이터베이스 타입

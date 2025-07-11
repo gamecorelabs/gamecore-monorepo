@@ -19,7 +19,6 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@gamecoregg/nestjs-core/*": ["../../packages/core/src/*"],
-      "@gamecoregg/nestjs-core": ["../../packages/core/src/index.ts"],
 
       "@base-auth/*": ["../../packages/core/src/base-auth/*"],
       "@base-board/*": ["../../packages/core/src/base-board/*"],

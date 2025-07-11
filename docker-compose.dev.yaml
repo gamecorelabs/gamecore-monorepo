@@ -1,0 +1,90 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-net
+
+  data-api:
+    build:
+      context: ./apps/data-api
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/data-api:/apps/data-api
+      - ./packages/core:/packages/core
+      - ./cert:/cert
+    ports:
+      - "4000:3000"
+    env_file:
+      - ./apps/data-api/.env.dev
+    depends_on:
+      - mysql
+    networks:
+      - app-net
+
+  admin-api:
+    build:
+      context: ./apps/admin-api
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/admin-api:/apps/admin-api
+      - ./packages/core:/packages/core
+      - ./cert:/cert
+    ports:
+      - "4200:3000"
+    env_file:
+      - ./apps/admin-api/.env.dev
+    depends_on:
+      - mysql
+    networks:
+      - app-net
+
+  auth-api:
+    build:
+      context: ./apps/auth-api
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/auth-api:/apps/auth-api
+      - ./packages/core:/packages/core
+      - ./cert:/cert
+    ports:
+      - "4400:3000"
+    env_file:
+      - ./apps/auth-api/.env.dev
+    depends_on:
+      - mysql
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/frontend/.env.dev
+    depends_on:
+      - admin-api
+      - auth-api
+      - data-api
+    networks:
+      - app-net
+
+volumes:
+  mysql_data:
+
+networks:
+  app-net:
+    driver: bridge
