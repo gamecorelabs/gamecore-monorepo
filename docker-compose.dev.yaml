@@ -51,7 +51,7 @@ services:
       - "traefik.http.routers.dataapi.tls=true"
       - "traefik.http.routers.dataapi-insecure.rule=Host(`dev.data-api.gamecore.co.kr`)"
       - "traefik.http.routers.dataapi-insecure.entrypoints=web"
-      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https"
+      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https@file"
 
   admin-api:
     build:
@@ -74,7 +74,7 @@ services:
       - "traefik.http.routers.adminapi.tls=true"
       - "traefik.http.routers.adminapi-insecure.rule=Host(`dev.admin-api.gamecore.co.kr`)"
       - "traefik.http.routers.adminapi-insecure.entrypoints=web"
-      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https"
+      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https@file"
 
   auth-api:
     build:
@@ -97,7 +97,7 @@ services:
       - "traefik.http.routers.authapi.tls=true"
       - "traefik.http.routers.authapi-insecure.rule=Host(`dev.auth-api.gamecore.co.kr`)"
       - "traefik.http.routers.authapi-insecure.entrypoints=web"
-      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https"
+      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https@file"
 
   frontend:
     build:
@@ -121,7 +121,7 @@ services:
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.routers.frontend-insecure.rule=Host(`dev.gamecore.co.kr`)"
       - "traefik.http.routers.frontend-insecure.entrypoints=web"
-      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https"
+      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https@file"
 
 volumes:
   mysql_data:

@@ -111,6 +111,7 @@ export class BaseAuthService {
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        domain: ".gamecore.co.kr",
         maxAge: TOKEN_EXPIRE.access * 1000,
       });
     }
@@ -120,6 +121,7 @@ export class BaseAuthService {
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        domain: ".gamecore.co.kr",
         maxAge: TOKEN_EXPIRE.refresh * 1000,
       });
     }
@@ -132,12 +134,14 @@ export class BaseAuthService {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      domain: ".gamecore.co.kr",
     });
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      domain: ".gamecore.co.kr",
     });
 
     return { success: true };
