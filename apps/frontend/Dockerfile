@@ -1,9 +1,10 @@
 FROM node:22-alpine
 
-WORKDIR /app/frontend
+WORKDIR /apps/frontend
 
-COPY . .
+COPY package*.json ./
 
+# 의존성 설치
 RUN npm install
 
 EXPOSE 3000
