@@ -1,5 +1,13 @@
-import { createBaseApi } from "./baseApi";
+import { createApi } from "./apiFactory";
 
-const adminApi = createBaseApi(process.env.NEXT_PUBLIC_ADMIN_API_URL as string);
+const adminApi = createApi(
+  {
+    publicUrl: process.env.NEXT_PUBLIC_ADMIN_API_URL as string,
+    internalUrl: process.env.INTERNAL_ADMIN_API_URL as string,
+  },
+  {
+    withCredentials: true,
+  }
+);
 
 export default adminApi;

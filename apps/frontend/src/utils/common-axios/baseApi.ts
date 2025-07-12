@@ -1,15 +1,10 @@
+import { ApiOptions } from "@/types/common/axios-api-types";
 import axios, { AxiosInstance } from "axios";
 
-type ApiOptions = {
-  withCredentials?: boolean;
-  headers?: Record<string, string>;
-  timeout?: number;
-};
-
-export function createBaseApi(
+export const createBaseApi = (
   baseURL: string,
   options: ApiOptions = {}
-): AxiosInstance {
+): AxiosInstance => {
   const {
     headers = { "Content-Type": "application/json" },
     timeout = 5000,
@@ -33,4 +28,4 @@ export function createBaseApi(
   );
 
   return instance;
-}
+};
