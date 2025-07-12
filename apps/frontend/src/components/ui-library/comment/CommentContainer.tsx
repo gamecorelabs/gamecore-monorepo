@@ -16,7 +16,7 @@ const CommentContainer = async ({
       `/${resourceType}/${resourceId}/comments`
     );
     comments = response?.data || null;
-  } catch (error) {
+  } catch {
     comments = null;
   }
 

@@ -1,4 +1,4 @@
-import { getUserName } from "@/utils/helpers/getUsername";
+import { getUserName } from "@/utils/helpers/getUserName";
 import { BoardPost } from "@/types/board/boardPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
 

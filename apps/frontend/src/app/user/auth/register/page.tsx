@@ -39,7 +39,7 @@ const RegisterPage = () => {
       }
       router.push(redirectUrl);
       router.refresh();
-    } catch (error) {
+    } catch {
       window.alert("회원가입 중 오류가 발생했습니다.");
     }
   };

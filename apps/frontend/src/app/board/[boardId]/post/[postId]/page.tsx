@@ -3,7 +3,7 @@ import BoardPostDetail from "@/components/ui-library/board/detail/BoardPostDetai
 import dataApi from "@/utils/common-axios/dataApi";
 
 interface BoardPostDetailProps {
-  params: { boardId: string; postId: string };
+  params: Promise<{ boardId: string; postId: string }>;
 }
 
 const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
@@ -13,7 +13,7 @@ const BoardPostDetailPage = async ({ params }: BoardPostDetailProps) => {
   try {
     const response = await dataApi.get(`/board-post/${postId}`);
     post = response?.data || null;
-  } catch (error) {
+  } catch {
     post = null;
   }
 

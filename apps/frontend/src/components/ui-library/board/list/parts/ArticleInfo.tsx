@@ -1,4 +1,4 @@
-import { getUserName } from "@/utils/helpers/getUsername";
+import { getUserName } from "@/utils/helpers/getUserName";
 import { BoardPost } from "@/types/board/boardPost.types";
 
 export const ArticleInfo = ({ post }: { post: BoardPost }) => (

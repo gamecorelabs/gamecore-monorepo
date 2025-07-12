@@ -1,10 +1,9 @@
 import { FallbackPage } from "@/components/ui-library";
-import BoardPostDetail from "@/components/ui-library/board/detail/BoardPostDetail";
 import BoardPostEdit from "@/components/ui-library/board/edit/BoardPostEdit";
 import dataApi from "@/utils/common-axios/dataApi";
 
 interface BoardPostDetailProps {
-  params: { boardId: string; postId: string };
+  params: Promise<{ boardId: string; postId: string }>;
 }
 
 const BoardPostEditPage = async ({ params }: BoardPostDetailProps) => {
@@ -14,7 +13,7 @@ const BoardPostEditPage = async ({ params }: BoardPostDetailProps) => {
   try {
     const response = await dataApi.get(`/board-post/${postId}`);
     post = response?.data || null;
-  } catch (error) {
+  } catch {
     post = null;
   }
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { decodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { FallbackPage } from "../../fallback";
-import BoardPostNew from "../new/BoardPostNew";
 import WriteForm from "../new/parts/WriteForm";
 import useHydrated from "@/utils/hooks/useHydrated";
 

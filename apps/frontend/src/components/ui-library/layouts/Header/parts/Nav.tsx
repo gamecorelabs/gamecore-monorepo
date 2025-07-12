@@ -14,11 +14,11 @@ const defaultMenu: NavItem[] = defaultMenuJson as NavItem[];
 
 // FIXME: 추후 캐시를 이용하여 nav items를 불러오기
 const Nav = ({ items }: { items?: NavItem[] }) => {
-  let pathname: string = "";
+  // let pathname: string = "";
   const menuItems = items && items.length > 0 ? items : defaultMenu;
-  if (typeof window !== "undefined" && window.location.pathname) {
-    pathname = window.location.pathname;
-  }
+  // if (typeof window !== "undefined" && window.location.pathname) {
+  //   pathname = window.location.pathname;
+  // }
   return (
     <nav className="bg-gray-800 text-white overflow-x-auto">
       <div className="mx-auto px-4 py-2">

@@ -1,9 +1,6 @@
 "use client";
 import { GalleryVerticalEnd } from "lucide-react";
 import { LoginForm } from "@ui-library/auth/LoginForm";
-import { useUserStore } from "@/store/userStore";
-import { userLogin } from "@/utils/auth/login";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
   return (

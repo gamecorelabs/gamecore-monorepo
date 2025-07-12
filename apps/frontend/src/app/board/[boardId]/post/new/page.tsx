@@ -1,10 +1,10 @@
 import BoardPostNew from "@/components/ui-library/board/new/BoardPostNew";
 
 interface BoardPostNewProps {
-  params: { boardId: string };
+  params: Promise<{ boardId: string }>;
 }
 
-const BoardPostNewPage = async ({ params }: { params: BoardPostNewProps }) => {
+const BoardPostNewPage = async ({ params }: BoardPostNewProps) => {
   const { boardId } = await params;
 
   return <BoardPostNew boardId={boardId} />;

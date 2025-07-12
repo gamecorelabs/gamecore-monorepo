@@ -1,14 +1,9 @@
 "use client";
-import { useUserStore } from "@/store/userStore";
-import dataApi from "@/utils/common-axios/dataApi";
-import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
-import { useFingerprint } from "@/utils/hooks/useFingerprint";
 import { useLikeSelection } from "@/utils/hooks/useLikeSelection";
 import { Comment } from "@/types/comment/comment.types";
 import { ResourceType } from "@/types/common/resource.types";
-import { LikeType } from "@/types/like/like.types";
 import CommentItem from "@ui-library/comment/CommentItem";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 const CommentList = ({ comments }: { comments: Comment[] }) => {
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);

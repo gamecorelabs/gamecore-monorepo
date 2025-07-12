@@ -6,7 +6,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -45,8 +44,8 @@ const SearchList = ({ defaultValue = "title" }: { defaultValue?: string }) => {
       return;
     }
 
-    let searchType = formObject.searchType as string;
-    let searchValue = formObject.searchValue as string;
+    const searchType = formObject.searchType as string;
+    const searchValue = formObject.searchValue as string;
     let searchQueryKey = "";
 
     switch (searchType) {

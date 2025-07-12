@@ -6,7 +6,7 @@ import { useFingerprint } from "@/utils/hooks/useFingerprint";
 import { ResourceType } from "@/types/common/resource.types";
 import { LikeType } from "@/types/like/like.types";
 import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
-import { AxiosError, HttpStatusCode } from "axios";
+import { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -84,7 +84,11 @@ const LikeDetail = ({
     <div className="flex justify-center items-center gap-8 py-8">
       <button
         className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2  hover:bg-gray-50 transition-colors duration-200
-            ${selected === LikeType.LIKE ? "border-red-600 border-2" : "border-gray-200"}`}
+            ${
+              selected === LikeType.LIKE
+                ? "border-red-600 border-2"
+                : "border-gray-200"
+            }`}
         onClick={() => handleLike(LikeType.LIKE)}
       >
         <HandThumbUpIcon className="h-8 w-8 text-green-500" />
@@ -92,7 +96,11 @@ const LikeDetail = ({
       </button>
       <button
         className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 hover:bg-gray-50 transition-colors duration-200
-          ${selected === LikeType.DISLIKE ? "border-red-600 border-2" : "border-gray-200"}`}
+          ${
+            selected === LikeType.DISLIKE
+              ? "border-red-600 border-2"
+              : "border-gray-200"
+          }`}
         onClick={() => handleLike(LikeType.DISLIKE)}
       >
         <HandThumbDownIcon className="h-8 w-8 text-red-500" />

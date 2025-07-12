@@ -10,7 +10,6 @@ import {
   userBoardPostSchema,
   guestBoardPostSchema,
 } from "@/utils/validation/board/newBoardPostSchema";
-import type { ZodIssue } from "zod";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import { BoardPost } from "@/types/board/boardPost.types";
@@ -94,7 +93,7 @@ const WriteForm = ({
       if (result.status === StatusCodes.CREATED && result.data.id > 0) {
         router.push(`/board/${boardId}/post`);
       }
-    } catch (error) {
+    } catch {
       window.alert("게시글 작성 중 오류가 발생했습니다. 다시 시도해주세요.");
       return;
     }
@@ -114,7 +113,7 @@ const WriteForm = ({
       if (result.status === StatusCodes.OK && result.data.id > 0) {
         router.push(`/board/${boardId}/post`);
       }
-    } catch (error) {
+    } catch {
       window.alert("게시글 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
       return;
     }

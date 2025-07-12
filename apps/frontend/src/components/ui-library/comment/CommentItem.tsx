@@ -1,17 +1,15 @@
 "use client";
-import { getUserName } from "@/utils/helpers/getUsername";
+import { getUserName } from "@/utils/helpers/getUserName";
 import { Comment, CommentStatus } from "@/types/comment/comment.types";
 import ReplyForm from "@ui-library/comment/CommentReplyForm";
 import PasswordModal from "../modal/PasswordModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import dataApi from "@/utils/common-axios/dataApi";
 import { StatusCodes } from "http-status-codes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import LikeDetail from "../like/LikeDetail";
-import { ResourceType } from "@/types/common/resource.types";
 import { LikeType } from "@/types/like/like.types";
 import HideCommentItem from "./HideCommentItem";
 import { formatDate } from "@/utils/helpers/formatDate";
@@ -113,7 +111,13 @@ export const CommentItem = ({
     <div className="mb-3 space-y-4">
       <div className="border-b border-gray-100 pb-4">
         {isHideComponent ? (
-          <HideCommentItem status={comment.status} />
+          <HideCommentItem
+            status={
+              comment.status as
+                | CommentStatus.DELETED
+                | CommentStatus.ADMIN_DELETED
+            }
+          />
         ) : (
           <>
             <div className="flex justify-between items-start mb-2">
@@ -155,7 +159,9 @@ export const CommentItem = ({
         onClose={handleModalClose}
         onSubmit={handlePasswordSubmit}
         title={pendingAction === "delete" ? "댓글 삭제" : ""}
-        description={`댓글을 ${pendingAction === "delete" ? "삭제" : ""}하려면 비밀번호를 입력해주세요.`}
+        description={`댓글을 ${
+          pendingAction === "delete" ? "삭제" : ""
+        }하려면 비밀번호를 입력해주세요.`}
       />
 
       {isReplying && (

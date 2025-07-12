@@ -32,11 +32,11 @@ export default function SessionRefresher({
           const res = await authApi.post("/auth/me");
           setUser(res.data);
         }
-      } catch (err) {
+      } catch {
         setUser(null);
       }
     })();
-  }, [user, setUser]);
+  }, [user, hasRefreshToken, setUser]);
 
   return null;
 }
