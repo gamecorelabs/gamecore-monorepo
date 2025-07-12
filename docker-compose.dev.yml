@@ -115,11 +115,11 @@ services:
       - app-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`dev.gamecore.co.kr`)"
+      - "traefik.http.routers.frontend.rule=Host(`dev.gamecore.co.kr`) || HostRegexp(`dev.{subdomain:[a-z]+}.gamecore.co.kr`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend-insecure.rule=Host(`dev.gamecore.co.kr`)"
+      - "traefik.http.routers.frontend-insecure.rule=Host(`dev.gamecore.co.kr`) || HostRegexp(`dev.{subdomain:[a-z]+}.gamecore.co.kr`)"
       - "traefik.http.routers.frontend-insecure.entrypoints=web"
       - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https@file"
 
