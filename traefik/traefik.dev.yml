@@ -1,0 +1,47 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true
+
+serversTransports:
+  insecure:
+    insecureSkipVerify: true
+
+# HTTP to HTTPS redirect middleware
+http:
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    # 프록시 헤더 설정 미들웨어
+    # 컨테이너 내부에서 HTTPS 통신으로 부터 왔다는 것을 알리는 목적으로 사용
+    # 내부에서는 https에서 요청이 온지 모르기 때문에 필요해서 추가함
+    # secure-headers:
+    #   headers:
+    #     customRequestHeaders:
+    #       X-Forwarded-Proto: "https"
+    #       X-Forwarded-Port: "443"
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/dev.gamecore.co.kr+3.pem
+        keyFile: /certs/dev.gamecore.co.kr+3-key.pem
+  certificates:
+    - certFile: /certs/dev.gamecore.co.kr+3.pem
+      keyFile: /certs/dev.gamecore.co.kr+3-key.pem
