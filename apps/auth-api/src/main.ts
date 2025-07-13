@@ -7,9 +7,27 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  // CORS 설정 - 개발 환경
+  // CORS 설정
   app.enableCors({
-    origin: ['https://dev.gamecore.co.kr', 'https://localhost:3000'],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        /^https:\/\/.*\.gamecore\.co\.kr$/,
+        // 'https://frontend:3000',
+      ];
+
+      if (
+        !origin ||
+        allowedOrigins.some((allowed) =>
+          typeof allowed === 'string'
+            ? allowed === origin
+            : allowed.test(origin),
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 
