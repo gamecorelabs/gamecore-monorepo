@@ -1,0 +1,79 @@
+/* 서브도메인별 테마 스타일 */
+
+/* 기본 테마 */
+.theme-default {
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --accent-color: #06b6d4;
+  --background-color: #f8fafc;
+  --text-color: #1e293b;
+}
+
+/* 바람의나라 테마 */
+.baram-theme {
+  --primary-color: #2d5a2d;
+  --secondary-color: #1a4d1a;
+  --accent-color: #90ee90;
+  --background-color: #0f1a0f;
+  --text-color: #e6f3e6;
+}
+
+.baram-theme .bg-primary {
+  background-color: var(--primary-color);
+}
+
+.baram-theme .text-primary {
+  color: var(--primary-color);
+}
+
+.baram-theme .border-primary {
+  border-color: var(--primary-color);
+}
+
+/* 공통 테마 적용 클래스 */
+.themed-container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.themed-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+}
+
+.themed-button:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.themed-link {
+  color: var(--primary-color);
+}
+
+.themed-link:hover {
+  color: var(--secondary-color);
+}
+
+.themed-border {
+  border-color: var(--primary-color);
+}
+
+.themed-accent {
+  color: var(--accent-color);
+}
+
+/* 다크 테마 지원 */
+@media (prefers-color-scheme: dark) {
+  .theme-default {
+    --background-color: #0f172a;
+    --text-color: #f1f5f9;
+  }
+}
+
+/* 반응형 테마 조정 */
+@media (max-width: 768px) {
+  .themed-container {
+    padding: 1rem;
+  }
+}
