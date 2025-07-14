@@ -10,22 +10,18 @@ async function bootstrap() {
   // CORS 설정
   app.enableCors({
     origin: (origin, callback) => {
-      const allowedOrigins = [
-        /^https:\/\/.*\.gamecore\.co\.kr$/,
-        // 'https://frontend:3000',
-      ];
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
 
-      if (
-        !origin ||
-        allowedOrigins.some((allowed) =>
-          typeof allowed === 'string'
-            ? allowed === origin
-            : allowed.test(origin),
-        )
-      ) {
+      const allowedRegex =
+        /^https?:\/\/(dev\.|sta\.)?[a-z0-9\-]+\.gamecore\.co\.kr$/;
+
+      if (allowedRegex.test(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error('Not allowed by CORS'), false);
       }
     },
     credentials: true,
