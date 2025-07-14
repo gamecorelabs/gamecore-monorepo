@@ -28,11 +28,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)"
       - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
-      - "traefik.http.routers.dataapi.entrypoints=websecure"
       - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.dataapi-insecure.rule=Host(`data-api.gamecore.co.kr`)"
-      - "traefik.http.routers.dataapi-insecure.entrypoints=web"
-      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https"
     restart: unless-stopped
 
   admin-api:
@@ -47,11 +43,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)"
       - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
-      - "traefik.http.routers.adminapi.entrypoints=websecure"
       - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.adminapi-insecure.rule=Host(`admin-api.gamecore.co.kr`)"
-      - "traefik.http.routers.adminapi-insecure.entrypoints=web"
-      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https"
     restart: unless-stopped
 
   auth-api:
@@ -66,11 +58,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
       - "traefik.http.services.authapi.loadbalancer.server.port=3000"
-      - "traefik.http.routers.authapi.entrypoints=websecure"
       - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.authapi-insecure.rule=Host(`auth-api.gamecore.co.kr`)"
-      - "traefik.http.routers.authapi-insecure.entrypoints=web"
-      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https"
     restart: unless-stopped
 
   frontend:
@@ -89,11 +77,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.frontend-insecure.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)"
-      - "traefik.http.routers.frontend-insecure.entrypoints=web"
-      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https"
     restart: unless-stopped
 
 networks:

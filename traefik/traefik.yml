@@ -2,17 +2,19 @@ global:
   checkNewVersion: false
   sendAnonymousUsage: false
 
-serversTransport:
-  insecureSkipVerify: true
-
 api:
   dashboard: true
-  debug: true
-  insecure: false
+  insecure: true
 
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
 
   websecure:
     address: ":443"
@@ -21,17 +23,16 @@ providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    network: gamecoregg-monorepo_app-net
 
 certificatesResolvers:
   letsencrypt:
     acme:
-      tlsChallenge: {}
       email: grooveturtle29@gmail.com
       storage: /letsencrypt/acme.json
-      caServer: https://acme-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        entryPoint: web
 
-# HTTP to HTTPS 리다이렉션 미들웨어 추가
+# 미들웨어 정의
 http:
   middlewares:
     redirect-to-https:
