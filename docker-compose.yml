@@ -65,8 +65,6 @@ services:
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
-    env_file:
-      - ./apps/frontend/.env.prod
     depends_on:
       - admin-api
       - auth-api

@@ -17,6 +17,12 @@ export const createApi = (config: ApiConfig, options?: ApiOptions) => {
     });
   }
 
+  // URL 유효성 검증
+  if (!url || url === "undefined") {
+    console.error("❌ API URL is undefined:", config);
+    throw new Error(`API URL is undefined. Check environment variables.`);
+  }
+
   return createBaseApi(url, options);
 };
 
