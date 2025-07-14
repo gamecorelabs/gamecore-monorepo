@@ -17,7 +17,8 @@ export async function middleware(request: NextRequest) {
   let response: NextResponse;
 
   if (subdomain) {
-    response = handleSubdomainRouting(subdomain, request, url);
+    // response = handleSubdomainRouting(subdomain, url, request);
+    response = handleSubdomainRouting(subdomain, url);
   } else {
     response = NextResponse.next();
   }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { SUBDOMAIN_CONFIGS, COMMON_PATHS } from "@/config/subdomains";
 import {
   getEnvSubdomainConfig,
@@ -64,8 +64,8 @@ export function getMainDomainUrl(originalUrl: URL): URL {
  */
 export function handleSubdomainRouting(
   subdomain: string,
-  request: NextRequest,
   url: URL
+  // request: NextRequest,
 ): NextResponse {
   // 공통 경로는 그대로 처리하되 서브도메인 정보를 헤더로 전달
   if (isCommonPath(url.pathname)) {
@@ -81,7 +81,8 @@ export function handleSubdomainRouting(
   }
 
   // 서브도메인별 전용 경로 처리
-  return handleSubdomainSpecificRouting(subdomain, url, request);
+  // return handleSubdomainSpecificRouting(subdomain, url, request);
+  return handleSubdomainSpecificRouting(subdomain, url);
 }
 
 /**
@@ -89,8 +90,8 @@ export function handleSubdomainRouting(
  */
 function handleSubdomainSpecificRouting(
   subdomain: string,
-  url: URL,
-  request: NextRequest
+  url: URL
+  // request: NextRequest // NOTE: request는 추후 특정 path에서 인증 처리 및 추가적인 작업이 필요할 때 활용하자
 ): NextResponse {
   const config = SUBDOMAIN_CONFIGS[subdomain];
 

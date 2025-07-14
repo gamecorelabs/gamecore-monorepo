@@ -1,6 +1,6 @@
 import { getSubdomainInfo } from "@/utils/hooks/useSubdomain";
 
-export async function SubMain() {
+export default async function Page() {
   const { subdomain, config } = await getSubdomainInfo();
 
   return (
@@ -18,5 +18,3 @@ export async function SubMain() {
     </div>
   );
 }
-
-export default SubMain;
