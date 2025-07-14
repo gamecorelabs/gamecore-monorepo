@@ -1,19 +1,4 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - app-net
-
   traefik:
     image: traefik:v2.11
     container_name: traefik
@@ -25,10 +10,11 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./certs:/certs:ro
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./letsencrypt:/letsencrypt
     networks:
       - app-net
+    restart: unless-stopped
 
   data-api:
     build:
@@ -36,8 +22,6 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./apps/data-api/.env.prod
-    depends_on:
-      - mysql
     networks:
       - app-net
     labels:
@@ -45,10 +29,11 @@ services:
       - "traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)"
       - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
       - "traefik.http.routers.dataapi.entrypoints=websecure"
-      - "traefik.http.routers.dataapi.tls=true"
+      - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
       - "traefik.http.routers.dataapi-insecure.rule=Host(`data-api.gamecore.co.kr`)"
       - "traefik.http.routers.dataapi-insecure.entrypoints=web"
-      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.dataapi-insecure.middlewares=redirect-to-https"
+    restart: unless-stopped
 
   admin-api:
     build:
@@ -56,8 +41,6 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./apps/admin-api/.env.prod
-    depends_on:
-      - mysql
     networks:
       - app-net
     labels:
@@ -65,10 +48,11 @@ services:
       - "traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)"
       - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
       - "traefik.http.routers.adminapi.entrypoints=websecure"
-      - "traefik.http.routers.adminapi.tls=true"
+      - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
       - "traefik.http.routers.adminapi-insecure.rule=Host(`admin-api.gamecore.co.kr`)"
       - "traefik.http.routers.adminapi-insecure.entrypoints=web"
-      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.adminapi-insecure.middlewares=redirect-to-https"
+    restart: unless-stopped
 
   auth-api:
     build:
@@ -76,8 +60,6 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./apps/auth-api/.env.prod
-    depends_on:
-      - mysql
     networks:
       - app-net
     labels:
@@ -85,10 +67,11 @@ services:
       - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
       - "traefik.http.services.authapi.loadbalancer.server.port=3000"
       - "traefik.http.routers.authapi.entrypoints=websecure"
-      - "traefik.http.routers.authapi.tls=true"
+      - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
       - "traefik.http.routers.authapi-insecure.rule=Host(`auth-api.gamecore.co.kr`)"
       - "traefik.http.routers.authapi-insecure.entrypoints=web"
-      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.authapi-insecure.middlewares=redirect-to-https"
+    restart: unless-stopped
 
   frontend:
     build:
@@ -104,16 +87,14 @@ services:
       - app-net
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z]+}.gamecore.co.kr`)"
+      - "traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
       - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend-insecure.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z]+}.gamecore.co.kr`)"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-insecure.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)"
       - "traefik.http.routers.frontend-insecure.entrypoints=web"
-      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https@file"
-
-volumes:
-  mysql_data:
+      - "traefik.http.routers.frontend-insecure.middlewares=redirect-to-https"
+    restart: unless-stopped
 
 networks:
   app-net:

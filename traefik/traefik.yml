@@ -1,47 +1,49 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+serversTransport:
+  insecureSkipVerify: true
+
 api:
   dashboard: true
-  insecure: true
+  debug: true
+  insecure: false
 
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
   websecure:
     address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
 
 providers:
   docker:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-  file:
-    filename: /etc/traefik/traefik.yml
-    watch: true
+    network: app-net
 
-serversTransports:
-  insecure:
-    insecureSkipVerify: true
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      tlsChallenge: {}
+      email: grooveturtle29@gmail.com
+      storage: /letsencrypt/acme.json
+      caServer: https://acme-v02.api.letsencrypt.org/directory
 
-# HTTP to HTTPS redirect middleware
+# HTTP to HTTPS 리다이렉션 미들웨어
 http:
   middlewares:
     redirect-to-https:
       redirectScheme:
         scheme: https
         permanent: true
-    # 프록시 헤더 설정 미들웨어
-    # 컨테이너 내부에서 HTTPS 통신으로 부터 왔다는 것을 알리는 목적으로 사용
-    # 내부에서는 https에서 요청이 온지 모르기 때문에 필요해서 추가함
-    # secure-headers:
-    #   headers:
-    #     customRequestHeaders:
-    #       X-Forwarded-Proto: "https"
-    #       X-Forwarded-Port: "443"
-
-tls:
-  stores:
-    default:
-      defaultCertificate:
-        certFile: /certs/dev.gamecore.co.kr+3.pem
-        keyFile: /certs/dev.gamecore.co.kr+3-key.pem
-  certificates:
-    - certFile: /certs/dev.gamecore.co.kr+3.pem
-      keyFile: /certs/dev.gamecore.co.kr+3-key.pem
