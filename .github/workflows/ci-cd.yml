@@ -1,0 +1,678 @@
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  GITHUB_REGISTRY: ghcr.io
+  DOCKER_REGISTRY: docker.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # 변경된 파일 감지
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.changes.outputs.frontend }}
+      auth-api: ${{ steps.changes.outputs.auth-api }}
+      admin-api: ${{ steps.changes.outputs.admin-api }}
+      data-api: ${{ steps.changes.outputs.data-api }}
+      core: ${{ steps.changes.outputs.core }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'apps/frontend/**'
+            auth-api:
+              - 'apps/auth-api/**'
+              - 'packages/core/**'
+            admin-api:
+              - 'apps/admin-api/**'
+              - 'packages/core/**'
+            data-api:
+              - 'apps/data-api/**'
+              - 'packages/core/**'
+            core:
+              - 'packages/core/**'
+
+  # 공통 코어 패키지 빌드
+  build-core:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.core == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "packages/core/package-lock.json"
+
+      - name: Create .npmrc
+        working-directory: packages/core
+        run: |
+          cat > .npmrc << EOF
+          @gamecorelabs:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
+      - name: Install dependencies
+        working-directory: packages/core
+        run: npm ci
+
+      - name: Build core package
+        working-directory: packages/core
+        run: npm run build
+
+      - name: Publish to GitHub Package Registry
+        working-directory: packages/core
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Frontend 빌드
+  build-frontend:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "apps/frontend/package-lock.json"
+
+      - name: Create environment file
+        working-directory: apps/frontend
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          NEXT_PUBLIC_DATA_API_URL=https://data-api.gamecore.co.kr
+          NEXT_PUBLIC_ADMIN_API_URL=https://admin-api.gamecore.co.kr
+          NEXT_PUBLIC_AUTH_API_URL=https://auth-api.gamecore.co.kr
+          INTERNAL_DATA_API_URL=http://data-api:3000
+          INTERNAL_ADMIN_API_URL=http://admin-api:3000
+          INTERNAL_AUTH_API_URL=http://auth-api:3000
+          NEXT_PUBLIC_S3_URL=https://${{ secrets.AWS_S3_BUCKET_NAME }}.s3.${{ secrets.AWS_REGION }}.amazonaws.com
+          NEXT_PUBLIC_DOMAIN=gamecore.co.kr
+          PORT=3000
+          EOF
+
+      - name: Install dependencies
+        working-directory: apps/frontend
+        run: npm ci
+
+      - name: Build application
+        working-directory: apps/frontend
+        run: npm run build
+
+      - name: Run tests
+        working-directory: apps/frontend
+        run: npm run test --if-present
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}/frontend
+            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/frontend
+          file: apps/frontend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+  # Auth API 빌드
+  build-auth-api:
+    needs: [detect-changes, build-core]
+    if: needs.detect-changes.outputs.auth-api == 'true' && !failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "apps/auth-api/package-lock.json"
+
+      - name: Create .npmrc
+        working-directory: apps/auth-api
+        run: |
+          cat > .npmrc << EOF
+          @gamecorelabs:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
+      - name: Create environment file
+        working-directory: apps/auth-api
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
+          PORT=3000
+          CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+          EOF
+
+      - name: Install dependencies
+        working-directory: apps/auth-api
+        run: npm ci
+
+      - name: Build application
+        working-directory: apps/auth-api
+        run: npm run build:prod
+
+      - name: Run tests
+        working-directory: apps/auth-api
+        run: npm run test --if-present
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}/auth-api
+            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/auth-api
+          file: apps/auth-api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+  # Admin API 빌드
+  build-admin-api:
+    needs: [detect-changes, build-core]
+    if: needs.detect-changes.outputs.admin-api == 'true' && !failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "apps/admin-api/package-lock.json"
+
+      - name: Create .npmrc
+        working-directory: apps/admin-api
+        run: |
+          cat > .npmrc << EOF
+          @gamecorelabs:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
+      - name: Create environment file
+        working-directory: apps/admin-api
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
+          PORT=3000
+          CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+          EOF
+
+      - name: Install dependencies
+        working-directory: apps/admin-api
+        run: npm ci
+
+      - name: Build application
+        working-directory: apps/admin-api
+        run: npm run build:prod
+
+      - name: Run tests
+        working-directory: apps/admin-api
+        run: npm run test --if-present
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}/admin-api
+            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/admin-api
+          file: apps/admin-api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+  # Data API 빌드
+  build-data-api:
+    needs: [detect-changes, build-core]
+    if: needs.detect-changes.outputs.data-api == 'true' && !failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "apps/data-api/package-lock.json"
+
+      - name: Create .npmrc
+        working-directory: apps/data-api
+        run: |
+          cat > .npmrc << EOF
+          @gamecorelabs:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
+      - name: Create environment file
+        working-directory: apps/data-api
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
+          PORT=3000
+          CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+          EOF
+
+      - name: Install dependencies
+        working-directory: apps/data-api
+        run: npm ci
+
+      - name: Build application
+        working-directory: apps/data-api
+        run: npm run build:prod
+
+      - name: Run tests
+        working-directory: apps/data-api
+        run: npm run test --if-present
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}/data-api
+            ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/data-api
+          file: apps/data-api/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+  # 프로덕션 배포
+  deploy-production:
+    needs: [build-frontend, build-auth-api, build-admin-api, build-data-api]
+    if: github.ref == 'refs/heads/main' && success()
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://gamecore.co.kr
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            set -e
+
+            # 프로젝트 디렉토리로 이동
+            cd /home/ubuntu/gamecore-monorepo
+
+            # 필요한 디렉토리 생성
+            mkdir -p letsencrypt
+
+            # Let's Encrypt acme.json 파일 초기화 (존재하지 않는 경우만)
+            if [ ! -f letsencrypt/acme.json ]; then
+              echo "Creating acme.json file..."
+              touch letsencrypt/acme.json
+              chmod 600 letsencrypt/acme.json
+              echo "acme.json created with proper permissions"
+            else
+              echo "acme.json already exists"
+              # 권한 재설정
+              chmod 600 letsencrypt/acme.json
+            fi
+
+            # Docker Hub 로그인
+            echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+            # 최신 이미지 풀
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
+
+            # 환경 변수 파일 생성
+            cat > .env.production << EOF
+            NODE_ENV=production
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_DATABASE=${{ secrets.DB_DATABASE }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
+            ACME_EMAIL=${{ secrets.ACME_EMAIL }}
+            CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+            EOF
+
+            # 프로덕션 docker-compose 파일 생성
+            cat > docker-compose.production.yml << 'EOF'
+            version: '3.8'
+
+            services:
+              traefik:
+                image: traefik:v2.11
+                container_name: traefik
+                restart: unless-stopped
+                command:
+                  - "--configFile=/etc/traefik/traefik.yml"
+                ports:
+                  - "80:80"
+                  - "443:443"
+                  - "8080:8080"
+                volumes:
+                  - /var/run/docker.sock:/var/run/docker.sock:ro
+                  - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+                  - ./letsencrypt:/letsencrypt
+                networks:
+                  - gamecore-network
+                healthcheck:
+                  test: ["CMD", "traefik", "healthcheck"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+
+              data-api:
+                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
+                restart: unless-stopped
+                env_file:
+                  - .env.production
+                networks:
+                  - gamecore-network
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)"
+                  - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
+                  - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dataapi.middlewares=secure-headers"
+                  - "traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 30s
+
+              admin-api:
+                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
+                restart: unless-stopped
+                env_file:
+                  - .env.production
+                networks:
+                  - gamecore-network
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)"
+                  - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
+                  - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.adminapi.middlewares=secure-headers"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 30s
+
+              auth-api:
+                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
+                restart: unless-stopped
+                env_file:
+                  - .env.production
+                networks:
+                  - gamecore-network
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
+                  - "traefik.http.services.authapi.loadbalancer.server.port=3000"
+                  - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.authapi.middlewares=secure-headers"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 30s
+
+              frontend:
+                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
+                restart: unless-stopped
+                depends_on:
+                  data-api:
+                    condition: service_healthy
+                  admin-api:
+                    condition: service_healthy
+                  auth-api:
+                    condition: service_healthy
+                networks:
+                  - gamecore-network
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)"
+                  - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+                  - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.frontend.middlewares=secure-headers"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                  interval: 30s
+                  timeout: 10s
+                  retries: 3
+                  start_period: 30s
+
+            networks:
+              gamecore-network:
+                driver: bridge
+                ipam:
+                  config:
+                    - subnet: 172.20.0.0/16
+            EOF
+
+            # 이전 컨테이너 정리 (무중단 배포)
+            docker-compose -f docker-compose.production.yml pull
+
+            # 새 컨테이너 시작
+            docker-compose -f docker-compose.production.yml up -d --remove-orphans
+
+            # 헬스 체크
+            echo "Waiting for services to be healthy..."
+            sleep 60
+
+            # 서비스 상태 확인
+            for service in data-api admin-api auth-api frontend; do
+              if ! docker-compose -f docker-compose.production.yml ps $service | grep -q "healthy"; then
+                echo "Service $service is not healthy"
+                docker-compose -f docker-compose.production.yml logs $service
+                exit 1
+              fi
+            done
+
+            # 외부 접근 테스트
+            if ! curl -f --retry 3 --retry-delay 10 https://gamecore.co.kr/health; then
+              echo "Frontend health check failed"
+              exit 1
+            fi
+
+            echo "Deployment completed successfully!"
+
+            # 미사용 이미지 정리
+            docker image prune -f
+            docker system prune -f --volumes
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Deployment to production completed successfully!"
+          echo "🔗 Frontend: https://gamecore.co.kr"
+          echo "🔗 Auth API: https://auth-api.gamecore.co.kr"
+          echo "🔗 Admin API: https://admin-api.gamecore.co.kr"
+          echo "🔗 Data API: https://data-api.gamecore.co.kr"
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment to production failed!"
+          echo "Please check the logs and fix the issues."
