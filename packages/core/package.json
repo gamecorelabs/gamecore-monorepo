@@ -1,6 +1,6 @@
 {
-  "name": "@gamecoreteam/nestjs-core",
-  "version": "0.0.8",
+  "name": "@gamecorelabs/nestjs-core",
+  "version": "0.0.1",
   "private": false,
   "files": [
     "dist"
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gamecoreteam/gamecore-monorepo"
+    "url": "https://github.com/gamecorelabs/gamecore-monorepo"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
