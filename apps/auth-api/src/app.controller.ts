@@ -13,7 +13,7 @@ export class AppController {
   @Get('/health')
   getHealth(): object {
     return {
-      status: 'healthy1',
+      status: 'healthy',
       timestamp: new Date().toISOString(),
       service: 'auth-api',
     };

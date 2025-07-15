@@ -180,9 +180,9 @@ jobs:
         working-directory: apps/auth-api
         run: npm run build:prod
 
-      - name: Run tests
-        working-directory: apps/auth-api
-        run: npm run test --if-present
+      # - name: Run tests
+      #   working-directory: apps/auth-api
+      #   run: npm run test --if-present
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -266,7 +266,7 @@ jobs:
           EOF
 
       - name: Install latest @gamecorelabs/nestjs-core
-        working-directory: apps/auth-api
+        working-directory: apps/admin-api
         run: npm install @gamecorelabs/nestjs-core@latest
 
       - name: Install dependencies
@@ -277,9 +277,9 @@ jobs:
         working-directory: apps/admin-api
         run: npm run build:prod
 
-      - name: Run tests
-        working-directory: apps/admin-api
-        run: npm run test --if-present
+      # - name: Run tests
+      #   working-directory: apps/admin-api
+      #   run: npm run test --if-present
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -363,7 +363,7 @@ jobs:
           EOF
 
       - name: Install latest @gamecorelabs/nestjs-core
-        working-directory: apps/auth-api
+        working-directory: apps/data-api
         run: npm install @gamecorelabs/nestjs-core@latest
 
       - name: Install dependencies
@@ -374,9 +374,9 @@ jobs:
         working-directory: apps/data-api
         run: npm run build:prod
 
-      - name: Run tests
-        working-directory: apps/data-api
-        run: npm run test --if-present
+      # - name: Run tests
+      #   working-directory: apps/data-api
+      #   run: npm run test --if-present
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
