@@ -9,13 +9,13 @@ export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
   @Post('/domain')
-  @UseGuards(AdminRoleUserGuard)
+  // @UseGuards(AdminRoleUserGuard)
   postDomainConfig(@Body() body: CreateDomainConfigDto) {
     return this.configService.saveDomainConfig(body);
   }
 
   @Post('/domain/:id/board')
-  @UseGuards(AdminRoleUserGuard)
+  // @UseGuards(AdminRoleUserGuard)
   postBoardConfig(@Param('id') id: number, @Body() body: CreateBoardConfigDto) {
     return this.configService.saveBoardConfig(id, body);
   }

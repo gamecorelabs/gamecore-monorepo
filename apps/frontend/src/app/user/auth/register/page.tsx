@@ -81,7 +81,7 @@ const RegisterPage = () => {
             />
           </label>
         </div>
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block mb-1 font-medium">
             역할
             <span className="text-red-600">(*테스트용)</span>
@@ -95,7 +95,7 @@ const RegisterPage = () => {
               <option value="admin">관리자</option>
             </select>
           </label>
-        </div>
+        </div> */}
         <button
           type="submit"
           className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition"
