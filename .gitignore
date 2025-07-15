@@ -42,3 +42,6 @@ cert/
 certs/
 
 .npmrc
+
+letsencrypt/
+acme.json
