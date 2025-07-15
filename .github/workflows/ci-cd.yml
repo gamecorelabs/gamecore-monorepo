@@ -42,46 +42,6 @@ jobs:
             data-api:
               - 'apps/data-api/**'
               - 'packages/core/**'
-            core:
-              - 'packages/core/**'
-
-  # 공통 코어 패키지 빌드
-  build-core:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.core == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-          cache-dependency-path: "packages/core/package-lock.json"
-
-      - name: Create .npmrc
-        working-directory: packages/core
-        run: |
-          cat > .npmrc << EOF
-          @gamecorelabs:registry=https://npm.pkg.github.com
-          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
-          EOF
-
-      - name: Install dependencies
-        working-directory: packages/core
-        run: npm ci
-
-      - name: Build core package
-        working-directory: packages/core
-        run: npm run build
-
-      - name: Publish to GitHub Package Registry
-        working-directory: packages/core
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Frontend 빌드
   build-frontend:
@@ -166,7 +126,7 @@ jobs:
 
   # Auth API 빌드
   build-auth-api:
-    needs: [detect-changes, build-core]
+    needs: [detect-changes]
     if: needs.detect-changes.outputs.auth-api == 'true' && !failure()
     runs-on: ubuntu-latest
     steps:
@@ -207,6 +167,10 @@ jobs:
           PORT=3000
           CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
           EOF
+
+      - name: Install latest @gamecorelabs/nestjs-core
+        working-directory: apps/auth-api
+        run: npm install @gamecorelabs/nestjs-core@latest
 
       - name: Install dependencies
         working-directory: apps/auth-api
@@ -259,7 +223,7 @@ jobs:
 
   # Admin API 빌드
   build-admin-api:
-    needs: [detect-changes, build-core]
+    needs: [detect-changes]
     if: needs.detect-changes.outputs.admin-api == 'true' && !failure()
     runs-on: ubuntu-latest
     steps:
@@ -300,6 +264,10 @@ jobs:
           PORT=3000
           CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
           EOF
+
+      - name: Install latest @gamecorelabs/nestjs-core
+        working-directory: apps/auth-api
+        run: npm install @gamecorelabs/nestjs-core@latest
 
       - name: Install dependencies
         working-directory: apps/admin-api
@@ -352,7 +320,7 @@ jobs:
 
   # Data API 빌드
   build-data-api:
-    needs: [detect-changes, build-core]
+    needs: [detect-changes]
     if: needs.detect-changes.outputs.data-api == 'true' && !failure()
     runs-on: ubuntu-latest
     steps:
@@ -393,6 +361,10 @@ jobs:
           PORT=3000
           CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
           EOF
+
+      - name: Install latest @gamecorelabs/nestjs-core
+        working-directory: apps/auth-api
+        run: npm install @gamecorelabs/nestjs-core@latest
 
       - name: Install dependencies
         working-directory: apps/data-api
