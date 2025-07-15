@@ -19,7 +19,7 @@ export default function Home() {
           <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"></div>
           <div
             className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"
-            style={{ animationDelay: "0.1s" }}
+            style={{ animationDelay: "0.11s" }}
           ></div>
           <div
             className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"
