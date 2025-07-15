@@ -5,11 +5,11 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardConfig } from '@gamecoregg/nestjs-core/base-board/entity/board-config.entity';
+import { BoardConfig } from '@gamecorelabs/nestjs-core/base-board/entity/board-config.entity';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { DomainConfig } from '@gamecoregg/nestjs-core/base-domain/entity/domain-config.entity';
-import { CreateDomainConfigDto } from '@gamecoregg/nestjs-core/base-board/dto/create-domain-config.dto';
-import { CreateBoardConfigDto } from '@gamecoregg/nestjs-core/base-board/dto/create-board-config.dto';
+import { DomainConfig } from '@gamecorelabs/nestjs-core/base-domain/entity/domain-config.entity';
+import { CreateDomainConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-domain-config.dto';
+import { CreateBoardConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-board-config.dto';
 
 @Injectable()
 export class ConfigService {

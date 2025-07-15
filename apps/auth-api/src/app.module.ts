@@ -4,13 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { UserAccount } from '@gamecoregg/nestjs-core/base-user/entity/user-account.entity';
-import { BoardPost } from '@gamecoregg/nestjs-core/base-post/board/entity/board-post.entity';
-import { BoardConfig } from '@gamecoregg/nestjs-core/base-board/entity/board-config.entity';
-import { DomainConfig } from '@gamecoregg/nestjs-core/base-domain/entity/domain-config.entity';
-import { Comment } from '@gamecoregg/nestjs-core/base-comment/entity/comment.entity';
-import { Like } from '@gamecoregg/nestjs-core/base-like/entity/like.entity';
-import { BoardCategory } from '@gamecoregg/nestjs-core/base-board/entity/board-category.entity';
+import { UserAccount } from '@gamecorelabs/nestjs-core/base-user/entity/user-account.entity';
+import { BoardPost } from '@gamecorelabs/nestjs-core/base-post/board/entity/board-post.entity';
+import { BoardConfig } from '@gamecorelabs/nestjs-core/base-board/entity/board-config.entity';
+import { DomainConfig } from '@gamecorelabs/nestjs-core/base-domain/entity/domain-config.entity';
+import { Comment } from '@gamecorelabs/nestjs-core/base-comment/entity/comment.entity';
+import { Like } from '@gamecorelabs/nestjs-core/base-like/entity/like.entity';
+import { BoardCategory } from '@gamecorelabs/nestjs-core/base-board/entity/board-category.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({

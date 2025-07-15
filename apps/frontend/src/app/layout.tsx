@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GameCoreGG",
-  description: "게임 코어 지지 - 개발 테스트 단계 입니다.",
+  title: "GameCore",
+  description: "게임 코어 - 개발 테스트 단계 입니다.",
 };
 
 export default async function RootLayout({

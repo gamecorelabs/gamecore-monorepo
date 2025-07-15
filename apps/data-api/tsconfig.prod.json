@@ -5,9 +5,11 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "paths": {
-      "@gamecoregg/nestjs-core": ["node_modules/@gamecoregg/nestjs-core/dist"],
-      "@gamecoregg/nestjs-core/*": [
-        "node_modules/@gamecoregg/nestjs-core/dist/*"
+      "@gamecorelabs/nestjs-core": [
+        "node_modules/@gamecorelabs/nestjs-core/dist"
+      ],
+      "@gamecorelabs/nestjs-core/*": [
+        "node_modules/@gamecorelabs/nestjs-core/dist/*"
       ]
     }
   },

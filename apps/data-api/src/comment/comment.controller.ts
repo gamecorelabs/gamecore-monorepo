@@ -11,18 +11,18 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
-import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
-import { BaseCommentService } from "@gamecoregg/nestjs-core/base-comment/base-comment.service";
-import { ResourceExistenceGuard } from "@gamecoregg/nestjs-core/base-common/guard/resource-existence.guard";
-import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
-import * as CommonRequestTypes from "@gamecoregg/nestjs-core/base-common/types/request-types";
-import * as CommentRequestTypes from "@gamecoregg/nestjs-core/base-comment/types/request-types";
-import { CreateRequestLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/create-like.dto";
-import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
+import { GuestOrUserTokenGuard } from "@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecorelabs/nestjs-core/base-user/decorator/current-user.decorator";
+import { BaseCommentService } from "@gamecorelabs/nestjs-core/base-comment/base-comment.service";
+import { ResourceExistenceGuard } from "@gamecorelabs/nestjs-core/base-common/guard/resource-existence.guard";
+import * as UserRequestTypes from "@gamecorelabs/nestjs-core/base-user/types/user.types";
+import * as CommonRequestTypes from "@gamecorelabs/nestjs-core/base-common/types/request-types";
+import * as CommentRequestTypes from "@gamecorelabs/nestjs-core/base-comment/types/request-types";
+import { CreateRequestLikeDto } from "@gamecorelabs/nestjs-core/base-like/dto/create-like.dto";
+import { BaseLikeService } from "@gamecorelabs/nestjs-core/base-like/base-like.service";
 import { QueryRunner } from "typeorm";
-import { CurrentQueryRunner } from "@gamecoregg/nestjs-core/base-common/decorator/current-query-runner.decorator";
-import { QueryRunnerTransactionInterceptor } from "@gamecoregg/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
+import { CurrentQueryRunner } from "@gamecorelabs/nestjs-core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunnerTransactionInterceptor } from "@gamecorelabs/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
 
 @Controller("comment")
 export class CommentController {

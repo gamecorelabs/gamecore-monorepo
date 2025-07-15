@@ -1,10 +1,10 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { LikeService } from "./like.service";
-import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
-import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
-import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
-import { SelectedLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/selected-like.dto";
+import { GuestOrUserTokenGuard } from "@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecorelabs/nestjs-core/base-user/decorator/current-user.decorator";
+import * as UserRequestTypes from "@gamecorelabs/nestjs-core/base-user/types/user.types";
+import { BaseLikeService } from "@gamecorelabs/nestjs-core/base-like/base-like.service";
+import { SelectedLikeDto } from "@gamecorelabs/nestjs-core/base-like/dto/selected-like.dto";
 
 @Controller("like")
 export class LikeController {

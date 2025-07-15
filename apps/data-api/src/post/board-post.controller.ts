@@ -12,21 +12,21 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
-import { GuestOrUserTokenGuard } from "@gamecoregg/nestjs-core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@gamecoregg/nestjs-core/base-user/decorator/current-user.decorator";
-import { BoardPostService } from "@gamecoregg/nestjs-core/base-post/board/board-post.service";
-import { BaseLikeService } from "@gamecoregg/nestjs-core/base-like/base-like.service";
-import * as UserRequestTypes from "@gamecoregg/nestjs-core/base-user/types/user.types";
-import * as CommonRequestTypes from "@gamecoregg/nestjs-core/base-common/types/request-types";
-import * as BoardRequestTypes from "@gamecoregg/nestjs-core/base-post/board/types/request-types";
-import { ResourceExistenceGuard } from "@gamecoregg/nestjs-core/base-common/guard/resource-existence.guard";
-import { CreateRequestLikeDto } from "@gamecoregg/nestjs-core/base-like/dto/create-like.dto";
-import { RequestCreateCommentDto } from "@gamecoregg/nestjs-core/base-comment/dto/create-comment.dto";
-import { UpdateBoardPostDto } from "@gamecoregg/nestjs-core/base-post/board/dto/update-board-post.dto";
-import { BaseCommentService } from "@gamecoregg/nestjs-core/base-comment/base-comment.service";
+import { GuestOrUserTokenGuard } from "@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard";
+import { CurrentUser } from "@gamecorelabs/nestjs-core/base-user/decorator/current-user.decorator";
+import { BoardPostService } from "@gamecorelabs/nestjs-core/base-post/board/board-post.service";
+import { BaseLikeService } from "@gamecorelabs/nestjs-core/base-like/base-like.service";
+import * as UserRequestTypes from "@gamecorelabs/nestjs-core/base-user/types/user.types";
+import * as CommonRequestTypes from "@gamecorelabs/nestjs-core/base-common/types/request-types";
+import * as BoardRequestTypes from "@gamecorelabs/nestjs-core/base-post/board/types/request-types";
+import { ResourceExistenceGuard } from "@gamecorelabs/nestjs-core/base-common/guard/resource-existence.guard";
+import { CreateRequestLikeDto } from "@gamecorelabs/nestjs-core/base-like/dto/create-like.dto";
+import { RequestCreateCommentDto } from "@gamecorelabs/nestjs-core/base-comment/dto/create-comment.dto";
+import { UpdateBoardPostDto } from "@gamecorelabs/nestjs-core/base-post/board/dto/update-board-post.dto";
+import { BaseCommentService } from "@gamecorelabs/nestjs-core/base-comment/base-comment.service";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { QueryRunnerTransactionInterceptor } from "@gamecoregg/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
-import { CurrentQueryRunner } from "@gamecoregg/nestjs-core/base-common/decorator/current-query-runner.decorator";
+import { QueryRunnerTransactionInterceptor } from "@gamecorelabs/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
+import { CurrentQueryRunner } from "@gamecorelabs/nestjs-core/base-common/decorator/current-query-runner.decorator";
 import { QueryRunner } from "typeorm";
 
 @Controller(["board-post"])

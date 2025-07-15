@@ -18,7 +18,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@gamecoregg/nestjs-core/*": ["../../packages/core/src/*"],
+      "@gamecorelabs/nestjs-core/*": ["../../packages/core/src/*"],
 
       "@base-auth/*": ["../../packages/core/src/base-auth/*"],
       "@base-board/*": ["../../packages/core/src/base-board/*"],
