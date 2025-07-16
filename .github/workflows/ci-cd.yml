@@ -592,7 +592,7 @@ jobs:
                   - 'traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)'
                   - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.dataapi.middlewares=secure-headers"
+                  - "traefik.http.routers.dataapi.middlewares=secure-headers@file"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -613,7 +613,7 @@ jobs:
                   - 'traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)'
                   - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.adminapi.middlewares=secure-headers"
+                  - "traefik.http.routers.adminapi.middlewares=secure-headers@file"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -634,7 +634,7 @@ jobs:
                   - 'traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)'
                   - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.authapi.middlewares=secure-headers"
+                  - "traefik.http.routers.authapi.middlewares=secure-headers@file"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -660,7 +660,7 @@ jobs:
                   - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)'
                   - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.frontend.middlewares=secure-headers"
+                  - "traefik.http.routers.frontend.middlewares=secure-headers@file"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
                   interval: 30s
