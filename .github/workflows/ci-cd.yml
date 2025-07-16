@@ -417,7 +417,7 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    needs: [build-data-api, build-admin-api, build-auth-api, build-frontend]
+    # needs: [build-data-api, build-admin-api, build-auth-api, build-frontend]
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment:
