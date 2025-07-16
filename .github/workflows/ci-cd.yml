@@ -744,7 +744,7 @@ jobs:
             done
           '
 
-  - name: Get deployment results
+      - name: Get deployment results
         if: always()
         run: |
           echo "Getting command execution results..."
