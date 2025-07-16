@@ -475,7 +475,7 @@ jobs:
             fi
 
             # Traefik 설정 파일 생성
-            cat > traefik/traefik.yml << 'TRAEFIK_EOF'
+            cat > traefik/traefik.yml << EOF
             global:
               checkNewVersion: false
               sendAnonymousUsage: false
@@ -505,7 +505,7 @@ jobs:
             certificatesResolvers:
               letsencrypt:
                 acme:
-                  email: ${secrets.ACME_EMAIL}
+                  email: ${{ secrets.ACME_EMAIL }}
                   storage: /letsencrypt/acme.json
                   keyType: EC256
                   httpChallenge:
@@ -513,10 +513,6 @@ jobs:
 
             http:
               middlewares:
-                redirect-to-https:
-                  redirectScheme:
-                    scheme: https
-                    permanent: true
                 secure-headers:
                   headers:
                     customRequestHeaders:
@@ -527,7 +523,7 @@ jobs:
                       X-XSS-Protection: "1; mode=block"
                       Strict-Transport-Security: "max-age=31536000; includeSubDomains"
                       Referrer-Policy: "strict-origin-when-cross-origin"
-            TRAEFIK_EOF
+            EOF
 
             # Docker Hub 로그인
             echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
@@ -597,7 +593,6 @@ jobs:
                   - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
                   - "traefik.http.routers.dataapi.middlewares=secure-headers"
-                  - "traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
