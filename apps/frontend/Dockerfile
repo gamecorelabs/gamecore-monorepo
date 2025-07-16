@@ -16,6 +16,8 @@ FROM node:22-alpine AS runner
 
 WORKDIR /app
 
+RUN apk add --no-cache curl
+
 # 비 root 사용자 생성
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
