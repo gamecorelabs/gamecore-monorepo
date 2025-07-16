@@ -427,212 +427,425 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to production server
-        uses: appleboy/ssh-action@v1.0.0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT || 22 }}
-          script: |
-            set -e
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-            # 프로젝트 디렉토리로 이동
-            cd /home/ubuntu/gamecore-monorepo
+      - name: Create S3 bucket for deployment scripts
+        run: |
+          # S3 버킷 생성 (이미 존재하면 에러 무시)
+          aws s3 mb s3://${{ secrets.DEPLOYMENT_BUCKET }} --region ${{ secrets.AWS_REGION }} || true
 
-            # 필요한 디렉토리 생성
-            mkdir -p letsencrypt
+      - name: Create deployment script
+        run: |
+          cat > deploy-script.sh << 'EOF'
+          #!/bin/bash
+          set -e
 
-            # Let's Encrypt acme.json 파일 초기화 (존재하지 않는 경우만)
-            if [ ! -f letsencrypt/acme.json ]; then
-              echo "Creating acme.json file..."
-              touch letsencrypt/acme.json
-              chmod 600 letsencrypt/acme.json
-              echo "acme.json created with proper permissions"
-            else
-              echo "acme.json already exists"
-              # 권한 재설정
-              chmod 600 letsencrypt/acme.json
-            fi
+          echo "Starting deployment process..."
 
-            # Docker Hub 로그인
-            echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+          # 프로젝트 디렉토리 생성
+          sudo mkdir -p /home/ubuntu/gamecore-monorepo
+          cd /home/ubuntu/gamecore-monorepo
 
-            # 최신 이미지 풀
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
+          # 필요한 디렉토리 생성
+          sudo mkdir -p letsencrypt traefik
 
-            # 환경 변수 파일 생성
-            cat > .env.production << EOF
-            NODE_ENV=production
-            DB_HOST=${{ secrets.DB_HOST }}
-            DB_PORT=${{ secrets.DB_PORT }}
-            DB_USERNAME=${{ secrets.DB_USERNAME }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            DB_DATABASE=${{ secrets.DB_DATABASE }}
-            AWS_REGION=${{ secrets.AWS_REGION }}
-            AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
-            ACME_EMAIL=${{ secrets.ACME_EMAIL }}
-            CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
-            EOF
+          # Let's Encrypt acme.json 파일 초기화
+          if [ ! -f letsencrypt/acme.json ]; then
+            echo "Creating acme.json file..."
+            sudo touch letsencrypt/acme.json
+            sudo chmod 600 letsencrypt/acme.json
+            echo "acme.json created with proper permissions"
+          else
+            echo "acme.json already exists"
+            sudo chmod 600 letsencrypt/acme.json
+          fi
 
-            # 프로덕션 docker-compose 파일 생성
-            cat > docker-compose.production.yml << 'EOF'
-            version: '3.8'
+          # Traefik 설정 파일 생성
+          sudo tee traefik/traefik.yml > /dev/null << 'TRAEFIK_EOF'
+          global:
+            checkNewVersion: false
+            sendAnonymousUsage: false
 
-            services:
-              traefik:
-                image: traefik:v2.11
-                container_name: traefik
-                restart: unless-stopped
-                command:
-                  - "--configFile=/etc/traefik/traefik.yml"
-                ports:
-                  - "80:80"
-                  - "443:443"
-                  - "8080:8080"
-                volumes:
-                  - /var/run/docker.sock:/var/run/docker.sock:ro
-                  - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-                  - ./letsencrypt:/letsencrypt
-                networks:
-                  - gamecore-network
-                healthcheck:
-                  test: ["CMD", "traefik", "healthcheck"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
+          api:
+            dashboard: true
+            insecure: true
 
-              data-api:
-                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
-                restart: unless-stopped
-                env_file:
-                  - .env.production
-                networks:
-                  - gamecore-network
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)"
-                  - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
-                  - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.dataapi.middlewares=secure-headers"
-                  - "traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-                healthcheck:
-                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
-                  start_period: 30s
+          entryPoints:
+            web:
+              address: ":80"
+              http:
+                redirections:
+                  entryPoint:
+                    to: websecure
+                    scheme: https
+                    permanent: true
 
-              admin-api:
-                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
-                restart: unless-stopped
-                env_file:
-                  - .env.production
-                networks:
-                  - gamecore-network
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)"
-                  - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
-                  - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.adminapi.middlewares=secure-headers"
-                healthcheck:
-                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
-                  start_period: 30s
+            websecure:
+              address: ":443"
 
-              auth-api:
-                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
-                restart: unless-stopped
-                env_file:
-                  - .env.production
-                networks:
-                  - gamecore-network
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
-                  - "traefik.http.services.authapi.loadbalancer.server.port=3000"
-                  - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.authapi.middlewares=secure-headers"
-                healthcheck:
-                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
-                  start_period: 30s
+          providers:
+            docker:
+              endpoint: "unix:///var/run/docker.sock"
+              exposedByDefault: false
 
-              frontend:
-                image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
-                restart: unless-stopped
-                depends_on:
-                  data-api:
-                    condition: service_healthy
-                  admin-api:
-                    condition: service_healthy
-                  auth-api:
-                    condition: service_healthy
-                networks:
-                  - gamecore-network
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)"
-                  - "traefik.http.services.frontend.loadbalancer.server.port=3000"
-                  - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.frontend.middlewares=secure-headers"
-                healthcheck:
-                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
-                  start_period: 30s
+          certificatesResolvers:
+            letsencrypt:
+              acme:
+                email: ${ACME_EMAIL}
+                storage: /letsencrypt/acme.json
+                httpChallenge:
+                  entryPoint: web
 
-            networks:
-              gamecore-network:
-                driver: bridge
-                ipam:
-                  config:
-                    - subnet: 172.20.0.0/16
-            EOF
+          http:
+            middlewares:
+              redirect-to-https:
+                redirectScheme:
+                  scheme: https
+                  permanent: true
+              secure-headers:
+                headers:
+                  customRequestHeaders:
+                    X-Forwarded-Proto: "https"
+                  customResponseHeaders:
+                    X-Frame-Options: "SAMEORIGIN"
+                    X-Content-Type-Options: "nosniff"
+                    X-XSS-Protection: "1; mode=block"
+                    Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+                    Referrer-Policy: "strict-origin-when-cross-origin"
+          TRAEFIK_EOF
 
-            # 이전 컨테이너 정리 (무중단 배포)
-            docker-compose -f docker-compose.production.yml pull
+          # Docker Hub 로그인
+          echo "${DOCKER_HUB_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
 
-            # 새 컨테이너 시작
-            docker-compose -f docker-compose.production.yml up -d --remove-orphans
+          # 최신 이미지 풀
+          docker pull ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
+          docker pull ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
+          docker pull ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
+          docker pull ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
 
-            # 헬스 체크
-            echo "Waiting for services to be healthy..."
-            sleep 60
+          # 환경 변수 파일 생성
+          sudo tee .env.production > /dev/null << ENV_EOF
+          NODE_ENV=production
+          DB_HOST=${DB_HOST}
+          DB_PORT=${DB_PORT}
+          DB_USERNAME=${DB_USERNAME}
+          DB_PASSWORD=${DB_PASSWORD}
+          DB_DATABASE=${DB_DATABASE}
+          AWS_REGION=${AWS_REGION}
+          AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+          AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+          AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+          JWT_SECRET=${JWT_SECRET}
+          HASH_ROUNDS=${HASH_ROUNDS}
+          ACME_EMAIL=${ACME_EMAIL}
+          CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+          ENV_EOF
 
-            # 서비스 상태 확인
-            for service in data-api admin-api auth-api frontend; do
-              if ! docker-compose -f docker-compose.production.yml ps $service | grep -q "healthy"; then
-                echo "Service $service is not healthy"
-                docker-compose -f docker-compose.production.yml logs $service
-                exit 1
-              fi
-            done
+          # Docker Compose 파일 생성
+          sudo tee docker-compose.production.yml > /dev/null << 'COMPOSE_EOF'
+          version: '3.8'
 
-            # 외부 접근 테스트
-            if ! curl -f --retry 3 --retry-delay 10 https://gamecore.co.kr/health; then
-              echo "Frontend health check failed"
+          services:
+            traefik:
+              image: traefik:v2.11
+              container_name: traefik
+              restart: unless-stopped
+              command:
+                - "--configFile=/etc/traefik/traefik.yml"
+              ports:
+                - "80:80"
+                - "443:443"
+                - "8080:8080"
+              volumes:
+                - /var/run/docker.sock:/var/run/docker.sock:ro
+                - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+                - ./letsencrypt:/letsencrypt
+              networks:
+                - gamecore-network
+              healthcheck:
+                test: ["CMD", "traefik", "healthcheck", "--ping"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 10s
+
+            data-api:
+              image: ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
+              restart: unless-stopped
+              env_file:
+                - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
+              networks:
+                - gamecore-network
+              labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.dataapi.rule=Host(\`data-api.gamecore.co.kr\`)"
+                - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
+                - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
+                - "traefik.http.routers.dataapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
+
+            admin-api:
+              image: ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
+              restart: unless-stopped
+              env_file:
+                - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
+              networks:
+                - gamecore-network
+              labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.adminapi.rule=Host(\`admin-api.gamecore.co.kr\`)"
+                - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
+                - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
+                - "traefik.http.routers.adminapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
+
+            auth-api:
+              image: ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
+              restart: unless-stopped
+              env_file:
+                - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
+              networks:
+                - gamecore-network
+              labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.authapi.rule=Host(\`auth-api.gamecore.co.kr\`)"
+                - "traefik.http.services.authapi.loadbalancer.server.port=3000"
+                - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
+                - "traefik.http.routers.authapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
+
+            frontend:
+              image: ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
+              restart: unless-stopped
+              depends_on:
+                traefik:
+                  condition: service_healthy
+                data-api:
+                  condition: service_healthy
+                admin-api:
+                  condition: service_healthy
+                auth-api:
+                  condition: service_healthy
+              networks:
+                - gamecore-network
+              labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.frontend.rule=Host(\`gamecore.co.kr\`) || HostRegexp(\`{subdomain:[a-z0-9-]+}.gamecore.co.kr\`)"
+                - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+                - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+                - "traefik.http.routers.frontend.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
+
+          networks:
+            gamecore-network:
+              driver: bridge
+              ipam:
+                config:
+                  - subnet: 172.20.0.0/16
+          COMPOSE_EOF
+
+          # 이전 컨테이너 정리
+          echo "Pulling latest images..."
+          docker-compose -f docker-compose.production.yml pull
+
+          # 새 컨테이너 시작
+          echo "Starting services..."
+          docker-compose -f docker-compose.production.yml up -d --remove-orphans
+
+          # 헬스 체크
+          echo "Waiting for services to be healthy..."
+          sleep 60
+
+          # 서비스 상태 확인
+          for service in traefik data-api admin-api auth-api frontend; do
+            echo "Checking $service status..."
+            if ! docker-compose -f docker-compose.production.yml ps $service | grep -q "healthy"; then
+              echo "Service $service is not healthy"
+              docker-compose -f docker-compose.production.yml logs $service
               exit 1
             fi
+          done
 
-            echo "Deployment completed successfully!"
+          # 외부 접근 테스트
+          echo "Testing external access..."
+          if ! curl -f --retry 5 --retry-delay 10 --max-time 30 https://gamecore.co.kr/health; then
+            echo "Frontend health check failed"
+            exit 1
+          fi
 
-            # 미사용 이미지 정리
-            docker image prune -f
-            docker system prune -f --volumes
+          echo "Deployment completed successfully!"
+
+          # 미사용 이미지 정리
+          docker image prune -f
+          docker system prune -f --volumes
+
+          echo "Cleanup completed!"
+          EOF
+
+          chmod +x deploy-script.sh
+
+      - name: Upload deployment script to S3
+        run: |
+          aws s3 cp deploy-script.sh s3://${{ secrets.DEPLOYMENT_BUCKET }}/deploy-script.sh
+          echo "Deployment script uploaded to S3"
+
+      - name: Check EC2 instance status
+        run: |
+          INSTANCE_STATUS=$(aws ec2 describe-instance-status \
+            --instance-ids ${{ secrets.INSTANCE_ID }} \
+            --query 'InstanceStatuses[0].InstanceStatus.Status' \
+            --output text)
+
+          if [ "$INSTANCE_STATUS" != "ok" ]; then
+            echo "Instance is not in OK status: $INSTANCE_STATUS"
+            exit 1
+          fi
+
+          echo "Instance status: $INSTANCE_STATUS"
+
+      - name: Execute deployment via SSM
+        run: |
+          echo "Sending command to EC2 instance..."
+
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids ${{ secrets.INSTANCE_ID }} \
+            --document-name "AWS-RunShellScript" \
+            --parameters commands='[
+              "export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}",
+              "export DOCKER_HUB_TOKEN=${{ secrets.DOCKER_HUB_TOKEN }}",
+              "export DB_HOST=${{ secrets.DB_HOST }}",
+              "export DB_PORT=${{ secrets.DB_PORT }}",
+              "export DB_USERNAME=${{ secrets.DB_USERNAME }}",
+              "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}",
+              "export DB_DATABASE=${{ secrets.DB_DATABASE }}",
+              "export AWS_REGION=${{ secrets.AWS_REGION }}",
+              "export AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}",
+              "export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}",
+              "export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}",
+              "export JWT_SECRET=${{ secrets.JWT_SECRET }}",
+              "export HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}",
+              "export ACME_EMAIL=${{ secrets.ACME_EMAIL }}",
+              "cd /tmp",
+              "aws s3 cp s3://${{ secrets.DEPLOYMENT_BUCKET }}/deploy-script.sh ./deploy-script.sh",
+              "chmod +x deploy-script.sh",
+              "./deploy-script.sh"
+            ]' \
+            --timeout-seconds 1800 \
+            --query 'Command.CommandId' \
+            --output text)
+
+          echo "Command ID: $COMMAND_ID"
+          echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_ENV
+
+      - name: Wait for deployment completion
+        run: |
+          echo "Waiting for command execution to complete..."
+
+          # 최대 30분 대기
+          timeout 1800 bash -c '
+            while true; do
+              STATUS=$(aws ssm get-command-invocation \
+                --command-id ${{ env.COMMAND_ID }} \
+                --instance-id ${{ secrets.INSTANCE_ID }} \
+                --query "Status" \
+                --output text 2>/dev/null)
+              
+              echo "Command status: $STATUS"
+              
+              if [ "$STATUS" = "Success" ]; then
+                echo "Command completed successfully"
+                break
+              elif [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ] || [ "$STATUS" = "TimedOut" ]; then
+                echo "Command failed with status: $STATUS"
+                exit 1
+              fi
+              
+              sleep 30
+            done
+          '
+
+      - name: Get deployment results
+        run: |
+          echo "Getting command execution results..."
+
+          # 명령 실행 결과 가져오기
+          aws ssm get-command-invocation \
+            --command-id ${{ env.COMMAND_ID }} \
+            --instance-id ${{ secrets.INSTANCE_ID }} \
+            --query "StandardOutputContent" \
+            --output text > deployment_output.log
+
+          # 표준 출력 내용 표시
+          echo "=== Deployment Output ==="
+          cat deployment_output.log
+
+          # 에러 출력 확인
+          ERROR_OUTPUT=$(aws ssm get-command-invocation \
+            --command-id ${{ env.COMMAND_ID }} \
+            --instance-id ${{ secrets.INSTANCE_ID }} \
+            --query "StandardErrorContent" \
+            --output text)
+
+          if [ -n "$ERROR_OUTPUT" ] && [ "$ERROR_OUTPUT" != "None" ]; then
+            echo "=== Error Output ==="
+            echo "$ERROR_OUTPUT"
+          fi
+
+      - name: Cleanup S3 deployment script
+        if: always()
+        run: |
+          aws s3 rm s3://${{ secrets.DEPLOYMENT_BUCKET }}/deploy-script.sh || true
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment..."
+
+          # 각 서비스 상태 확인
+          services=("https://gamecore.co.kr/health" "https://auth-api.gamecore.co.kr/health" "https://admin-api.gamecore.co.kr/health" "https://data-api.gamecore.co.kr/health")
+
+          for service in "${services[@]}"; do
+            echo "Checking $service..."
+            if curl -f --retry 3 --retry-delay 5 --max-time 10 "$service" >/dev/null 2>&1; then
+              echo "✅ $service is healthy"
+            else
+              echo "❌ $service is not responding"
+              exit 1
+            fi
+          done
 
       - name: Notify deployment success
         if: success()
@@ -642,9 +855,12 @@ jobs:
           echo "🔗 Auth API: https://auth-api.gamecore.co.kr"
           echo "🔗 Admin API: https://admin-api.gamecore.co.kr"
           echo "🔗 Data API: https://data-api.gamecore.co.kr"
+          echo "📊 Deployed via AWS Systems Manager"
 
       - name: Notify deployment failure
         if: failure()
         run: |
           echo "❌ Deployment to production failed!"
-          echo "Please check the logs and fix the issues."
+          echo "Command ID: ${{ env.COMMAND_ID }}"
+          echo "Please check the SSM command execution logs in AWS Console"
+          echo "Instance ID: ${{ secrets.INSTANCE_ID }}"
