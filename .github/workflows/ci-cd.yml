@@ -417,8 +417,15 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    needs: [build-data-api, build-admin-api, build-auth-api, build-frontend]
-    if: github.ref == 'refs/heads/main' && success()
+    needs:
+      [
+        detect-changes,
+        build-data-api,
+        build-admin-api,
+        build-auth-api,
+        build-frontend,
+      ]
+    if: github.ref == 'refs/heads/main' && !failure() && !cancelled()
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -515,11 +522,27 @@ jobs:
             # Docker Hub 로그인
             echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-            # 최신 이미지 풀
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
+            # 변경된 서비스만 이미지 풀
+            echo "Pulling updated images..."
+            if [ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]; then
+              echo "Pulling frontend image..."
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
+            fi
+
+            if [ "${{ needs.detect-changes.outputs.auth-api }}" == "true" ]; then
+              echo "Pulling auth-api image..."
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
+            fi
+
+            if [ "${{ needs.detect-changes.outputs.admin-api }}" == "true" ]; then
+              echo "Pulling admin-api image..."
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
+            fi
+
+            if [ "${{ needs.detect-changes.outputs.data-api }}" == "true" ]; then
+              echo "Pulling data-api image..."
+              docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
+            fi
 
             # 환경 변수 파일 생성
             cat > .env.production << EOF
@@ -677,6 +700,22 @@ jobs:
           echo "🔗 Auth API: https://auth-api.gamecore.co.kr"
           echo "🔗 Admin API: https://admin-api.gamecore.co.kr"
           echo "🔗 Data API: https://data-api.gamecore.co.kr"
+
+          # 배포된 서비스 정보 출력
+          echo ""
+          echo "📋 Deployed services:"
+          if [ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]; then
+            echo "  ✅ Frontend updated"
+          fi
+          if [ "${{ needs.detect-changes.outputs.auth-api }}" == "true" ]; then
+            echo "  ✅ Auth API updated"
+          fi
+          if [ "${{ needs.detect-changes.outputs.admin-api }}" == "true" ]; then
+            echo "  ✅ Admin API updated"
+          fi
+          if [ "${{ needs.detect-changes.outputs.data-api }}" == "true" ]; then
+            echo "  ✅ Data API updated"
+          fi
 
       - name: Notify deployment failure
         if: failure()
