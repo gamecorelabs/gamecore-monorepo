@@ -5,7 +5,7 @@ export async function GET() {
     status: "healthy",
     timestamp: new Date().toISOString(),
     services: {
-      frontend: "okay",
+      frontend: "ok",
     },
   });
 }
