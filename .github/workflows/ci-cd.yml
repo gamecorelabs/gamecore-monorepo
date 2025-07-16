@@ -456,10 +456,11 @@ jobs:
             set -e
 
             # 프로젝트 디렉토리로 이동
+            mkdir -p /home/ubuntu/gamecore-monorepo
             cd /home/ubuntu/gamecore-monorepo
 
             # 필요한 디렉토리 생성
-            mkdir -p letsencrypt
+            mkdir -p letsencrypt traefik
 
             # Let's Encrypt acme.json 파일 초기화 (존재하지 않는 경우만)
             if [ ! -f letsencrypt/acme.json ]; then
@@ -472,6 +473,61 @@ jobs:
               # 권한 재설정
               chmod 600 letsencrypt/acme.json
             fi
+
+            # Traefik 설정 파일 생성
+            cat > traefik/traefik.yml << 'TRAEFIK_EOF'
+            global:
+              checkNewVersion: false
+              sendAnonymousUsage: false
+
+            api:
+              dashboard: true
+              insecure: true
+
+            entryPoints:
+              web:
+                address: ":80"
+                http:
+                  redirections:
+                    entryPoint:
+                      to: websecure
+                      scheme: https
+                      permanent: true
+
+              websecure:
+                address: ":443"
+
+            providers:
+              docker:
+                endpoint: "unix:///var/run/docker.sock"
+                exposedByDefault: false
+
+            certificatesResolvers:
+              letsencrypt:
+                acme:
+                  email: ${secrets.ACME_EMAIL}
+                  storage: /letsencrypt/acme.json
+                  keyType: EC256
+                  httpChallenge:
+                    entryPoint: web
+
+            http:
+              middlewares:
+                redirect-to-https:
+                  redirectScheme:
+                    scheme: https
+                    permanent: true
+                secure-headers:
+                  headers:
+                    customRequestHeaders:
+                      X-Forwarded-Proto: "https"
+                    customResponseHeaders:
+                      X-Frame-Options: "SAMEORIGIN"
+                      X-Content-Type-Options: "nosniff"
+                      X-XSS-Protection: "1; mode=block"
+                      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+                      Referrer-Policy: "strict-origin-when-cross-origin"
+            TRAEFIK_EOF
 
             # Docker Hub 로그인
             echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
