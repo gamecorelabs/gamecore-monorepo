@@ -123,6 +123,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:buildcache,mode=max
 
   # Auth API 빌드
   build-auth-api:
@@ -220,6 +222,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:buildcache,mode=max
 
   # Admin API 빌드
   build-admin-api:
@@ -317,6 +321,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:buildcache,mode=max
 
   # Data API 빌드
   build-data-api:
@@ -414,6 +420,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:buildcache,mode=max
 
   # 프로덕션 배포
   deploy-production:
