@@ -6,7 +6,7 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} gamecore.co.kr All rights reserved.
         </p>
         <p>
-          <a href="/privacy-policy" className="text-gray-400 hover:text-white">
+          <a href="#" className="text-gray-400 hover:text-white">
             Privacy Policy
           </a>
         </p>
