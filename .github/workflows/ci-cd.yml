@@ -471,8 +471,12 @@ jobs:
           fi
 
           # acme.json 파일이 ubuntu 사용자 소유인지 확인
-          chown ubuntu:ubuntu letsencrypt/acme.json
+          sudo chown ubuntu:ubuntu letsencrypt/acme.json
           echo "acme.json ownership set to ubuntu:ubuntu"
+
+          # Let's Encrypt 도메인 검증을 위한 임시 디렉토리 생성
+          mkdir -p .well-known/acme-challenge
+          chmod 755 .well-known/acme-challenge
 
           # Traefik 설정 파일 생성
           cat > traefik/traefik.yml << 'TRAEFIK_EOF'
@@ -507,8 +511,11 @@ jobs:
               acme:
                 email: ${ACME_EMAIL}
                 storage: /letsencrypt/acme.json
+                keyType: EC256
                 httpChallenge:
                   entryPoint: web
+                # 개발 환경에서는 staging을 사용해 rate limit 방지
+                # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
 
           http:
             middlewares:
@@ -601,11 +608,11 @@ jobs:
                 - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.dataapi.middlewares=secure-headers"
               healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
                 interval: 30s
                 timeout: 10s
-                retries: 3
-                start_period: 30s
+                retries: 5
+                start_period: 60s
 
             admin-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
@@ -624,11 +631,11 @@ jobs:
                 - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.adminapi.middlewares=secure-headers"
               healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
                 interval: 30s
                 timeout: 10s
-                retries: 3
-                start_period: 30s
+                retries: 5
+                start_period: 60s
 
             auth-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
@@ -647,11 +654,11 @@ jobs:
                 - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.authapi.middlewares=secure-headers"
               healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
                 interval: 30s
                 timeout: 10s
-                retries: 3
-                start_period: 30s
+                retries: 5
+                start_period: 60s
 
             frontend:
               image: ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
@@ -674,11 +681,11 @@ jobs:
                 - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.frontend.middlewares=secure-headers"
               healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
                 interval: 30s
                 timeout: 10s
-                retries: 3
-                start_period: 30s
+                retries: 5
+                start_period: 60s
 
           networks:
             gamecore-network:
@@ -700,7 +707,31 @@ jobs:
 
           # 서비스 시작 대기 (SSL 인증서 발급 시간 고려)
           echo "Waiting for services to start and SSL certificates to be issued..."
-          sleep 120
+
+          # 단계적 서비스 시작 확인
+          echo "Checking Traefik startup..."
+          for i in {1..30}; do
+            if docker-compose -f docker-compose.production.yml ps traefik | grep -q "healthy"; then
+              echo "✅ Traefik is healthy"
+              break
+            fi
+            echo "⏳ Waiting for Traefik to be ready... ($i/30)"
+            sleep 10
+          done
+
+          echo "Checking API services startup..."
+          for i in {1..60}; do
+            if docker-compose -f docker-compose.production.yml ps | grep -E "(data-api|admin-api|auth-api)" | grep -q "healthy"; then
+              echo "✅ API services are starting to become healthy"
+              break
+            fi
+            echo "⏳ Waiting for API services to be ready... ($i/60)"
+            sleep 10
+          done
+
+          # 추가 대기 시간 (SSL 인증서 발급)
+          echo "Waiting additional time for SSL certificate generation..."
+          sleep 180
 
           # 컨테이너 상태 확인
           echo "Checking container status..."
@@ -727,22 +758,32 @@ jobs:
 
           # 헬스체크 (HTTP와 HTTPS 모두 확인)
           echo "Performing health checks..."
+
+          # 먼저 HTTP 헬스체크 (SSL 인증서 발급 전에도 동작해야 함)
+          echo "Testing HTTP endpoints first..."
+          for i in {1..30}; do
+            echo "HTTP Health check attempt $i/30..."
+            
+            if curl -f --max-time 10 --connect-timeout 5 http://gamecore.co.kr/health >/dev/null 2>&1; then
+              echo "✅ HTTP gamecore.co.kr health check passed"
+              break
+            fi
+            
+            echo "⏳ Waiting for HTTP services to be ready..."
+            sleep 10
+          done
+
+          # SSL 인증서 발급 확인 후 HTTPS 테스트
+          echo "Testing HTTPS endpoints..."
           for i in {1..20}; do
-            echo "Health check attempt $i/20..."
+            echo "HTTPS Health check attempt $i/20..."
             
-            # HTTP 헬스체크 (SSL 인증서 발급 전)
-            if curl -f --max-time 10 http://gamecore.co.kr/health >/dev/null 2>&1; then
-              echo "✅ HTTP health check passed"
+            if curl -f --max-time 10 --connect-timeout 5 -k https://gamecore.co.kr/health >/dev/null 2>&1; then
+              echo "✅ HTTPS gamecore.co.kr health check passed"
               break
             fi
             
-            # HTTPS 헬스체크 (SSL 인증서 발급 후)
-            if curl -f --max-time 10 https://gamecore.co.kr/health >/dev/null 2>&1; then
-              echo "✅ HTTPS health check passed"
-              break
-            fi
-            
-            echo "⏳ Waiting for services to be ready..."
+            echo "⏳ Waiting for HTTPS services to be ready..."
             sleep 15
           done
 
