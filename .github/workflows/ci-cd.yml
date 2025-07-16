@@ -417,15 +417,14 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    needs:
-      [
-        detect-changes,
-        build-data-api,
-        build-admin-api,
-        build-auth-api,
-        build-frontend,
-      ]
-    if: github.ref == 'refs/heads/main' && !failure() && !cancelled()
+    needs: [build-data-api, build-admin-api, build-auth-api, build-frontend]
+    if: github.ref == 'refs/heads/main' &&
+      (needs.build-data-api.result == 'success' ||
+      needs.build-admin-api.result == 'success' ||
+      needs.build-auth-api.result == 'success' ||
+      needs.build-frontend.result == 'success') &&
+      !failure() &&
+      !cancelled()
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -524,22 +523,22 @@ jobs:
 
             # 변경된 서비스만 이미지 풀
             echo "Pulling updated images..."
-            if [ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]; then
+            if [ "${{ needs.build-frontend.result }}" == "success" ]; then
               echo "Pulling frontend image..."
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
             fi
 
-            if [ "${{ needs.detect-changes.outputs.auth-api }}" == "true" ]; then
+            if [ "${{ needs.build-auth-api.result }}" == "success" ]; then
               echo "Pulling auth-api image..."
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
             fi
 
-            if [ "${{ needs.detect-changes.outputs.admin-api }}" == "true" ]; then
+            if [ "${{ needs.build-admin-api.result }}" == "success" ]; then
               echo "Pulling admin-api image..."
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
             fi
 
-            if [ "${{ needs.detect-changes.outputs.data-api }}" == "true" ]; then
+            if [ "${{ needs.build-data-api.result }}" == "success" ]; then
               echo "Pulling data-api image..."
               docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
             fi
@@ -672,10 +671,10 @@ jobs:
             EOF
 
             # 이전 컨테이너 정리 (무중단 배포)
-            docker-compose -f docker-compose.production.yml pull
+            docker compose -f docker-compose.production.yml pull
 
             # 새 컨테이너 시작
-            docker-compose -f docker-compose.production.yml up -d --remove-orphans
+            docker compose -f docker-compose.production.yml up -d --remove-orphans
 
             echo "Deployment completed successfully!"
 
@@ -702,18 +701,17 @@ jobs:
           echo "🔗 Data API: https://data-api.gamecore.co.kr"
 
           # 배포된 서비스 정보 출력
-          echo ""
           echo "📋 Deployed services:"
-          if [ "${{ needs.detect-changes.outputs.frontend }}" == "true" ]; then
+          if [ "${{ needs.build-frontend.result }}" == "success" ]; then
             echo "  ✅ Frontend updated"
           fi
-          if [ "${{ needs.detect-changes.outputs.auth-api }}" == "true" ]; then
+          if [ "${{ needs.build-auth-api.result }}" == "success" ]; then
             echo "  ✅ Auth API updated"
           fi
-          if [ "${{ needs.detect-changes.outputs.admin-api }}" == "true" ]; then
+          if [ "${{ needs.build-admin-api.result }}" == "success" ]; then
             echo "  ✅ Admin API updated"
           fi
-          if [ "${{ needs.detect-changes.outputs.data-api }}" == "true" ]; then
+          if [ "${{ needs.build-data-api.result }}" == "success" ]; then
             echo "  ✅ Data API updated"
           fi
 
