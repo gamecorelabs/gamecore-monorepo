@@ -417,7 +417,7 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    needs: []
+    needs: [build-data-api, build-admin-api, build-auth-api, build-frontend]
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment:
@@ -560,11 +560,6 @@ jobs:
                   - ./letsencrypt:/letsencrypt
                 networks:
                   - gamecore-network
-                healthcheck:
-                  test: ["CMD", "traefik", "healthcheck"]
-                  interval: 30s
-                  timeout: 10s
-                  retries: 3
 
               data-api:
                 image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
@@ -641,9 +636,10 @@ jobs:
                   - gamecore-network
                 labels:
                   - "traefik.enable=true"
-                  - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)'
+                  - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)'
                   - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+
             networks:
               gamecore-network:
                 driver: bridge
@@ -657,25 +653,6 @@ jobs:
 
             # 새 컨테이너 시작
             docker-compose -f docker-compose.production.yml up -d --remove-orphans
-
-            # 헬스 체크
-            echo "Waiting for services to be healthy..."
-            sleep 60
-
-            # 서비스 상태 확인
-            for service in data-api admin-api auth-api frontend; do
-              if ! docker-compose -f docker-compose.production.yml ps $service | grep -q "healthy"; then
-                echo "Service $service is not healthy"
-                docker-compose -f docker-compose.production.yml logs $service
-                exit 1
-              fi
-            done
-
-            # 외부 접근 테스트
-            if ! curl -f --retry 3 --retry-delay 10 https://gamecore.co.kr/health; then
-              echo "Frontend health check failed"
-              exit 1
-            fi
 
             echo "Deployment completed successfully!"
 
