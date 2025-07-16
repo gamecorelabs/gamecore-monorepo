@@ -417,7 +417,7 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    # needs: [build-frontend, build-auth-api, build-admin-api, build-data-api]
+    needs: [build-frontend, build-auth-api, build-admin-api, build-data-api]
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment:
@@ -586,6 +586,7 @@ jobs:
               data-api:
                 image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-data-api:latest
                 restart: unless-stopped
+                container_name: gamecore-data-api
                 env_file:
                   - .env.production
                 networks:
@@ -607,6 +608,7 @@ jobs:
               admin-api:
                 image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-admin-api:latest
                 restart: unless-stopped
+                container_name: gamecore-admin-api
                 env_file:
                   - .env.production
                 networks:
@@ -627,6 +629,7 @@ jobs:
               auth-api:
                 image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-auth-api:latest
                 restart: unless-stopped
+                container_name: gamecore-auth-api
                 env_file:
                   - .env.production
                 networks:
@@ -647,6 +650,7 @@ jobs:
               frontend:
                 image: ${{ secrets.DOCKER_HUB_USERNAME }}/gamecore-frontend:latest
                 restart: unless-stopped
+                container_name: gamecore-frontend
                 depends_on:
                   data-api:
                     condition: service_healthy
@@ -663,7 +667,7 @@ jobs:
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
                   - "traefik.http.routers.frontend.middlewares=secure-headers"
                 healthcheck:
-                  test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
                   interval: 30s
                   timeout: 10s
                   retries: 3
