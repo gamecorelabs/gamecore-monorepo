@@ -443,7 +443,17 @@ jobs:
           SG_ID: ${{ secrets.EC2_SG_ID }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          curl -s https://api.github.com/meta | jq -r '.actions[]' > actions_ips.txt
+          # github meta api 요청
+          RESPONSE=$(curl -s https://api.github.com/meta)
+          echo "$RESPONSE" > meta.json
+          # 응답에서 actions 필드가 존재하는지 확인
+          if ! echo "$RESPONSE" | jq -e '.actions' >/dev/null; then
+            echo "❌ ERROR: .actions 필드가 meta API 응답에 존재하지 않음. 응답내용:"
+            cat meta.json
+            exit 1
+          fi
+
+          echo "$RESPONSE" | jq -r '.actions[]' > actions_ips.txt
 
           while read cidr; do
             echo "Allowing $cidr for SSH..."
