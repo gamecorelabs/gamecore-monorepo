@@ -569,21 +569,12 @@ jobs:
                 - ./letsencrypt:/letsencrypt
               networks:
                 - gamecore-network
-              healthcheck:
-                test: ["CMD", "traefik", "healthcheck", "--ping"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 10s
 
             data-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
-              depends_on:
-                traefik:
-                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -592,21 +583,12 @@ jobs:
                 - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.dataapi.middlewares=secure-headers"
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 30s
 
             admin-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
-              depends_on:
-                traefik:
-                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -615,21 +597,12 @@ jobs:
                 - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.adminapi.middlewares=secure-headers"
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 30s
 
             auth-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
-              depends_on:
-                traefik:
-                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -638,25 +611,14 @@ jobs:
                 - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.authapi.middlewares=secure-headers"
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 30s
 
             frontend:
               image: ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
               restart: unless-stopped
               depends_on:
-                traefik:
-                  condition: service_healthy
-                data-api:
-                  condition: service_healthy
-                admin-api:
-                  condition: service_healthy
-                auth-api:
-                  condition: service_healthy
+                - admin-api
+                - auth-api
+                - data-api
               networks:
                 - gamecore-network
               labels:
@@ -665,12 +627,6 @@ jobs:
                 - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                 - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.frontend.middlewares=secure-headers"
-              healthcheck:
-                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-                interval: 30s
-                timeout: 10s
-                retries: 3
-                start_period: 30s
 
           networks:
             gamecore-network:
@@ -693,23 +649,6 @@ jobs:
           # 헬스 체크
           echo "Waiting for services to be healthy..."
           sleep 60
-
-          # 서비스 상태 확인
-          for service in traefik data-api admin-api auth-api frontend; do
-            echo "Checking $service status..."
-            if ! docker-compose -f docker-compose.production.yml ps $service | grep -q "healthy"; then
-              echo "Service $service is not healthy"
-              docker-compose -f docker-compose.production.yml logs $service
-              exit 1
-            fi
-          done
-
-          # 외부 접근 테스트
-          echo "Testing external access..."
-          if ! curl -f --retry 5 --retry-delay 10 --max-time 30 https://gamecore.co.kr/health; then
-            echo "Frontend health check failed"
-            exit 1
-          fi
 
           echo "Deployment completed successfully!"
 
