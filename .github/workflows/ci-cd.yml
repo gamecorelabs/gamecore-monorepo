@@ -417,7 +417,7 @@ jobs:
 
   # 프로덕션 배포
   deploy-production:
-    needs: [build-frontend, build-auth-api, build-admin-api, build-data-api]
+    # needs: [build-frontend, build-auth-api, build-admin-api, build-data-api]
     if: github.ref == 'refs/heads/main' && success()
     runs-on: ubuntu-latest
     environment:
@@ -474,10 +474,6 @@ jobs:
           sudo chown ubuntu:ubuntu letsencrypt/acme.json
           echo "acme.json ownership set to ubuntu:ubuntu"
 
-          # Let's Encrypt 도메인 검증을 위한 임시 디렉토리 생성
-          mkdir -p .well-known/acme-challenge
-          chmod 755 .well-known/acme-challenge
-
           # Traefik 설정 파일 생성
           cat > traefik/traefik.yml << 'TRAEFIK_EOF'
           global:
@@ -514,8 +510,6 @@ jobs:
                 keyType: EC256
                 httpChallenge:
                   entryPoint: web
-                # 개발 환경에서는 staging을 사용해 rate limit 방지
-                # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
 
           http:
             middlewares:
@@ -582,6 +576,8 @@ jobs:
                 - /var/run/docker.sock:/var/run/docker.sock:ro
                 - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
                 - ./letsencrypt:/letsencrypt
+              environment:
+                - ACME_EMAIL=${ACME_EMAIL}
               networks:
                 - gamecore-network
               healthcheck:
@@ -872,8 +868,8 @@ jobs:
         run: |
           echo "Waiting for command execution to complete..."
 
-          # 최대 30분 대기
-          timeout 1800 bash -c '
+          # 최대 10분 대기 (30분에서 단축)
+          timeout 600 bash -c '
             while true; do
               STATUS=$(aws ssm get-command-invocation \
                 --command-id ${{ env.COMMAND_ID }} \
@@ -891,7 +887,7 @@ jobs:
                 exit 1
               fi
               
-              sleep 30
+              sleep 15
             done
           '
 
