@@ -7,7 +7,7 @@ const Footer = () => {
         </p>
         <p>
           <a href="#" className="text-gray-400 hover:text-white">
-            Privacy Policy
+            Privacy Policy 2025
           </a>
         </p>
       </div>
