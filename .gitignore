@@ -44,3 +44,5 @@ certs/
 
 letsencrypt/
 acme.json
+
+*_bak.*

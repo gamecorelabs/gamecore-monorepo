@@ -588,7 +588,7 @@ jobs:
                 - gamecore-network
               labels:
                 - "traefik.enable=true"
-                - "traefik.http.routers.dataapi.rule=Host(\`data-api.gamecore.co.kr\`)"
+                - 'traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)'
                 - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.dataapi.middlewares=secure-headers"
@@ -611,7 +611,7 @@ jobs:
                 - gamecore-network
               labels:
                 - "traefik.enable=true"
-                - "traefik.http.routers.adminapi.rule=Host(\`admin-api.gamecore.co.kr\`)"
+                - 'traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)'
                 - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.adminapi.middlewares=secure-headers"
@@ -634,7 +634,7 @@ jobs:
                 - gamecore-network
               labels:
                 - "traefik.enable=true"
-                - "traefik.http.routers.authapi.rule=Host(\`auth-api.gamecore.co.kr\`)"
+                - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
                 - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.authapi.middlewares=secure-headers"
@@ -661,7 +661,7 @@ jobs:
                 - gamecore-network
               labels:
                 - "traefik.enable=true"
-                - "traefik.http.routers.frontend.rule=Host(\`gamecore.co.kr\`) || HostRegexp(\`{subdomain:[a-z0-9-]+}.gamecore.co.kr\`)"
+                - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)'
                 - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                 - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.frontend.middlewares=secure-headers"
@@ -679,6 +679,8 @@ jobs:
                 config:
                   - subnet: 172.20.0.0/16
           COMPOSE_EOF
+
+                  echo "Docker Compose file created"
 
           # 이전 컨테이너 정리
           echo "Pulling latest images..."
