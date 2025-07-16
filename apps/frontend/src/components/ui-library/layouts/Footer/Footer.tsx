@@ -7,7 +7,7 @@ const Footer = () => {
         </p>
         <p>
           <a href="#" className="text-gray-400 hover:text-white">
-            Privacy Policy | Terms of Service
+            Privacy Policy | Terms of Service | Zess
           </a>
         </p>
       </div>
