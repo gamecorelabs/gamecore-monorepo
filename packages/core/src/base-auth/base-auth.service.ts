@@ -24,7 +24,7 @@ export class BaseAuthService {
         if (redraw) {
           return false;
         }
-        throw new UnauthorizedException("토큰이 만료되었습니다.1");
+        throw new UnauthorizedException("토큰이 만료되었습니다.");
       } else {
         throw new UnauthorizedException("잘못된 토큰입니다.");
       }
