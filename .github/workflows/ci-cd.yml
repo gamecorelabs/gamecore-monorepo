@@ -593,6 +593,7 @@ jobs:
 
             data-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
+              container_name: gamecore-data-api
               restart: unless-stopped
               env_file:
                 - .env.production
@@ -616,6 +617,7 @@ jobs:
 
             admin-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
+              container_name: gamecore-admin-api
               restart: unless-stopped
               env_file:
                 - .env.production
@@ -639,6 +641,7 @@ jobs:
 
             auth-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
+              container_name: gamecore-auth-api
               restart: unless-stopped
               env_file:
                 - .env.production
@@ -662,6 +665,7 @@ jobs:
 
             frontend:
               image: ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
+              container_name: gamecore-frontend
               restart: unless-stopped
               depends_on:
                 traefik:
@@ -697,21 +701,13 @@ jobs:
 
           echo "Docker Compose file created"
 
-          # 기존 컨테이너 정리
-          echo "Stopping existing containers..."
-          docker-compose -f docker-compose.production.yml down || true
-
-          # 새 컨테이너 시작
-          echo "Starting services..."
-          docker-compose -f docker-compose.production.yml up -d
-
           # 서비스 시작 대기 (SSL 인증서 발급 시간 고려)
           echo "Waiting for services to start and SSL certificates to be issued..."
 
           # 단계적 서비스 시작 확인
           echo "Checking Traefik startup..."
           for i in {1..30}; do
-            if docker-compose -f docker-compose.production.yml ps traefik | grep -q "healthy"; then
+            if docker ps --filter "name=traefik" --filter "status=running" | grep -q "healthy"; then
               echo "✅ Traefik is healthy"
               break
             fi
@@ -721,11 +717,12 @@ jobs:
 
           echo "Checking API services startup..."
           for i in {1..60}; do
-            if docker-compose -f docker-compose.production.yml ps | grep -E "(data-api|admin-api|auth-api)" | grep -q "healthy"; then
-              echo "✅ API services are starting to become healthy"
+            HEALTHY_COUNT=$(docker ps --filter "name=gamecore-" --filter "status=running" | grep -c "healthy" || echo "0")
+            if [ "$HEALTHY_COUNT" -ge 3 ]; then
+              echo "✅ API services are healthy (${HEALTHY_COUNT}/3)"
               break
             fi
-            echo "⏳ Waiting for API services to be ready... ($i/60)"
+            echo "⏳ Waiting for API services to be ready... ($i/60) - ${HEALTHY_COUNT}/3 healthy"
             sleep 10
           done
 
@@ -733,9 +730,29 @@ jobs:
           echo "Waiting additional time for SSL certificate generation..."
           sleep 180
 
-          # 컨테이너 상태 확인
+          # 컨테이너 상태 확인 및 로그
           echo "Checking container status..."
           docker-compose -f docker-compose.production.yml ps
+
+          # 각 서비스 상태 개별 확인
+          echo "Individual container status:"
+          for container in traefik gamecore-data-api gamecore-admin-api gamecore-auth-api gamecore-frontend; do
+            if docker ps --filter "name=$container" --format "table {{.Names}}\t{{.Status}}" | grep -q "$container"; then
+              STATUS=$(docker ps --filter "name=$container" --format "{{.Status}}")
+              echo "  $container: $STATUS"
+            else
+              echo "  $container: NOT RUNNING"
+            fi
+          done
+
+          # 실패한 컨테이너 로그 확인
+          echo "Checking for failed containers..."
+          for container in gamecore-data-api gamecore-admin-api gamecore-auth-api gamecore-frontend; do
+            if docker ps --filter "name=$container" --format "{{.Status}}" | grep -q "unhealthy"; then
+              echo "=== $container logs ==="
+              docker logs $container --tail 50
+            fi
+          done
 
           # Traefik 로그 확인 (SSL 인증서 발급 확인)
           echo "Checking Traefik logs for SSL certificate generation..."
