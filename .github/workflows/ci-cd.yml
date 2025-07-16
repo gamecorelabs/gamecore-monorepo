@@ -453,6 +453,9 @@ jobs:
           sudo mkdir -p /home/ubuntu/gamecore-monorepo
           cd /home/ubuntu/gamecore-monorepo
 
+          # 소유권 설정
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/gamecore-monorepo
+
           # 필요한 디렉토리 생성
           sudo mkdir -p letsencrypt traefik
 
@@ -607,7 +610,7 @@ jobs:
                 - gamecore-network
               labels:
                 - "traefik.enable=true"
-                - "traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)"
+                - 'traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)'
                 - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.authapi.middlewares=secure-headers"
@@ -741,73 +744,7 @@ jobs:
             done
           '
 
-      - name: Get deployment results
-        run: |
-          echo "Getting command execution results..."
-
-          # 명령 실행 결과 가져오기
-          aws ssm get-command-invocation \
-            --command-id ${{ env.COMMAND_ID }} \
-            --instance-id ${{ secrets.INSTANCE_ID }} \
-            --query "StandardOutputContent" \
-            --output text > deployment_output.log
-
-          # 표준 출력 내용 표시
-          echo "=== Deployment Output ==="
-          cat deployment_output.log
-
-          # 에러 출력 확인
-          ERROR_OUTPUT=$(aws ssm get-command-invocation \
-            --command-id ${{ env.COMMAND_ID }} \
-            --instance-id ${{ secrets.INSTANCE_ID }} \
-            --query "StandardErrorContent" \
-            --output text)
-
-          if [ -n "$ERROR_OUTPUT" ] && [ "$ERROR_OUTPUT" != "None" ]; then
-            echo "=== Error Output ==="
-            echo "$ERROR_OUTPUT"
-          fi
-
-      - name: Cleanup S3 deployment script
-        if: always()
-        run: |
-          aws s3 rm s3://${{ secrets.DEPLOYMENT_BUCKET }}/deploy-script.sh || true
-
-      - name: Verify deployment
-        run: |
-          echo "Verifying deployment..."
-
-          # 각 서비스 상태 확인
-          services=("https://gamecore.co.kr/health" "https://auth-api.gamecore.co.kr/health" "https://admin-api.gamecore.co.kr/health" "https://data-api.gamecore.co.kr/health")
-
-          for service in "${services[@]}"; do
-            echo "Checking $service..."
-            if curl -f --retry 3 --retry-delay 5 --max-time 10 "$service" >/dev/null 2>&1; then
-              echo "✅ $service is healthy"
-            else
-              echo "❌ $service is not responding"
-              exit 1
-            fi
-          done
-
-      - name: Notify deployment success
-        if: success()
-        run: |
-          echo "🎉 Deployment to production completed successfully!"
-          echo "🔗 Frontend: https://gamecore.co.kr"
-          echo "🔗 Auth API: https://auth-api.gamecore.co.kr"
-          echo "🔗 Admin API: https://admin-api.gamecore.co.kr"
-          echo "🔗 Data API: https://data-api.gamecore.co.kr"
-          echo "📊 Deployed via AWS Systems Manager"
-
-      - name: Notify deployment failure
-        if: failure()
-        run: |
-          echo "❌ Deployment to production failed!"
-          echo "Command ID: ${{ env.COMMAND_ID }}"
-          echo "Please check the SSM command execution logs in AWS Console"
-          echo "Instance ID: ${{ secrets.INSTANCE_ID }}"
-      - name: Get deployment results
+  - name: Get deployment results
         if: always()
         run: |
           echo "Getting command execution results..."
@@ -854,3 +791,43 @@ jobs:
             echo "❌ Deployment failed"
             exit 1
           fi
+
+      - name: Cleanup S3 deployment script
+        if: always()
+        run: |
+          aws s3 rm s3://${{ secrets.DEPLOYMENT_BUCKET }}/deploy-script.sh || true
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment..."
+
+          # 각 서비스 상태 확인
+          services=("https://gamecore.co.kr/health" "https://auth-api.gamecore.co.kr/health" "https://admin-api.gamecore.co.kr/health" "https://data-api.gamecore.co.kr/health")
+
+          for service in "${services[@]}"; do
+            echo "Checking $service..."
+            if curl -f --retry 3 --retry-delay 5 --max-time 10 "$service" >/dev/null 2>&1; then
+              echo "✅ $service is healthy"
+            else
+              echo "❌ $service is not responding"
+              exit 1
+            fi
+          done
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "🎉 Deployment to production completed successfully!"
+          echo "🔗 Frontend: https://gamecore.co.kr"
+          echo "🔗 Auth API: https://auth-api.gamecore.co.kr"
+          echo "🔗 Admin API: https://admin-api.gamecore.co.kr"
+          echo "🔗 Data API: https://data-api.gamecore.co.kr"
+          echo "📊 Deployed via AWS Systems Manager"
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          echo "❌ Deployment to production failed!"
+          echo "Command ID: ${{ env.COMMAND_ID }}"
+          echo "Please check the SSM command execution logs in AWS Console"
+          echo "Instance ID: ${{ secrets.INSTANCE_ID }}"
