@@ -510,19 +510,6 @@ jobs:
                   keyType: EC256
                   httpChallenge:
                     entryPoint: web
-
-            http:
-              middlewares:
-                secure-headers:
-                  headers:
-                    customRequestHeaders:
-                      X-Forwarded-Proto: "https"
-                    customResponseHeaders:
-                      X-Frame-Options: "SAMEORIGIN"
-                      X-Content-Type-Options: "nosniff"
-                      X-XSS-Protection: "1; mode=block"
-                      Strict-Transport-Security: "max-age=31536000; includeSubDomains"
-                      Referrer-Policy: "strict-origin-when-cross-origin"
             EOF
 
             # Docker Hub 로그인
@@ -592,7 +579,13 @@ jobs:
                   - 'traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)'
                   - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.dataapi.middlewares=secure-headers@file"
+                  - "traefik.http.routers.dataapi.middlewares=secure-headers"
+                  - "traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+                  - "traefik.http.middlewares.secure-headers.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
+                  - "traefik.http.middlewares.secure-headers.headers.customresponseheaders.X-Content-Type-Options=nosniff"
+                  - "traefik.http.middlewares.secure-headers.headers.customresponseheaders.X-XSS-Protection=1; mode=block"
+                  - "traefik.http.middlewares.secure-headers.headers.customresponseheaders.Strict-Transport-Security=max-age=31536000; includeSubDomains"
+                  - "traefik.http.middlewares.secure-headers.headers.customresponseheaders.Referrer-Policy=strict-origin-when-cross-origin"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -613,7 +606,7 @@ jobs:
                   - 'traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)'
                   - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.adminapi.middlewares=secure-headers@file"
+                  - "traefik.http.routers.adminapi.middlewares=secure-headers"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -634,7 +627,7 @@ jobs:
                   - 'traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)'
                   - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.authapi.middlewares=secure-headers@file"
+                  - "traefik.http.routers.authapi.middlewares=secure-headers"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -660,7 +653,7 @@ jobs:
                   - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9-]+}.gamecore.co.kr`)'
                   - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-                  - "traefik.http.routers.frontend.middlewares=secure-headers@file"
+                  - "traefik.http.routers.frontend.middlewares=secure-headers"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
                   interval: 30s
