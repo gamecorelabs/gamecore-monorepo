@@ -17,7 +17,7 @@ const Header = () => {
               width={24}
               height={32}
             />
-            <h1 className="text-xl font-bold">바코지지</h1>
+            <h1 className="text-xl font-bold">게임코어</h1>
           </Link>
         </div>
         <div className="relative hidden sm:block">
