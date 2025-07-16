@@ -457,21 +457,25 @@ jobs:
           sudo chown -R ubuntu:ubuntu /home/ubuntu/gamecore-monorepo
 
           # 필요한 디렉토리 생성
-          sudo mkdir -p letsencrypt traefik
+          mkdir -p letsencrypt traefik
 
-          # Let's Encrypt acme.json 파일 초기화
+          # Let's Encrypt acme.json 파일 초기화 (권한 문제 해결)
           if [ ! -f letsencrypt/acme.json ]; then
             echo "Creating acme.json file..."
-            sudo touch letsencrypt/acme.json
-            sudo chmod 600 letsencrypt/acme.json
+            touch letsencrypt/acme.json
+            chmod 600 letsencrypt/acme.json
             echo "acme.json created with proper permissions"
           else
             echo "acme.json already exists"
-            sudo chmod 600 letsencrypt/acme.json
+            chmod 600 letsencrypt/acme.json
           fi
 
+          # acme.json 파일이 ubuntu 사용자 소유인지 확인
+          chown ubuntu:ubuntu letsencrypt/acme.json
+          echo "acme.json ownership set to ubuntu:ubuntu"
+
           # Traefik 설정 파일 생성
-          sudo tee traefik/traefik.yml > /dev/null << 'TRAEFIK_EOF'
+          cat > traefik/traefik.yml << 'TRAEFIK_EOF'
           global:
             checkNewVersion: false
             sendAnonymousUsage: false
@@ -534,7 +538,7 @@ jobs:
           docker pull ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
 
           # 환경 변수 파일 생성
-          sudo tee .env.production > /dev/null << ENV_EOF
+          cat > .env.production << ENV_EOF
           NODE_ENV=production
           DB_HOST=${DB_HOST}
           DB_PORT=${DB_PORT}
@@ -549,10 +553,11 @@ jobs:
           HASH_ROUNDS=${HASH_ROUNDS}
           ACME_EMAIL=${ACME_EMAIL}
           CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
+          DOCKER_HUB_USERNAME=${DOCKER_HUB_USERNAME}
           ENV_EOF
 
           # Docker Compose 파일 생성
-          sudo tee docker-compose.production.yml > /dev/null << 'COMPOSE_EOF'
+          cat > docker-compose.production.yml << 'COMPOSE_EOF'
           version: '3.8'
 
           services:
@@ -572,12 +577,21 @@ jobs:
                 - ./letsencrypt:/letsencrypt
               networks:
                 - gamecore-network
+              healthcheck:
+                test: ["CMD", "traefik", "healthcheck", "--ping"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 10s
 
             data-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-data-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -586,12 +600,21 @@ jobs:
                 - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.dataapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
 
             admin-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-admin-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -600,12 +623,21 @@ jobs:
                 - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.adminapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
 
             auth-api:
               image: ${DOCKER_HUB_USERNAME}/gamecore-auth-api:latest
               restart: unless-stopped
               env_file:
                 - .env.production
+              depends_on:
+                traefik:
+                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -614,14 +646,25 @@ jobs:
                 - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                 - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.authapi.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
 
             frontend:
               image: ${DOCKER_HUB_USERNAME}/gamecore-frontend:latest
               restart: unless-stopped
               depends_on:
-                - admin-api
-                - auth-api
-                - data-api
+                traefik:
+                  condition: service_healthy
+                admin-api:
+                  condition: service_healthy
+                auth-api:
+                  condition: service_healthy
+                data-api:
+                  condition: service_healthy
               networks:
                 - gamecore-network
               labels:
@@ -630,6 +673,12 @@ jobs:
                 - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                 - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
                 - "traefik.http.routers.frontend.middlewares=secure-headers"
+              healthcheck:
+                test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+                interval: 30s
+                timeout: 10s
+                retries: 3
+                start_period: 30s
 
           networks:
             gamecore-network:
@@ -639,19 +688,63 @@ jobs:
                   - subnet: 172.20.0.0/16
           COMPOSE_EOF
 
-                  echo "Docker Compose file created"
+          echo "Docker Compose file created"
 
-          # 이전 컨테이너 정리
-          echo "Pulling latest images..."
-          docker-compose -f docker-compose.production.yml pull
+          # 기존 컨테이너 정리
+          echo "Stopping existing containers..."
+          docker-compose -f docker-compose.production.yml down || true
 
           # 새 컨테이너 시작
           echo "Starting services..."
-          docker-compose -f docker-compose.production.yml up -d --remove-orphans
+          docker-compose -f docker-compose.production.yml up -d
 
-          # 헬스 체크
-          echo "Waiting for services to be healthy..."
-          sleep 60
+          # 서비스 시작 대기 (SSL 인증서 발급 시간 고려)
+          echo "Waiting for services to start and SSL certificates to be issued..."
+          sleep 120
+
+          # 컨테이너 상태 확인
+          echo "Checking container status..."
+          docker-compose -f docker-compose.production.yml ps
+
+          # Traefik 로그 확인 (SSL 인증서 발급 확인)
+          echo "Checking Traefik logs for SSL certificate generation..."
+          docker-compose -f docker-compose.production.yml logs traefik | tail -100
+
+          # acme.json 상태 확인
+          echo "Checking acme.json status..."
+          if [ -f letsencrypt/acme.json ]; then
+            echo "acme.json file exists"
+            echo "File size: $(stat -c%s letsencrypt/acme.json) bytes"
+            echo "File permissions: $(stat -c%a letsencrypt/acme.json)"
+            if [ -s letsencrypt/acme.json ]; then
+              echo "✅ acme.json contains certificate data"
+            else
+              echo "⚠️ acme.json is empty - certificates may still be generating"
+            fi
+          else
+            echo "❌ acme.json file not found"
+          fi
+
+          # 헬스체크 (HTTP와 HTTPS 모두 확인)
+          echo "Performing health checks..."
+          for i in {1..20}; do
+            echo "Health check attempt $i/20..."
+            
+            # HTTP 헬스체크 (SSL 인증서 발급 전)
+            if curl -f --max-time 10 http://gamecore.co.kr/health >/dev/null 2>&1; then
+              echo "✅ HTTP health check passed"
+              break
+            fi
+            
+            # HTTPS 헬스체크 (SSL 인증서 발급 후)
+            if curl -f --max-time 10 https://gamecore.co.kr/health >/dev/null 2>&1; then
+              echo "✅ HTTPS health check passed"
+              break
+            fi
+            
+            echo "⏳ Waiting for services to be ready..."
+            sleep 15
+          done
 
           echo "Deployment completed successfully!"
 
