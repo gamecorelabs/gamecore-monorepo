@@ -1,3 +1,4 @@
+# 빌드용 Docker Compose 파일
 services:
   mysql:
     image: mysql:8.0
@@ -32,11 +33,8 @@ services:
 
   data-api:
     build:
-      context: ./apps/data-api
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./apps/data-api:/apps/data-api
-      - ./packages/core:/packages/core
+      context: .
+      dockerfile: ./apps/data-api/Dockerfile.build # 실제 빌드 Dockerfile
     env_file:
       - ./apps/data-api/.env.dev
     depends_on:
@@ -55,11 +53,8 @@ services:
 
   admin-api:
     build:
-      context: ./apps/admin-api
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./apps/admin-api:/apps/admin-api
-      - ./packages/core:/packages/core
+      context: .
+      dockerfile: ./apps/admin-api/Dockerfile.build # 실제 빌드 Dockerfile
     env_file:
       - ./apps/admin-api/.env.dev
     depends_on:
@@ -78,11 +73,8 @@ services:
 
   auth-api:
     build:
-      context: ./apps/auth-api
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./apps/auth-api:/apps/auth-api
-      - ./packages/core:/packages/core
+      context: .
+      dockerfile: ./apps/auth-api/Dockerfile.build # 실제 빌드 Dockerfile
     env_file:
       - ./apps/auth-api/.env.dev
     depends_on:
@@ -101,10 +93,8 @@ services:
 
   frontend:
     build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./apps/frontend:/apps/frontend
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile.build # 실제 빌드 Dockerfile
     env_file:
       - ./apps/frontend/.env.dev
     depends_on:
