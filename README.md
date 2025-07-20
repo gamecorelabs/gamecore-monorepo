@@ -1,52 +1,38 @@
 # 사이드 프로젝트 - GameCore
 
 ### 프로젝트 소개
-
-- 종합 게임 포털 웹서비스 '게임코어지지'를 개발중에 있습니다.
+- 종합 게임 포털 '게임코어' 프로젝트를 개발 진행중에 있습니다.
 - 1인 프로젝트로 진행하고 있기 때문에 개발 편의상 현 repo에서 monorepo 방식으로 통합 개발을 진행하고 있습니다.
+- 자세한 프로젝트 설명 및 구조에 대해서는 아래의 Notion 링크를 참고해주세요.
+- <a href="https://gamecore-doc.notion.site/" target="_blank">프로젝트 소개 notion 링크</a>
 
-### 📂프로젝트 구조
+# GameCore 프로젝트 구성도
 
-```
-gamecore-monorepo/
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml              # CI/CD 자동화 스크립트
 ├── apps/
-│ └── frontend/ # 단일 프론트앤드 서버
-│ └── {service}-api # 각종 서비스 api 백앤드 서버
-│ ....
-├── packages/
-│ └── core/ # 공통 핵심 모듈
-├── .dockerignore
-├── .eslintrc.base.js
-├── .gitignore
-├── docker-compose.yaml
-├── package.json
-├── tsconfig.base.json # TypeScript 공통 설정
-└── tsconfig.json
-```
-
-### `/apps`
-
-- 프론트 서버 & 각종 서비스 api 백엔드 서버로 디렉터리가 구분 되어있습니다.
-- NestJS ^11, Next.js ^15 기반의 기술 스택으로 진행하고 있습니다.
-
-### `/packages`
-
-- 프로젝트의 공통 핵심 로직이나 유틸리티 함수, 타입 등을 관리하는 shared 디렉터리 입니다.
-- `/packages/core`
-  - gamecore의 공통 코어 service 로직들을 담고있는 코어 모듈 패키지입니다.
-  - 추후 repo 분리시에는 해당 패키지를 포함한 skeleton nestjs api project를 구성 할 수 있게 배포 할 예정입니다.
-- `/packages/utils`
-  - 공통으로 쓰이는 각종 유틸 함수들을 관리하는 패키지입니다.
-
-## 🚀 시작하기 (예시)
-
-```bash
-# 의존성 설치
-npm install
-
-# 전체 패키지 빌드
-npm run build
-
-# Docker로 실행
-docker-compose up --build
-```
+│   ├── auth-api/                  # 인증 관련 처리 서버 (NestJs)
+│   ├── admin-api/                 # 관리자 기능 처리 서버 (NestJs)
+│   ├── data-api/                  # 게시판 및 뉴스, 각종 공략 정보 등 처리 서버 (NestJs)
+│   └── frontend/                  # 프론트 서버 (NextJs, Tailwind 기반)
+├── packages                       # 프로젝트의 핵심 공통 모듈 폴더
+│   └── core/                      # 각 NestJs 서버에서 공통적으로 사용하는 비즈니스 로직 패키지
+│	      └── src/
+│	          └── base-auth          # 인증 처리 관련 비즈니스 로직 (회원, 비회원, fingerprint..)
+│	          └── base-domain        # 각 서브 페이지 도메인 설정 관련 비즈니스 로직
+│	          └── base-board         # 게시판 비즈니스 로직 
+│	          └── base-common        # 공통 비즈니스 로직(페이지네이션, 트랜잭션 등)
+│	          └── base-post          # 글쓰기 리소스 비즈니스 로직 (게시판, 뉴스 등)
+│	          └── base-comment       # 댓글 리소스 비즈니스 로직 (게시판, 뉴스 등)
+│	          └── base-like          # 좋아요 리소스 비즈니스 로직 (게시판, 뉴스 등)
+│           └── ....
+├── traefik                        # 트래픽 관리 및 리버스 프록시(traefik) 관련 설정 폴더
+│   ├── traefik.dev.yml            # traefik 개발용 설정파일
+│   └── traefik.yml                # (참고용) traefik 배포용 설정파일
+│      
+├── docker-compose.dev.yml         # 개발 환경용 Docker Compose 설정 파일
+├── docker-compose.yml             # (참고용) Docker Compose 배포 설정 파일
+├── .dockerignore                  
+├── .gitignore                     
+├── README.md  
