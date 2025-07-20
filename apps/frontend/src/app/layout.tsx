@@ -24,6 +24,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GameCore",
   description: "게임 코어 - 개발 테스트 단계 입니다.",
+  icons: [
+    {
+      rel: "icon",
+      url: "/favicon/favicon-96x96.png",
+      type: "image/png",
+      sizes: "96x96",
+    },
+    { rel: "icon", url: "/favicon/favicon.svg", type: "image/svg+xml" },
+    { rel: "shortcut icon", url: "/favicon/favicon.ico" },
+    {
+      rel: "apple-touch-icon",
+      url: "/favicon/apple-touch-icon.png",
+      sizes: "180x180",
+    },
+  ],
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default async function RootLayout({
