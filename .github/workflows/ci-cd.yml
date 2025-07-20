@@ -686,7 +686,7 @@ jobs:
                   - gamecore-network
                 labels:
                   - "traefik.enable=true"
-                  - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:(?!dev)[a-z0-9]+}.gamecore.co.kr`)'
+                  - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)'
                   - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
 
