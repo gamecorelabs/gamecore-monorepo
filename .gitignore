@@ -46,3 +46,5 @@ letsencrypt/
 acme.json
 
 *_bak.*
+
+CLAUDE.md
