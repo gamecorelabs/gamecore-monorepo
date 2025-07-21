@@ -206,6 +206,14 @@ body.themed-container {
   background-color: var(--input-bg) !important;
 }
 
+.article-row:hover {
+  background-color: var(--input-bg) !important;
+}
+
+.article-row:nth-child(even) {
+  background-color: rgba(var(--primary-color-rgb), 0.02);
+}
+
 .new-post-button:hover {
   background-color: var(--secondary-color) !important;
   transform: scale(1.05);

@@ -123,7 +123,7 @@ const WriteForm = ({
 
   return (
     <form
-      className="flex flex-col items-center justify-center h-full w-full mx-auto p-6 bg-white rounded shadow"
+      className="flex flex-col items-center justify-center h-full w-full mx-auto rounded"
       ref={formRef}
     >
       {guestMode && (
@@ -134,7 +134,12 @@ const WriteForm = ({
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
+        className="w-full font-semibold py-2 rounded transition"
+        style={{
+          backgroundColor: "var(--primary-color)",
+          borderColor: "var(--border-color)",
+          color: "var(--text-color)",
+        }}
         onClick={handlePost}
       >
         작성하기

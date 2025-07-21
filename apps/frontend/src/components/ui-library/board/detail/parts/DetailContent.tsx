@@ -17,9 +17,7 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
     post && (
       <>
         <div className="max-w-none min-h-48 mb-6 ">
-          <div className="text-gray-800 whitespace-pre-wrap">
-            {post.content}
-          </div>
+          <div className="whitespace-pre-wrap">{post.content}</div>
         </div>
 
         <LikeDetail

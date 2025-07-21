@@ -131,7 +131,7 @@ const BottomSection = ({
     <div className="flex justify-between items-center pb-4 border-b border-gray-200 space-x-4">
       <div>
         <button className=" hover:text-blue-600">
-          <span className="text-lg font-semibold text-gray-900 mb-4">
+          <span className="text-lg font-semibold mb-4">
             댓글 {post.comment_count || 0}개
           </span>
         </button>
@@ -166,7 +166,9 @@ const BottomSection = ({
         onClose={handleModalClose}
         onSubmit={handlePasswordSubmit}
         title={pendingAction === "edit" ? "게시글 수정" : "게시글 삭제"}
-        description={`게시글을 ${pendingAction === "edit" ? "수정" : "삭제"}하려면 비밀번호를 입력해주세요.`}
+        description={`게시글을 ${
+          pendingAction === "edit" ? "수정" : "삭제"
+        }하려면 비밀번호를 입력해주세요.`}
       />
     </div>
   );

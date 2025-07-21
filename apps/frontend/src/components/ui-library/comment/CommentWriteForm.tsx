@@ -93,9 +93,7 @@ const CommentWriteForm = ({
     <div className="pt-6">
       <form className="gap-3" ref={formRef}>
         <div className="w-full md:flex md:items-center md:justify-between">
-          <h4 className="font-medium text-gray-900 mb-3 w-full md:w-1/2">
-            댓글 작성
-          </h4>
+          <h4 className="font-medium  mb-3 w-full md:w-1/2">댓글 작성</h4>
           {!currentUser && (
             <div className="flex gap-3 mb-3 w-full md:w-1/2">
               <input

@@ -134,7 +134,7 @@ export const CommentItem = ({
               </div>
               <div className="flex gap-2"></div>
             </div>
-            <div className="text-gray-800 whitespace-pre-wrap">
+            <div className="whitespace-pre-wrap">
               <div className="flex justify-between items-end">
                 <p className="pr-4">{comment.content}</p>
 
