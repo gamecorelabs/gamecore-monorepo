@@ -10,6 +10,7 @@ import React, { useRef } from "react";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
 import { userLoginSchema } from "@/utils/validation/user/userLoginSchema";
+import { readyAlert } from "@/utils/helpers/alertReady";
 
 export function LoginForm({
   className,
@@ -65,7 +66,11 @@ export function LoginForm({
           <form ref={formRef} onSubmit={handleLogin}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={(e) => readyAlert(e)}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -85,7 +90,7 @@ export function LoginForm({
               </div>
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">이메일</Label>
                   <Input
                     id="email"
                     type="email"
@@ -96,13 +101,7 @@ export function LoginForm({
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
+                    <Label htmlFor="password">비밀번호</Label>
                   </div>
                   <Input
                     id="password"
@@ -116,9 +115,21 @@ export function LoginForm({
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
-                  Sign up
+                계정이 없으신가요?&nbsp;
+                <a
+                  href="/user/auth/register"
+                  className="underline underline-offset-4"
+                >
+                  회원가입
+                </a>
+              </div>
+              <div className="text-center text-sm">
+                <a
+                  href="#"
+                  className="underline underline-offset-4"
+                  onClick={(e) => readyAlert(e)}
+                >
+                  비밀번호를 잊으셨나요?
                 </a>
               </div>
             </div>
