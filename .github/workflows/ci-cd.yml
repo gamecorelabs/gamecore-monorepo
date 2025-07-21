@@ -589,7 +589,7 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
             ACME_EMAIL=${{ secrets.ACME_EMAIL }}
-            CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
+            CLOUDFLARE_DNS_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
             CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
             EOF
 
