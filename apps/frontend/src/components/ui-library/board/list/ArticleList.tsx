@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import NewPostButton from "../buttons/NewPostButton";
 import { ArticleContent } from "./parts/ArticleContent";
-import { ArticleInfo } from "./parts/ArticleInfo";
 import { BoardPost } from "@/types/board/boardPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import PaginationContainer from "@ui-library/common/PaginationContainer";
@@ -23,33 +22,101 @@ const ArticleList = ({
   if (!posts || posts.length === 0) {
     return (
       <>
-        <EmptyArticle />
-        <SearchList />
-        <NewPostButton link={`/board/${boardId}/post/new`} />
+        <div className="min-h-screen">
+          <div className="mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div>
+                <h2
+                  className="text-2xl font-bold"
+                  style={{ color: "var(--text-color)" }}
+                >
+                  게시글 목록
+                </h2>
+                <p
+                  className="text-sm mt-1"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  게시글이 없습니다
+                </p>
+              </div>
+              <SearchList />
+            </div>
+          </div>
+          <EmptyArticle />
+          <NewPostButton link={`/board/${boardId}/post/new`} />
+        </div>
       </>
     );
   }
 
   return (
-    <>
-      {posts.map((post) => (
-        <article key={post.id} className="border-b py-4" data-id={post.id}>
-          <ArticleContent boardId={boardId} post={post} />
-          <ArticleInfo post={post} />
-        </article>
-      ))}
+    <div className="min-h-screen">
+      {/* 게시글 헤더 */}
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-2xl font-bold" style={{ color: "var()" }}>
+              테스트 게시판
+            </h2>
+          </div>
+        </div>
 
-      <PaginationContainer
-        {...paginationInfo}
-        onPageChange={(page) => {
-          router.push(`/board/${boardId}/post?page=${page}`);
-        }}
-      />
+        {/* 게시글 테이블 헤더 (데스크톱만) */}
+        <div
+          className="hidden md:grid md:grid-cols-12 gap-4 py-3 px-4 text-sm font-medium border-b-2"
+          style={{
+            borderColor: "var(--border-color)",
+            backgroundColor: "var(--input-bg)",
+            color: "var(--text-secondary)",
+          }}
+        >
+          <div className="col-span-6">제목</div>
+          <div className="col-span-2 text-center">작성자</div>
+          <div className="col-span-2 text-center">작성일</div>
+          <div className="col-span-1 text-center">조회</div>
+          <div className="col-span-1 text-center">추천</div>
+        </div>
+      </div>
 
-      <SearchList />
+      {/* 게시글 리스트 */}
+      <div className="space-y-0">
+        {posts.map((post) => (
+          <article
+            key={post.id}
+            className="article-row transition-colors border-b last:border-b-0"
+            style={{ borderColor: "var(--border-color)" }}
+            data-id={post.id}
+          >
+            <ArticleContent boardId={boardId} post={post} />
+          </article>
+        ))}
+      </div>
 
-      <NewPostButton link={`/board/${boardId}/post/new`} />
-    </>
+      {/* 하단 컨트롤 */}
+      <div className="flex mt-6 justify-end">
+        <button
+          onClick={() => router.push(`/board/${boardId}/post/new`)}
+          className="px-4 py-1 rounded-sm font-medium transition-all whitespace-nowrap"
+          style={{
+            backgroundColor: "var(--primary-color)",
+            color: "white",
+          }}
+        >
+          글쓰기
+        </button>
+      </div>
+      <div className="mt-8 space-y-6">
+        <PaginationContainer
+          {...paginationInfo}
+          onPageChange={(page) => {
+            router.push(`/board/${boardId}/post?page=${page}`);
+          }}
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <SearchList />
+      </div>
+    </div>
   );
 };
 

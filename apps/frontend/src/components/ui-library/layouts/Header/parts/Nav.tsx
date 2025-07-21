@@ -19,56 +19,39 @@ const Nav = ({ items }: { items?: NavItem[] }) => {
   const menuItems = items && items.length > 0 ? items : defaultMenu;
 
   return (
-    <nav 
+    <nav
       className="relative backdrop-blur-sm border-t overflow-x-auto"
-      style={{ 
-        backgroundColor: 'var(--card-bg)',
-        borderColor: 'var(--border-color)' 
+      style={{
+        backgroundColor: "var(--card-bg)",
+        borderColor: "var(--border-color)",
       }}
     >
-      <div className="mx-auto px-6 py-3">
+      <div className="mx-auto px-6">
         <ul className="flex space-x-1 min-w-max">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <li key={item.id}>
-                <Link 
-                  href={item.href} 
-                  className="relative px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 border inline-block"
+                <Link
+                  href={item.href}
+                  className={`nav-link relative px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 inline-block ${
+                    isActive ? "nav-active" : ""
+                  }`}
                   style={{
-                    backgroundColor: isActive 
-                      ? 'rgba(var(--primary-color-rgb), 0.2)' 
-                      : 'transparent',
-                    color: isActive 
-                      ? 'var(--primary-color)' 
-                      : 'var(--text-secondary)',
-                    borderColor: isActive 
-                      ? 'rgba(var(--primary-color-rgb), 0.4)' 
-                      : 'transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = 'var(--text-color)';
-                      e.currentTarget.style.backgroundColor = 'rgba(var(--primary-color-rgb), 0.1)';
-                      e.currentTarget.style.borderColor = 'rgba(var(--primary-color-rgb), 0.3)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = 'var(--text-secondary)';
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.borderColor = 'transparent';
-                    }
+                    color: isActive
+                      ? "var(--primary-color)"
+                      : "var(--text-secondary)",
                   }}
                 >
                   {/* Active indicator */}
                   {isActive && (
-                    <div 
+                    <div
                       className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
-                      style={{ backgroundColor: 'var(--primary-color)' }}
+                      style={{ backgroundColor: "var(--primary-color)" }}
                     ></div>
                   )}
-                  
+
                   <span className="relative z-10">{item.title}</span>
                 </Link>
               </li>

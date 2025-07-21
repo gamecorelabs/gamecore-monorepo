@@ -70,7 +70,7 @@ const SearchList = ({ defaultValue = "title" }: { defaultValue?: string }) => {
         onSubmit={handleSearchSubmit}
       >
         <Select name="searchType" defaultValue={defaultValue}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="검색 옵션" />
           </SelectTrigger>
           <SelectContent>
