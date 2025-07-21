@@ -2,7 +2,7 @@ import { getUserName } from "@/utils/helpers/getUserName";
 import { BoardPost } from "@/types/board/boardPost.types";
 
 export const ArticleInfo = ({ post }: { post: BoardPost }) => (
-  <div className="flex justify-between text-sm text-gray-500 mt-2">
+  <div className="flex justify-between text-sm mt-2">
     <div className="font-medium flex items-center">
       {/* TODO: Profile Image 노출 */}
       <span className="mr-1 inline-block align-middle">

@@ -83,7 +83,7 @@ const LikeDetail = ({
   return (
     <div className="flex justify-center items-center gap-8 py-8">
       <button
-        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2  hover:bg-gray-50 transition-colors duration-200
+        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 transition-colors duration-200
             ${
               selected === LikeType.LIKE
                 ? "border-red-600 border-2"
@@ -95,7 +95,7 @@ const LikeDetail = ({
         <span className="text-lg font-medium">{likeCount}</span>
       </button>
       <button
-        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 hover:bg-gray-50 transition-colors duration-200
+        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 transition-colors duration-200
           ${
             selected === LikeType.DISLIKE
               ? "border-red-600 border-2"
