@@ -542,8 +542,10 @@ jobs:
                   email: ${{ secrets.ACME_EMAIL }}
                   storage: /letsencrypt/acme.json
                   keyType: EC256
-                  httpChallenge:
-                    entryPoint: web
+                  dnsChallenge:
+                    provider: cloudflare
+
+                    
             EOF
 
             # Docker Hub 로그인
@@ -586,6 +588,7 @@ jobs:
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
             ACME_EMAIL=${{ secrets.ACME_EMAIL }}
+            CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
             CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
             EOF
 
@@ -604,6 +607,8 @@ jobs:
                   - "80:80"
                   - "443:443"
                   - "8080:8080"
+                environment
+                  - CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
                 volumes:
                   - /var/run/docker.sock:/var/run/docker.sock:ro
                   - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
@@ -624,6 +629,8 @@ jobs:
                   - 'traefik.http.routers.dataapi.rule=Host(`data-api.gamecore.co.kr`)'
                   - "traefik.http.services.dataapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.dataapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dataapi.tls.domains[0].main=gamecore.co.kr"
+                  - "traefik.http.routers.dataapi.tls.domains[0].sans=*.gamecore.co.kr"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -644,6 +651,8 @@ jobs:
                   - 'traefik.http.routers.adminapi.rule=Host(`admin-api.gamecore.co.kr`)'
                   - "traefik.http.services.adminapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.adminapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dataapi.tls.domains[0].main=gamecore.co.kr"
+                  - "traefik.http.routers.dataapi.tls.domains[0].sans=*.gamecore.co.kr"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -664,6 +673,8 @@ jobs:
                   - 'traefik.http.routers.authapi.rule=Host(`auth-api.gamecore.co.kr`)'
                   - "traefik.http.services.authapi.loadbalancer.server.port=3000"
                   - "traefik.http.routers.authapi.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dataapi.tls.domains[0].main=gamecore.co.kr"
+                  - "traefik.http.routers.dataapi.tls.domains[0].sans=*.gamecore.co.kr"
                 healthcheck:
                   test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
                   interval: 30s
@@ -689,6 +700,8 @@ jobs:
                   - 'traefik.http.routers.frontend.rule=Host(`gamecore.co.kr`) || HostRegexp(`{subdomain:[a-z0-9]+}.gamecore.co.kr`)'
                   - "traefik.http.services.frontend.loadbalancer.server.port=3000"
                   - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dataapi.tls.domains[0].main=gamecore.co.kr"
+                  - "traefik.http.routers.dataapi.tls.domains[0].sans=*.gamecore.co.kr"
 
             networks:
               gamecore-network:
