@@ -1,7 +1,11 @@
 const Container = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      {children}
+    <div className="min-h-screen flex flex-col relative">
+      {/* Simple clean background */}
+      <div className="fixed inset-0 z-0 bg-slate-950"></div>
+
+      {/* Content wrapper */}
+      <div className="relative z-10 flex flex-col min-h-screen">{children}</div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import {
   getSubdomainInfo,
   getSubdomainThemeClass,
 } from "@/utils/hooks/useSubdomain";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,12 +58,14 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${themeClass} antialiased themed-container`}
       >
-        <Container>
-          <SessionRefresher user={user} hasRefreshToken={hasRefresh} />
-          <Header />
-          <Main>{children}</Main>
-          <Footer />
-        </Container>
+        <ThemeProvider>
+          <Container>
+            <SessionRefresher user={user} hasRefreshToken={hasRefresh} />
+            <Header />
+            <Main>{children}</Main>
+            <Footer />
+          </Container>
+        </ThemeProvider>
       </body>
     </html>
   );

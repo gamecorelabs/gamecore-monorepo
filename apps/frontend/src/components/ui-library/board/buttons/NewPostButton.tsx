@@ -7,10 +7,14 @@ export default function NewPostButton({ link }: { link: string }) {
       <div className="flex justify-end">
         <Link
           href={link}
-          className="bg-indigo-100 hover:bg-indigo-200 text-white p-3 rounded-full shadow-lg"
+          className="new-post-button p-3 rounded-full shadow-lg transition-all"
+          style={{
+            backgroundColor: 'var(--primary-color)',
+            color: 'white'
+          }}
           aria-label="글쓰기"
         >
-          <PencilSquareIcon className="h-4 w-4 text-gray-500" />
+          <PencilSquareIcon className="h-4 w-4" style={{ color: 'white' }} />
         </Link>
       </div>
     </div>

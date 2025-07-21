@@ -13,7 +13,13 @@ const BoardPostDetail = ({
   post: BoardPost;
 }) => {
   return (
-    <div className="max-w-4xl mx-auto py-4 px-1 bg-white rounded-lg shadow-md">
+    <div
+      className="mx-auto p-4 rounded-lg shadow-md"
+      style={{
+        backgroundColor: "var(--card-bg)",
+        borderColor: "var(--border-color)",
+      }}
+    >
       <DetailHeader post={post} />
       <DetailContent post={post} />
       <BottomSection boardId={boardId} post={post} />

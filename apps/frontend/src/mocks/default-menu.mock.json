@@ -1,9 +1,4 @@
 [
   { "id": 1, "title": "홈", "href": "/" },
-  { "id": 2, "title": "게시판", "href": "/board/1/post" },
-  { "id": 3, "title": "가이드", "href": "/guid" },
-  { "id": 4, "title": "지도", "href": "/map" },
-  { "id": 5, "title": "마법", "href": "/skill" },
-  { "id": 6, "title": "사냥터", "href": "/dungeon" },
-  { "id": 7, "title": "계산기", "href": "/calculator" }
+  { "id": 2, "title": "게시판", "href": "/board/1/post" }
 ]
