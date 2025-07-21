@@ -63,12 +63,12 @@ const Header = () => {
             </div>
 
             {/* Search Section */}
-            <div className="relative hidden sm:block">
+            <div className="relative hidden lg:block">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="게임, 뉴스, 커뮤니티 검색..."
-                  className="search-input w-80 px-6 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
+                  className="search-input w-[400px] px-6 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
                   style={{
                     backgroundColor: "var(--input-bg)",
                     borderColor: "var(--border-color)",
@@ -108,7 +108,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Search */}
-          <div className="px-6 pb-4 block sm:hidden">
+          <div className="px-6 pb-4 block lg:hidden">
             <div className="relative">
               <input
                 type="text"
