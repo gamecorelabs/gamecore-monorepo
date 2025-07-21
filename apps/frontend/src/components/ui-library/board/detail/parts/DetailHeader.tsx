@@ -6,14 +6,28 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{post.title}</h1>
-        <div className="flex items-center text-sm  space-x-3 justify-between">
+        <h1 
+          className="text-2xl font-bold mb-2"
+          style={{ color: 'var(--text-color)' }}
+        >
+          {post.title}
+        </h1>
+        <div 
+          className="flex items-center text-sm space-x-3 justify-between"
+          style={{ color: 'var(--text-secondary)' }}
+        >
           <div className="flex gap-3">
             <span>{getUserName(post)}</span>
-            <span className="inline-block w-[1px] h-4 bg-gray-300"></span>
+            <span 
+              className="inline-block w-[1px] h-4"
+              style={{ backgroundColor: 'var(--border-color)' }}
+            ></span>
             <span>{formatDate(post.created_at, { year: "numeric" })}</span>
           </div>
-          <div className="flex items-center text-sm  space-x-3">
+          <div 
+            className="flex items-center text-sm space-x-3"
+            style={{ color: 'var(--text-muted)' }}
+          >
             <span>조회수 {post.view_count || 0}</span>
           </div>
         </div>
