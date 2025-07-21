@@ -100,13 +100,23 @@ const CommentWriteForm = ({
                 type="text"
                 placeholder="아이디"
                 name="guestAuthorId"
-                className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                className="w-1/2 flex-1 p-1 border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={{
+                  color: "var(--text-color)",
+                  backgroundColor: "var(--input-bg)",
+                  borderColor: "var(--border-color)",
+                }}
               />
               <input
                 type="password"
                 placeholder="비밀번호"
                 name="guestAuthorPassword"
-                className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+                className="w-1/2 flex-1 p-1 border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={{
+                  color: "var(--text-color)",
+                  backgroundColor: "var(--input-bg)",
+                  borderColor: "var(--border-color)",
+                }}
               />
             </div>
           )}
@@ -114,14 +124,24 @@ const CommentWriteForm = ({
         <div>
           <textarea
             name="content"
-            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+            className="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
             placeholder="댓글을 입력하세요..."
+            style={{
+              color: "var(--text-color)",
+              backgroundColor: "var(--input-bg)",
+              borderColor: "var(--border-color)",
+            }}
           />
         </div>
         <div className="flex justify-end">
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-2  text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            style={{
+              backgroundColor: "var(--primary-color)",
+              borderColor: "var(--border-color)",
+              color: "var(--text-color)",
+            }}
             onClick={handleCommentSubmit}
           >
             댓글 등록

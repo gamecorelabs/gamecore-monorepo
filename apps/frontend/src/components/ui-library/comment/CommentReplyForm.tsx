@@ -101,22 +101,32 @@ const CommentReplyForm = ({
   };
 
   return (
-    <div className="mt-3 ml-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="mt-3 ml-6 p-4 rounded-lg border border-gray-200">
       <form className="space-y-3" ref={formRef}>
         <input type="hidden" name="parent_id" value={parentId} />
         {!currentUser && (
-          <div className="flex gap-3 mb-3 w-full md:w-1/2">
+          <div className="flex gap-3 mb-3 max-w-full md:w-1/2 justify-self-end">
             <input
               type="text"
               placeholder="아이디"
               name="guestAuthorId"
-              className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-1/2 flex-1 p-1 border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={{
+                color: "var(--text-color)",
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--border-color)",
+              }}
             />
             <input
               type="password"
               placeholder="비밀번호"
               name="guestAuthorPassword"
-              className="w-1/2 flex-1 p-1 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-1/2 flex-1 p-1 border focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={{
+                color: "var(--text-color)",
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--border-color)",
+              }}
             />
           </div>
         )}
@@ -128,18 +138,28 @@ const CommentReplyForm = ({
           defaultValue={defaultValue}
           autoFocus
           ref={textareaRef}
+          style={{
+            color: "var(--text-color)",
+            backgroundColor: "var(--input-bg)",
+            borderColor: "var(--border-color)",
+          }}
         />
         <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            className="px-4 py-2 text-sm"
           >
             취소
           </button>
           <button
             type="submit"
-            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-sm rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
+            style={{
+              backgroundColor: "var(--primary-color)",
+              borderColor: "var(--border-color)",
+              color: "var(--text-color)",
+            }}
             onClick={handleCommentReplySubmit}
           >
             답글 작성
