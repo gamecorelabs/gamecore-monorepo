@@ -1,5 +1,5 @@
 export type SubdomainConfig = {
-  name: string;
+  domain: string;
   title: string;
   shortTitle: string;
   description: string;

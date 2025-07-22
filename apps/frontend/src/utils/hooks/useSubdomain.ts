@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { getSubdomainConfig } from "@/config/subdomains";
+import { getSubdomainConfig } from "@/config/channel";
 import { SubdomainConfig } from "@/types/common/domain.types";
 
 /**

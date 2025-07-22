@@ -1,14 +1,6 @@
 import { SubdomainConfig } from "@/types/common/domain.types";
-import {
-  getEnvSubdomainConfig,
-  isSubdomainEnabled,
-  buildDomainUrl,
-  ENV_CONFIGS,
-} from "./environment";
-import { SUBDOMAIN_CHANNELS } from "@/config/subdomain_channels";
-
-// 공통 경로 설정
-export const COMMON_PATHS = ["/board", "/user", "/api", "/auth", "/admin"];
+import { isSubdomainEnabled, buildDomainUrl, ENV_CONFIGS } from "./environment";
+import { CHANNEL_CONFIG } from "@/config/channel_config";
 
 /**
  * 현재 환경의 도메인 설정 반환
@@ -28,23 +20,23 @@ export function getSubdomainConfig(subdomain: string): SubdomainConfig | null {
   if (!isSubdomainEnabled(subdomain)) {
     return null;
   }
-  return SUBDOMAIN_CHANNELS[subdomain] || null;
+  return CHANNEL_CONFIG[subdomain] || null;
 }
 
 /**
  * 활성화된 서브도메인 목록 반환
  */
-export function getAllSubdomains(): string[] {
-  const envConfig = getEnvSubdomainConfig();
-  return envConfig.enabledSubdomains.filter(
-    (subdomain) => subdomain in SUBDOMAIN_CHANNELS
-  );
+export function getAllChannels() {
+  const channels = Object.entries(CHANNEL_CONFIG).filter(([key]) => {
+    return isSubdomainEnabled(key);
+  });
+  return channels.map(([key, value]) => value);
 }
 
 /**
  * 서브도메인의 풀 URL 생성 (환경별 대응)
  */
-export function getSubdomainUrl(subdomain: string, path: string = "/"): string {
+export function getChannelUrl(subdomain: string, path: string = "/"): string {
   return buildDomainUrl(subdomain, path);
 }
 

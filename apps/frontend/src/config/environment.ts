@@ -2,16 +2,10 @@
  * 환경별 서브도메인 설정을 관리하는 파일
  * 이 파일을 통해 환경별로 다른 서브도메인 설정을 적용할 수 있습니다.
  */
+const ENABLED_SUBDOMAINS = ["main", "baram", "djmax"];
 
-const ENABLED_SUBDOMAINS = [
-  "main",
-  "baram",
-  "djmax",
-  "diablo4",
-  "wow",
-  "game",
-  "lol",
-];
+// 공통 경로 설정
+export const COMMON_PATHS = ["/board", "/user", "/api", "/auth", "/admin"];
 
 // 개발 환경 설정
 export const DEV_SUBDOMAIN_CONFIG = {
