@@ -63,7 +63,7 @@ export function buildDomainUrl(subdomain?: string, path: string = "/"): string {
   const config = getEnvSubdomainConfig();
 
   let host: string;
-  if (subdomain && isSubdomainEnabled(subdomain)) {
+  if (subdomain && subdomain !== "main" && isSubdomainEnabled(subdomain)) {
     if (config.prefix) {
       host = `${config.prefix}.${subdomain}.${config.baseDomain}`;
     } else {
