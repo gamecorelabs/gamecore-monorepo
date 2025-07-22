@@ -14,7 +14,7 @@ const BoardPostDetail = ({
 }) => {
   return (
     <div
-      className="mx-auto p-4 rounded-lg shadow-md"
+      className="mx-auto rounded-lg shadow-md"
       style={{
         backgroundColor: "var(--card-bg)",
         borderColor: "var(--border-color)",

@@ -23,7 +23,7 @@ const Header = () => {
           className="backdrop-blur-sm"
           style={{ backgroundColor: "var(--card-bg)" }}
         >
-          <div className="flex justify-between h-20 items-center px-6">
+          <div className="flex justify-between h-20 items-center px-4">
             {/* Logo Section */}
             <div className="flex items-center">
               <Link
@@ -108,12 +108,12 @@ const Header = () => {
           </div>
 
           {/* Mobile Search */}
-          <div className="px-6 pb-4 block lg:hidden">
+          <div className="px-4 pb-4 block lg:hidden">
             <div className="relative">
               <input
                 type="text"
                 placeholder="게임, 뉴스, 커뮤니티 검색..."
-                className="search-input w-full px-6 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
+                className="search-input w-full px-4 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
                 style={{
                   backgroundColor: "var(--input-bg)",
                   borderColor: "var(--border-color)",
