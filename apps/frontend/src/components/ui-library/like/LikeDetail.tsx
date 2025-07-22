@@ -17,12 +17,14 @@ const LikeDetail = ({
   likeCount,
   dislikeCount,
   selectedMap,
+  size = "default",
 }: {
   resourceType: ResourceType;
   resourceId: number;
   likeCount: number;
   dislikeCount: number;
   selectedMap: Record<number, { type: LikeType | null }>;
+  size?: "default" | "comment";
 }) => {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
@@ -80,10 +82,29 @@ const LikeDetail = ({
     }
   };
 
+  const sizeClasses = {
+    default: {
+      container: "flex justify-center items-center gap-8 py-8",
+      button:
+        "flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 transition-colors duration-200",
+      icon: "h-8 w-8",
+      text: "text-lg font-medium",
+    },
+    comment: {
+      container: "flex justify-center items-center gap-3",
+      button:
+        "flex flex-row items-center gap-1 px-3 py-2 rounded-md border transition-colors duration-200",
+      icon: "h-4 w-4",
+      text: "text-sm font-medium",
+    },
+  };
+
+  const classes = sizeClasses[size];
+
   return (
-    <div className="flex justify-center items-center gap-8 py-8">
+    <div className={classes.container}>
       <button
-        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 transition-colors duration-200
+        className={`${classes.button}
             ${
               selected === LikeType.LIKE
                 ? "border-red-600 border-2"
@@ -91,11 +112,11 @@ const LikeDetail = ({
             }`}
         onClick={() => handleLike(LikeType.LIKE)}
       >
-        <HandThumbUpIcon className="h-8 w-8 text-green-500" />
-        <span className="text-lg font-medium">{likeCount}</span>
+        <HandThumbUpIcon className={`${classes.icon} text-green-500`} />
+        <span className={classes.text}>{likeCount}</span>
       </button>
       <button
-        className={`flex flex-row items-center gap-2 px-6 py-4 rounded-lg border-2 transition-colors duration-200
+        className={`${classes.button}
           ${
             selected === LikeType.DISLIKE
               ? "border-red-600 border-2"
@@ -103,8 +124,8 @@ const LikeDetail = ({
           }`}
         onClick={() => handleLike(LikeType.DISLIKE)}
       >
-        <HandThumbDownIcon className="h-8 w-8 text-red-500" />
-        <span className="text-lg font-medium">{dislikeCount}</span>
+        <HandThumbDownIcon className={`${classes.icon} text-red-500`} />
+        <span className={classes.text}>{dislikeCount}</span>
       </button>
     </div>
   );

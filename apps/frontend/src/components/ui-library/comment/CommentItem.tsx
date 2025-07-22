@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { LikeType } from "@/types/like/like.types";
 import HideCommentItem from "./HideCommentItem";
 import { formatDate } from "@/utils/helpers/formatDate";
+import LikeDetail from "../like/LikeDetail";
+import { ResourceType } from "@/types/common/resource.types";
 
 export const CommentItem = ({
   comment,
@@ -132,7 +134,16 @@ export const CommentItem = ({
                   </button>
                 ) : null}
               </div>
-              <div className="flex gap-2"></div>
+              <div className="flex gap-2">
+                <LikeDetail
+                  resourceType={ResourceType.COMMENT}
+                  resourceId={comment.id}
+                  likeCount={comment.like_count}
+                  dislikeCount={comment.dislike_count}
+                  selectedMap={selectedMap}
+                  size="comment"
+                />
+              </div>
             </div>
             <div className="whitespace-pre-wrap">
               <div className="flex justify-between items-end">
