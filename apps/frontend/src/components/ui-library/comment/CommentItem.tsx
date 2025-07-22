@@ -175,7 +175,7 @@ export const CommentItem = ({
       )}
 
       {comment.children && comment.children.length > 0 && (
-        <div className="ml-8 space-y-3 border-l-2 border-gray-200 pl-4">
+        <div className="ml-4 space-y-3 border-l-2 border-gray-200 pl-4">
           {comment.children.map((childComment) => (
             <CommentItem
               key={childComment.id}

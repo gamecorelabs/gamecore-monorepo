@@ -101,7 +101,7 @@ const CommentReplyForm = ({
   };
 
   return (
-    <div className="mt-3 ml-6 p-4 rounded-lg border border-gray-200">
+    <div className="my-3 px-4 pt-2 pb-4 rounded-lg border border-gray-200">
       <form className="space-y-3" ref={formRef}>
         <input type="hidden" name="parent_id" value={parentId} />
         {!currentUser && (
