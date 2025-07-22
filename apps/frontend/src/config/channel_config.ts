@@ -3,9 +3,9 @@ import { SubdomainConfig } from "@/types/common/domain.types";
 export const CHANNEL_CONFIG: Record<string, SubdomainConfig> = {
   main: {
     domain: "main",
-    title: "게임코어 메인",
-    shortTitle: "게임코어 메인",
-    description: "게임코어 메인페이지 - 게임코어",
+    title: "게임코어",
+    shortTitle: "게임코어",
+    description: "게임코어 메인페이지",
     theme: "theme-default",
     routes: {
       home: "/channels/main",

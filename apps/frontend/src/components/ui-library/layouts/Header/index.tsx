@@ -5,6 +5,8 @@ import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
 import ThemeToggle from "../../common/ThemeToggle";
 import { SubdomainConfig } from "@/types/common/domain.types";
+import { getChannelUrl } from "@/config/channel";
+import { getMainDomainUrl } from "@/config/channel";
 
 const Header = ({ config }: { config: SubdomainConfig }) => {
   return (
@@ -27,40 +29,41 @@ const Header = ({ config }: { config: SubdomainConfig }) => {
           <div className="flex justify-between h-20 items-center px-4">
             {/* Logo Section */}
             <div className="flex items-center">
-              <Link
-                href="/"
-                className="flex gap-3 items-center justify-center group"
-              >
-                <div
-                  className="logo-container p-2 rounded-lg border transition-colors"
-                  style={{
-                    backgroundColor: "var(--card-bg)",
-                    borderColor: "var(--border-color)",
-                  }}
-                >
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_S3_URL}/${config.metadata?.icon}`}
-                    alt={`게임코어 로고 - ${config.title}`}
-                    className="h-8 w-8"
-                    width={32}
-                    height={32}
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <h1
-                    className="logo-title text-2xl font-bold transition-colors"
-                    style={{ color: "var(--text-color)" }}
+              <div className="group flex gap-3 items-center justify-center">
+                <Link href={getChannelUrl(config.domain)} className="block">
+                  <div
+                    className="logo-container rounded-lg border transition-colors"
+                    style={{
+                      backgroundColor: "var(--card-bg)",
+                      borderColor: "var(--border-color)",
+                    }}
                   >
-                    GameCore
-                  </h1>
-                  <span
-                    className="text-xs font-medium tracking-wider"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {config.shortTitle || config.title}
-                  </span>
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_S3_URL}/${config.metadata?.icon}`}
+                      alt={`게임코어 로고 - ${config.title}`}
+                      className="h-12 w-12"
+                    />
+                  </div>
+                </Link>
+                <div className="flex flex-col justify-center">
+                  <Link href={getChannelUrl(config.domain)}>
+                    <h1
+                      className="logo-title text-xl font-bold transition-colors"
+                      style={{ color: "var(--text-color)" }}
+                    >
+                      {config.shortTitle || config.title}
+                    </h1>
+                  </Link>
+                  <Link href={getMainDomainUrl()}>
+                    <span
+                      className="text-xs font-medium tracking-wider transition-colors hover:opacity-80"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      GameCore
+                    </span>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             </div>
 
             {/* Search Section */}
@@ -75,11 +78,19 @@ const Header = ({ config }: { config: SubdomainConfig }) => {
                     borderColor: "var(--border-color)",
                     color: "var(--text-color)",
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      window.alert("통합 검색기능은 현재 개발중입니다.");
+                    }
+                  }}
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                   <div
                     className="p-2 rounded-md"
                     style={{ backgroundColor: "var(--primary-color)" }}
+                    onClick={() => {
+                      window.alert("통합 검색기능은 현재 개발중입니다.");
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -120,11 +131,19 @@ const Header = ({ config }: { config: SubdomainConfig }) => {
                   borderColor: "var(--border-color)",
                   color: "var(--text-color)",
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    window.alert("통합 검색기능은 현재 개발중입니다.");
+                  }
+                }}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <div
                   className="p-2 rounded-md"
                   style={{ backgroundColor: "var(--primary-color)" }}
+                  onClick={() => {
+                    window.alert("통합 검색기능은 현재 개발중입니다.");
+                  }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
