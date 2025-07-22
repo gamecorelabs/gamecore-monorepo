@@ -1,6 +1,7 @@
 export type SubdomainConfig = {
   name: string;
   title: string;
+  shortTitle: string;
   description: string;
   theme: string;
   routes: {

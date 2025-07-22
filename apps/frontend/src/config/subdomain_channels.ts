@@ -3,7 +3,8 @@ import { SubdomainConfig } from "@/types/common/domain.types";
 export const SUBDOMAIN_CHANNELS: Record<string, SubdomainConfig> = {
   main: {
     name: "baram",
-    title: "게임코어",
+    title: "게임코어 메인",
+    shortTitle: "게임코어 메인",
     description: "게임코어 메인페이지 - 게임코어",
     theme: "theme-default",
     routes: {
@@ -19,6 +20,7 @@ export const SUBDOMAIN_CHANNELS: Record<string, SubdomainConfig> = {
   baram: {
     name: "baram",
     title: "바람의나라 클래식",
+    shortTitle: "바클코어",
     description: "바람의나라 클래식 - 게임코어",
     theme: "baram-theme",
     routes: {
@@ -34,6 +36,7 @@ export const SUBDOMAIN_CHANNELS: Record<string, SubdomainConfig> = {
   djmax: {
     name: "djmax",
     title: "DJMAX Respect V",
+    shortTitle: "디맥코어",
     description: "DJMAX Respect V - 게임코어",
     theme: "djmax-theme",
     routes: {

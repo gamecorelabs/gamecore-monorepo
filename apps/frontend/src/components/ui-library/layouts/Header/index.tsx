@@ -57,7 +57,7 @@ const Header = ({ config }: { config: SubdomainConfig }) => {
                     className="text-xs font-medium tracking-wider"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    게임 포털
+                    {config.shortTitle || config.title}
                   </span>
                 </div>
               </Link>
