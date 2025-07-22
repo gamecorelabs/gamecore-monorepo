@@ -17,7 +17,7 @@ async function bootstrap() {
       }
 
       const allowedRegex =
-        /^https?:\/\/((www\.|dev\.|sta\.)?[a-z0-9\-]+\.)?gamecore\.co\.kr(:\d+)?$|^https?:\/\/localhost:3000$/;
+        /^https?:\/\/((www\.|dev\.|dev-server\.|sta\.)?[a-z0-9\-]+\.)?gamecore\.co\.kr(:\d+)?$|^https?:\/\/localhost:3000$/;
 
       if (allowedRegex.test(origin)) {
         callback(null, true);
