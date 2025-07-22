@@ -40,8 +40,8 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: /certs/dev.gamecore.co.kr+4.pem
-        keyFile: /certs/dev.gamecore.co.kr+4-key.pem
+        certFile: /certs/dev-server.gamecore.co.kr+6.pem
+        keyFile: /certs/dev-server.gamecore.co.kr+6-key.pem
   certificates:
-    - certFile: /certs/dev.gamecore.co.kr+4.pem
-      keyFile: /certs/dev.gamecore.co.kr+4-key.pem
+    - certFile: /certs/dev-server.gamecore.co.kr+6.pem
+      keyFile: /certs/dev-server.gamecore.co.kr+6-key.pem
