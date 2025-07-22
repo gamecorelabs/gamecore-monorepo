@@ -88,6 +88,6 @@ export function getSubdomainMetadata(subdomain: string | null) {
   return {
     title: config.title,
     description: config.description,
-    keywords: config.metadata?.keywords || [config.name],
+    keywords: config.metadata?.keywords || [config.domain],
   };
 }
