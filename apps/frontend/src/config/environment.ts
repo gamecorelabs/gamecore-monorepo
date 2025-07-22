@@ -3,11 +3,19 @@
  * 이 파일을 통해 환경별로 다른 서브도메인 설정을 적용할 수 있습니다.
  */
 
-const ENABLED_SUBDOMAINS = ["baram", "diablo4", "wow", "game", "lol"];
+const ENABLED_SUBDOMAINS = [
+  "main",
+  "baram",
+  "djmax",
+  "diablo4",
+  "wow",
+  "game",
+  "lol",
+];
 
 // 개발 환경 설정
 export const DEV_SUBDOMAIN_CONFIG = {
-  prefix: "dev",
+  prefix: "dev-server",
   baseDomain: "gamecore.co.kr",
   protocol: "https",
   enabledSubdomains: ENABLED_SUBDOMAINS,
@@ -32,7 +40,7 @@ export const PRODUCTION_SUBDOMAIN_CONFIG = {
 // 환경별 설정 맵
 export const ENV_CONFIGS = {
   development: DEV_SUBDOMAIN_CONFIG,
-  sta: STAGING_SUBDOMAIN_CONFIG,
+  staging: STAGING_SUBDOMAIN_CONFIG,
   production: PRODUCTION_SUBDOMAIN_CONFIG,
 } as const;
 

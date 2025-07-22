@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@/styles/themes.css";
-import { Container, Header, Main, Footer } from "@ui-library";
+import { Container, Header, Main, Footer, FallbackPage } from "@ui-library";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
 import SessionRefresher from "@/components/session/SessionRefresh";
 import { hasRefreshToken } from "@/utils/auth/hasRefreshToken";
@@ -50,8 +50,18 @@ export default async function RootLayout({
 }>) {
   const user = await getCurrentUser();
   const hasRefresh = await hasRefreshToken();
-  const { subdomain } = await getSubdomainInfo();
+  const { subdomain, config } = await getSubdomainInfo();
   const themeClass = getSubdomainThemeClass(subdomain);
+
+  if (!subdomain || !config) {
+    return (
+      <FallbackPage
+        message="채널 정보가 존재하지 않습니다."
+        redirectTo="/"
+        delay={3000}
+      />
+    );
+  }
 
   return (
     <html lang="ko">
@@ -61,7 +71,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <Container>
             <SessionRefresher user={user} hasRefreshToken={hasRefresh} />
-            <Header />
+            <Header config={config} />
             <Main>{children}</Main>
             <Footer />
           </Container>

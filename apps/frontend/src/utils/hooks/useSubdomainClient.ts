@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getSubdomainFromHost } from "./useSubdomain";
-import { SubdomainConfig } from "@/config/subdomains";
+import { SubdomainConfig } from "@/types/common/domain.types";
 
 /**
  * 클라이언트 컴포넌트에서 서브도메인 정보를 사용하는 훅

@@ -4,8 +4,9 @@ import Link from "next/link";
 import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
 import ThemeToggle from "../../common/ThemeToggle";
+import { SubdomainConfig } from "@/types/common/domain.types";
 
-const Header = () => {
+const Header = ({ config }: { config: SubdomainConfig }) => {
   return (
     <header
       className="relative"
@@ -37,9 +38,9 @@ const Header = () => {
                     borderColor: "var(--border-color)",
                   }}
                 >
-                  <Image
-                    src="/icons/tokki.gif"
-                    alt="게임코어 로고"
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_S3_URL}/${config.metadata?.icon}`}
+                    alt={`게임코어 로고 - ${config.title}`}
                     className="h-8 w-8"
                     width={32}
                     height={32}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { SUBDOMAIN_CONFIGS, COMMON_PATHS } from "@/config/subdomains";
+import { COMMON_PATHS } from "@/config/subdomains";
+import { SUBDOMAIN_CHANNELS } from "@/config/subdomain_channels";
 import {
   getEnvSubdomainConfig,
   isSubdomainEnabled,
@@ -14,19 +15,20 @@ export function extractSubdomain(host: string): string | null {
   const parts = host.split(".");
   // 개발 환경: dev.{subdomain}.gamecore.co.kr -> {subdomain}
   // 스테이징 환경 : sta.{subdomain}.gamecore.co.kr -> {subdomain}
-  // 프로덕션 환경: {subdomain}.gamecore.co.kr -> {subdomain}
+  // 프로덕션 환경: {subdoma in}.gamecore.co.kr -> {subdomain}
+  console.log("doaminConfig:", domainConfig);
   if (domainConfig.prefix) {
     // 개발/스테이징 환경 (prefix 있음)
     if (parts.length >= 4 && parts[0] === domainConfig.prefix) {
       const subdomain = parts[1];
-      if (subdomain === "gamecore") return null;
+      if (subdomain === "gamecore") return "main"; // 메인 페이지는 "main"으로 처리
       return subdomain;
     }
   } else {
     // 프로덕션 환경 (prefix 없음)
     if (parts.length >= 3 && parts[0] !== "www") {
       const subdomain = parts[0];
-      if (subdomain === "gamecore") return null;
+      if (subdomain === "gamecore") return "main"; // 메인 페이지는 "main"으로 처리
       return subdomain;
     }
   }
@@ -45,7 +47,7 @@ export function isCommonPath(pathname: string): boolean {
  * 서브도메인이 유효한지 확인
  */
 export function isValidSubdomain(subdomain: string): boolean {
-  return isSubdomainEnabled(subdomain) && subdomain in SUBDOMAIN_CONFIGS;
+  return isSubdomainEnabled(subdomain) && subdomain in SUBDOMAIN_CHANNELS;
 }
 
 /**
@@ -93,7 +95,7 @@ function handleSubdomainSpecificRouting(
   url: URL
   // request: NextRequest // NOTE: request는 추후 특정 path에서 인증 처리 및 추가적인 작업이 필요할 때 활용하자
 ): NextResponse {
-  const config = SUBDOMAIN_CONFIGS[subdomain];
+  const config = SUBDOMAIN_CHANNELS[subdomain];
 
   // 루트 경로 처리
   if (url.pathname === "/") {
