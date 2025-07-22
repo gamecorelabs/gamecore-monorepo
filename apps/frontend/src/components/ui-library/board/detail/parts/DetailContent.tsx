@@ -11,15 +11,13 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
     useMemo(() => [post.id], [post.id])
   );
 
-  if (isLoading) return null;
-
   return (
-    post && (
-      <>
-        <div className="max-w-none min-h-48 mb-6 ">
-          <div className="whitespace-pre-wrap">{post.content}</div>
-        </div>
+    <>
+      <div className="max-w-none min-h-48 mb-6 ">
+        <div className="whitespace-pre-wrap">{post.content}</div>
+      </div>
 
+      {!isLoading && (
         <LikeDetail
           resourceType={ResourceType.BOARD_POST}
           resourceId={post.id}
@@ -27,8 +25,8 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
           dislikeCount={post.dislike_count}
           selectedMap={selectedMap}
         />
-      </>
-    )
+      )}
+    </>
   );
 };
 
