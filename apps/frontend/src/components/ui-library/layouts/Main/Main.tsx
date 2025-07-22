@@ -15,7 +15,7 @@ const Main = ({ children }: { children: React.ReactNode }) => {
               }}
             >
               {/* Content */}
-              <div className="relative z-10 p-6">{children}</div>
+              <div className="relative z-10 px-4 py-4">{children}</div>
             </div>
           </div>
         </div>
