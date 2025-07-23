@@ -3,13 +3,21 @@ import { ConfigService } from './config.service';
 import { CreateDomainConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-domain-config.dto';
 import { CreateBoardConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-board-config.dto';
 import { AdminRoleUserGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/admin-role-user.guard';
+import { GuestOrUserTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard';
 
 @Controller('config')
 export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
+  @Get('/domain')
+  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(AdminRoleUserGuard)
+  getDomainConfig() {
+    return this.configService.getDomainConfig();
+  }
+
   @Post('/domain')
-  // @UseGuards(AdminRoleUserGuard)
+  @UseGuards(AdminRoleUserGuard)
   postDomainConfig(@Body() body: CreateDomainConfigDto) {
     return this.configService.saveDomainConfig(body);
   }

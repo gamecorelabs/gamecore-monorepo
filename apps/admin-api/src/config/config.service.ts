@@ -21,6 +21,16 @@ export class ConfigService {
     private readonly dataSource: DataSource,
   ) {}
 
+  async getDomainConfig() {
+    try {
+      return await this.domainConfigRepository.find();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        '도메인 설정을 불러오는 중 오류가 발생했습니다.',
+      );
+    }
+  }
+
   async saveDomainConfig(dto: CreateDomainConfigDto) {
     const domain = this.domainConfigRepository.create({
       category: dto.category,
