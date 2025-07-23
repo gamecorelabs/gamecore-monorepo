@@ -1,4 +1,6 @@
 "use client";
+import { Domain, DomainCategory } from "@/types/common/domain.types";
+import adminApi from "@/utils/common-axios/adminApi";
 import { useEffect, useState } from "react";
 
 interface Board {
@@ -15,6 +17,7 @@ interface Board {
 }
 
 export default function BoardManagement() {
+  const [domains, setDomains] = useState<Domain[]>([]);
   const [boards, setBoards] = useState<Board[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,8 +31,17 @@ export default function BoardManagement() {
   });
 
   useEffect(() => {
+    loadDomains();
     loadBoards();
   }, []);
+  const loadDomains = async () => {
+    try {
+      const response = await adminApi.get("/config/domain");
+      setDomains(response.data);
+    } catch (error) {
+      console.error("Failed to load domains:", error);
+    }
+  };
 
   const loadBoards = async () => {
     // TODO: API 호출로 게시판 목록 로드
@@ -177,7 +189,7 @@ export default function BoardManagement() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  도메인
+                  채널
                 </label>
                 <select
                   value={formData.domain}
@@ -187,10 +199,12 @@ export default function BoardManagement() {
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   required
                 >
-                  <option value="">도메인 선택</option>
-                  <option value="main">main</option>
-                  <option value="djmax">djmax</option>
-                  <option value="baram">baram</option>
+                  <option value="">채널 선택</option>
+                  {domains.map((domain) => (
+                    <option key={domain.id} value={domain.id}>
+                      {domain.title} ({domain.domain})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -223,58 +237,6 @@ export default function BoardManagement() {
                 rows={3}
                 required
               />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  최대 글자 수
-                </label>
-                <input
-                  type="number"
-                  value={formData.maxPostLength}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      maxPostLength: parseInt(e.target.value),
-                    })
-                  }
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
-                  min="1000"
-                  max="50000"
-                />
-              </div>
-              <div className="flex items-center space-x-4 pt-6">
-                <label className="flex items-center text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.allowAnonymous}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        allowAnonymous: e.target.checked,
-                      })
-                    }
-                    className="mr-2 rounded"
-                  />
-                  익명 허용
-                </label>
-              </div>
-              <div className="flex items-center space-x-4 pt-6">
-                <label className="flex items-center text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.requireAuth}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        requireAuth: e.target.checked,
-                      })
-                    }
-                    className="mr-2 rounded"
-                  />
-                  인증 필요
-                </label>
-              </div>
             </div>
             <div className="flex space-x-4">
               <button
@@ -311,7 +273,7 @@ export default function BoardManagement() {
                   이름
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  도메인
+                  채널
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   설정

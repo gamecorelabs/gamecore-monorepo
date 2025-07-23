@@ -1,19 +1,10 @@
-export type ChannelConfig = {
+export type Domain = {
+  id: number;
   domain: string;
   title: string;
-  shortTitle: string;
-  description: string;
-  theme: string;
-  routes: {
-    home: string;
-    specific: string[];
-  };
-  // 추가 메타데이터
-  metadata?: {
-    icon?: string;
-    color?: string;
-    keywords?: string[];
-  };
+  category: DomainCategory;
+  status: DomainStatus;
+  created_at: string;
 };
 
 export enum DomainCategory {

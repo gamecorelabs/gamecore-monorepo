@@ -1,5 +1,6 @@
 "use client";
 import {
+  Domain,
   DomainCategory,
   DomainStatus,
   MappingDomainState,
@@ -7,15 +8,6 @@ import {
 import adminApi from "@/utils/common-axios/adminApi";
 import { formatDate } from "@/utils/helpers/formatDate";
 import { useEffect, useState } from "react";
-
-interface Domain {
-  id: number;
-  domain: string;
-  title: string;
-  category: DomainCategory;
-  status: DomainStatus;
-  created_at: string;
-}
 
 export default function DomainManagement() {
   const [domains, setDomains] = useState<Domain[]>([]);

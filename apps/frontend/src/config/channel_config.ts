@@ -1,4 +1,4 @@
-import { ChannelConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/channel.types";
 
 export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
   main: {

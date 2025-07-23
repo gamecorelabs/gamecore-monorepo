@@ -1,4 +1,4 @@
-import { ChannelConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/channel.types";
 
 const ChannelInfoModule = ({ config }: { config: ChannelConfig | null }) => {
   if (!config) {
