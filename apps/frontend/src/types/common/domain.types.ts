@@ -1,4 +1,4 @@
-export type SubdomainConfig = {
+export type ChannelConfig = {
   domain: string;
   title: string;
   shortTitle: string;

@@ -1,6 +1,6 @@
-import { SubdomainConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/domain.types";
 
-export const CHANNEL_CONFIG: Record<string, SubdomainConfig> = {
+export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
   main: {
     domain: "main",
     title: "게임코어",
