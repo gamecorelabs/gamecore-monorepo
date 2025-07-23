@@ -7,6 +7,7 @@ import ThemeToggle from "../../common/ThemeToggle";
 import { ChannelConfig } from "@/types/common/domain.types";
 import { getChannelUrl } from "@/config/channel";
 import { getMainDomainUrl } from "@/config/channel";
+import { S3_URL } from "@/config/config";
 
 const Header = ({ config }: { config: ChannelConfig }) => {
   return (
@@ -38,10 +39,13 @@ const Header = ({ config }: { config: ChannelConfig }) => {
                       borderColor: "var(--border-color)",
                     }}
                   >
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_S3_URL}/${config.metadata?.icon}`}
+                    <Image
+                      src={`${S3_URL}/${config.metadata?.icon}`}
                       alt={`게임코어 로고 - ${config.title}`}
                       className="h-12 w-12"
+                      priority={true}
+                      width={48}
+                      height={48}
                     />
                   </div>
                 </Link>
