@@ -4,11 +4,11 @@ import Link from "next/link";
 import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
 import ThemeToggle from "../../common/ThemeToggle";
-import { SubdomainConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/domain.types";
 import { getChannelUrl } from "@/config/channel";
 import { getMainDomainUrl } from "@/config/channel";
 
-const Header = ({ config }: { config: SubdomainConfig }) => {
+const Header = ({ config }: { config: ChannelConfig }) => {
   return (
     <header
       className="relative"

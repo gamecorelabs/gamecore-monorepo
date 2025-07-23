@@ -1,4 +1,4 @@
-import { SubdomainConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/domain.types";
 import { isSubdomainEnabled, buildDomainUrl, ENV_CONFIGS } from "./environment";
 import { CHANNEL_CONFIG } from "@/config/channel_config";
 
@@ -16,7 +16,7 @@ export function getEnvironmentDomainConfig() {
 /**
  * 서브도메인 설정 반환 (환경별 활성화 확인 포함)
  */
-export function getSubdomainConfig(subdomain: string): SubdomainConfig | null {
+export function getSubdomainConfig(subdomain: string): ChannelConfig | null {
   if (!isSubdomainEnabled(subdomain)) {
     return null;
   }

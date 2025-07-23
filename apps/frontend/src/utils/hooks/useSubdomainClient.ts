@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getSubdomainFromHost } from "./useSubdomain";
-import { SubdomainConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/domain.types";
 
 /**
  * 클라이언트 컴포넌트에서 서브도메인 정보를 사용하는 훅
@@ -10,7 +10,7 @@ import { SubdomainConfig } from "@/types/common/domain.types";
 export function useSubdomainClient() {
   const [subdomainInfo, setSubdomainInfo] = useState<{
     subdomain: string | null;
-    config: SubdomainConfig | null;
+    config: ChannelConfig | null;
   }>({ subdomain: null, config: null });
 
   const [isLoading, setIsLoading] = useState(true);

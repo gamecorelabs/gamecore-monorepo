@@ -1,19 +1,19 @@
 import { headers } from "next/headers";
 import { getSubdomainConfig } from "@/config/channel";
-import { SubdomainConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/domain.types";
 
 /**
  * 서버 컴포넌트에서 서브도메인 정보를 가져오는 함수
  */
 export async function getSubdomainInfo(): Promise<{
   subdomain: string | null;
-  config: SubdomainConfig | null;
+  config: ChannelConfig | null;
 }> {
   const headersList = await headers();
   const subdomain = headersList.get("x-subdomain");
 
   if (!subdomain) {
-    return { subdomain: null, config: null };
+    throw new Error("존재하지 않는 채널입니다.");
   }
 
   const config = getSubdomainConfig(subdomain);
@@ -26,7 +26,7 @@ export async function getSubdomainInfo(): Promise<{
  */
 export function getSubdomainFromHost(): {
   subdomain: string | null;
-  config: SubdomainConfig | null;
+  config: ChannelConfig | null;
 } {
   if (typeof window === "undefined") {
     return { subdomain: null, config: null };
