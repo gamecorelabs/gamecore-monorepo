@@ -5,7 +5,7 @@ import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
 import { BoardConfig } from '@gamecorelabs/nestjs-core/base-board/entity/board-config.entity';
-import { DomainConfig } from '@gamecorelabs/nestjs-core/base-domain/entity/domain-config.entity';
+import { ChannelConfig } from '@gamecorelabs/nestjs-core/base-channel/entity/channel-config.entity';
 import { BoardPost } from '@gamecorelabs/nestjs-core/base-post/board/entity/board-post.entity';
 import { UserAccount } from '@gamecorelabs/nestjs-core/base-user/entity/user-account.entity';
 import { Comment } from '@gamecorelabs/nestjs-core/base-comment/entity/comment.entity';
@@ -25,7 +25,7 @@ import { BoardCategory } from '@gamecorelabs/nestjs-core/base-board/entity/board
       password: process.env['DB_PASSWORD'],
       database: process.env['DB_DATABASE'],
       entities: [
-        DomainConfig,
+        ChannelConfig,
         BoardConfig,
         BoardCategory,
         BoardPost,
@@ -33,6 +33,7 @@ import { BoardCategory } from '@gamecorelabs/nestjs-core/base-board/entity/board
         Comment,
       ],
       synchronize: true,
+      dropSchema: true, // ⚠️ 모든 테이블 삭제 후 재생성
     }),
     ConfigModule,
   ],

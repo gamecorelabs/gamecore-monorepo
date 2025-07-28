@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { getSubdomainConfig } from "@/config/channel";
-import { ChannelConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/channel.types";
 
 /**
  * 서버 컴포넌트에서 서브도메인 정보를 가져오는 함수

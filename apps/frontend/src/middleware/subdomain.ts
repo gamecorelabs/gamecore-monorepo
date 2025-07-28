@@ -72,6 +72,7 @@ export function handleSubdomainRouting(
   if (isCommonPath(url.pathname)) {
     const response = NextResponse.next();
     response.headers.set("x-subdomain", subdomain);
+    response.headers.set("x-pathname", url.pathname);
     return response;
   }
 

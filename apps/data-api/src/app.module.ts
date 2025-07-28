@@ -6,7 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { BoardModule } from "./board/board.module";
 import { BoardConfig } from "@gamecorelabs/nestjs-core/base-board/entity/board-config.entity";
 import { BoardPost } from "@gamecorelabs/nestjs-core/base-post/board/entity/board-post.entity";
-import { DomainConfig } from "@gamecorelabs/nestjs-core/base-domain/entity/domain-config.entity";
+import { ChannelConfig } from "@gamecorelabs/nestjs-core/base-channel/entity/channel-config.entity";
 import { Comment } from "@gamecorelabs/nestjs-core/base-comment/entity/comment.entity";
 import { UserAccount } from "@gamecorelabs/nestjs-core/base-user/entity/user-account.entity";
 import { Like } from "@gamecorelabs/nestjs-core/base-like/entity/like.entity";
@@ -32,7 +32,7 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
       entities: [
         BoardConfig,
         BoardCategory,
-        DomainConfig,
+        ChannelConfig,
         BoardPost,
         UserAccount,
         Comment,

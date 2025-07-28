@@ -3,13 +3,15 @@ type BaseUserInfo = {
   ip_address: string;
 };
 
+export type UserRole = "user" | "admin" | "super_admin";
+
 export type UserAccount = {
   id: number;
   created_at: string;
   updated_at: string;
   nickname: string;
   email: string;
-  role: string;
+  role: UserRole;
   grade: string;
 };
 

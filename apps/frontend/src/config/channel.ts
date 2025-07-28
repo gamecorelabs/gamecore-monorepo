@@ -1,4 +1,4 @@
-import { ChannelConfig } from "@/types/common/domain.types";
+import { ChannelConfig } from "@/types/common/channel.types";
 import { isSubdomainEnabled, buildDomainUrl, ENV_CONFIGS } from "./environment";
 import { CHANNEL_CONFIG } from "@/config/channel_config";
 
