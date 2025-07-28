@@ -6,7 +6,7 @@ import ProfileBlock from "./parts/ProfileBlock";
 import ThemeToggle from "../../common/ThemeToggle";
 import { ChannelConfig } from "@/types/common/channel.types";
 import { getChannelUrl } from "@/config/channel";
-import { getMainDomainUrl } from "@/config/channel";
+import { getMainUrl } from "@/config/channel";
 import { S3_URL } from "@/config/config";
 
 const Header = ({ config }: { config: ChannelConfig }) => {
@@ -31,7 +31,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
             {/* Logo Section */}
             <div className="flex items-center">
               <div className="group flex gap-3 items-center justify-center">
-                <Link href={getChannelUrl(config.domain)} className="block">
+                <Link href={getChannelUrl(config.channel)} className="block">
                   <div
                     className="logo-container rounded-lg border transition-colors"
                     style={{
@@ -50,7 +50,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
                   </div>
                 </Link>
                 <div className="flex flex-col justify-center">
-                  <Link href={getChannelUrl(config.domain)}>
+                  <Link href={getChannelUrl(config.channel)}>
                     <h1
                       className="logo-title text-xl font-bold transition-colors"
                       style={{ color: "var(--text-color)" }}
@@ -58,7 +58,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
                       {config.shortTitle || config.title}
                     </h1>
                   </Link>
-                  <Link href={getMainDomainUrl()}>
+                  <Link href={getMainUrl()}>
                     <span
                       className="text-xs font-medium tracking-wider transition-colors hover:opacity-80"
                       style={{ color: "var(--text-muted)" }}

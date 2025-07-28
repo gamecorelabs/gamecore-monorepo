@@ -1,100 +1,100 @@
 "use client";
 import {
-  Domain,
-  DomainCategory,
-  DomainStatus,
-  MappingDomainState,
-} from "@/types/common/domain.types";
+  Channel,
+  ChannelCategory,
+  ChannelStatus,
+  MappingChannelState,
+} from "@/types/common/channel.types";
 import adminApi from "@/utils/common-axios/adminApi";
 import { formatDate } from "@/utils/helpers/formatDate";
 import { useEffect, useState } from "react";
 
-export default function DomainManagement() {
-  const [domains, setDomains] = useState<Domain[]>([]);
+export default function ChannelManagement() {
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
-    domain: "",
+    channel: "",
     title: "",
-    category: DomainCategory.GAME,
-    status: DomainStatus.ACTIVE,
+    category: ChannelCategory.GAME,
+    status: ChannelStatus.ACTIVE,
   });
 
   useEffect(() => {
-    loadDomains();
+    loadChannels();
   }, []);
 
-  const loadDomains = async () => {
+  const loadChannels = async () => {
     try {
-      const response = await adminApi.get("/config/domain");
-      setDomains(response.data);
+      const response = await adminApi.get("/config/channel");
+      setChannels(response.data);
     } catch (error) {
-      console.error("도메인 리스트 불러오기 오류", error);
+      console.error("채널 리스트 불러오기 오류", error);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await adminApi.post("/config/domain", formData);
+      await adminApi.post("/config/channel", formData);
       resetForm();
-      loadDomains();
+      loadChannels();
     } catch (error) {
-      console.error("도메인 생성 오류", error);
+      console.error("채널 생성 오류", error);
     }
     resetForm();
   };
 
   const resetForm = () => {
     setFormData({
-      domain: "",
+      channel: "",
       title: "",
-      category: DomainCategory.GAME,
-      status: DomainStatus.ACTIVE,
+      category: ChannelCategory.GAME,
+      status: ChannelStatus.ACTIVE,
     });
     setShowAddForm(false);
   };
 
-  // const toggleDomainStatus = async (id: number, isActive: boolean) => {
+  // const toggleChannelStatus = async (id: number, isActive: boolean) => {
   //   // TODO: API 호출
   //   // try {
-  //   //   await adminApi.patch(`/domains/${id}`, { isActive: !isActive });
-  //   //   loadDomains();
+  //   //   await adminApi.patch(`/channels/${id}`, { isActive: !isActive });
+  //   //   loadChannels();
   //   // } catch (error) {
-  //   //   console.error('Failed to update domain:', error);
+  //   //   console.error('Failed to update channel:', error);
   //   // }
 
-  //   console.log("Toggling domain status:", id, !isActive);
+  //   console.log("Toggling channel status:", id, !isActive);
   // };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white">도메인 관리</h1>
+        <h1 className="text-3xl font-bold text-white">채널 관리</h1>
         <button
           onClick={() => setShowAddForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
         >
-          새 도메인 추가
+          새 채널 추가
         </button>
       </div>
 
-      {/* 도메인 추가 폼 */}
+      {/* 채널 추가 폼 */}
       {showAddForm && (
         <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
           <h2 className="text-xl font-semibold text-white mb-4">
-            새 도메인 추가
+            새 채널 추가
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  채널 도메인명
+                  채널명
                 </label>
                 <input
                   type="text"
-                  value={formData.domain}
+                  value={formData.channel}
                   onChange={(e) =>
-                    setFormData({ ...formData, domain: e.target.value })
+                    setFormData({ ...formData, channel: e.target.value })
                   }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   placeholder="djmax, baram 등"
@@ -126,13 +126,13 @@ export default function DomainManagement() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    category: e.target.value as DomainCategory,
+                    category: e.target.value as ChannelCategory,
                   })
                 }
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                 required
               >
-                {Object.values(DomainCategory).map((category) => (
+                {Object.values(ChannelCategory).map((category) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
@@ -148,15 +148,15 @@ export default function DomainManagement() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    status: e.target.value as DomainStatus,
+                    status: e.target.value as ChannelStatus,
                   })
                 }
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                 required
               >
-                {Object.values(DomainStatus).map((status) => (
+                {Object.values(ChannelStatus).map((status) => (
                   <option key={status} value={status}>
-                    {MappingDomainState[status]}
+                    {MappingChannelState[status]}
                   </option>
                 ))}
               </select>
@@ -180,17 +180,17 @@ export default function DomainManagement() {
         </div>
       )}
 
-      {/* 도메인 목록 */}
+      {/* 채널 목록 */}
       <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-700">
-          <h2 className="text-xl font-semibold text-white">등록된 도메인</h2>
+          <h2 className="text-xl font-semibold text-white">등록된 채널</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-700">
             <thead className="bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  채널 도메인명
+                  채널명
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   채널 제목
@@ -204,30 +204,30 @@ export default function DomainManagement() {
               </tr>
             </thead>
             <tbody className="bg-gray-800 divide-y divide-gray-700">
-              {domains.map((domain) => (
-                <tr key={domain.id}>
+              {channels.map((channel) => (
+                <tr key={channel.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                    {domain.domain === "main" ? "" : `${domain.domain}.`}
+                    {channel.channel === "main" ? "" : `${channel.channel}.`}
                     gamecore.co.kr
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {domain.title}
+                    {channel.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        domain.status === DomainStatus.ACTIVE
+                        channel.status === ChannelStatus.ACTIVE
                           ? "bg-green-100 text-green-800"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {domain.status === DomainStatus.ACTIVE
+                      {channel.status === ChannelStatus.ACTIVE
                         ? "활성"
                         : "비활성"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {formatDate(domain.created_at)}
+                    {formatDate(channel.created_at)}
                   </td>
                 </tr>
               ))}

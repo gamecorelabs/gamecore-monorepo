@@ -6,10 +6,7 @@ import { Container, Header, Main, Footer, FallbackPage } from "@ui-library";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
 import SessionRefresher from "@/components/session/SessionRefresh";
 import { hasRefreshToken } from "@/utils/auth/hasRefreshToken";
-import {
-  getSubdomainInfo,
-  getSubdomainThemeClass,
-} from "@/utils/hooks/useSubdomain";
+import { getChannelInfo, getChannelThemeClass } from "@/utils/hooks/useChannel";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const geistSans = Geist({
@@ -50,10 +47,10 @@ export default async function RootLayout({
 }>) {
   const user = await getCurrentUser();
   const hasRefresh = await hasRefreshToken();
-  const { subdomain, config } = await getSubdomainInfo();
-  const themeClass = getSubdomainThemeClass(subdomain);
+  const { channel, config } = await getChannelInfo();
+  const themeClass = getChannelThemeClass(channel);
 
-  if (!subdomain || !config) {
+  if (!channel || !config) {
     return (
       <FallbackPage
         message="채널 정보가 존재하지 않습니다."

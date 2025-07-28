@@ -1,5 +1,5 @@
 "use client";
-import { Domain, DomainCategory } from "@/types/common/domain.types";
+import { Channel, ChannelCategory } from "@/types/common/channel.types";
 import adminApi from "@/utils/common-axios/adminApi";
 import { useEffect, useState } from "react";
 
@@ -8,7 +8,7 @@ interface Board {
   boardId: string;
   name: string;
   description: string;
-  domain: string;
+  channel: string;
   isActive: boolean;
   allowAnonymous: boolean;
   requireAuth: boolean;
@@ -17,29 +17,29 @@ interface Board {
 }
 
 export default function BoardManagement() {
-  const [domains, setDomains] = useState<Domain[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [boards, setBoards] = useState<Board[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     boardId: "",
     name: "",
     description: "",
-    domain: "",
+    channel: "",
     allowAnonymous: true,
     requireAuth: false,
     maxPostLength: 10000,
   });
 
   useEffect(() => {
-    loadDomains();
+    loadChannels();
     loadBoards();
   }, []);
-  const loadDomains = async () => {
+  const loadChannels = async () => {
     try {
-      const response = await adminApi.get("/config/domain");
-      setDomains(response.data);
+      const response = await adminApi.get("/config/channel");
+      setChannels(response.data);
     } catch (error) {
-      console.error("Failed to load domains:", error);
+      console.error("Failed to load channels:", error);
     }
   };
 
@@ -59,7 +59,7 @@ export default function BoardManagement() {
         boardId: "notice",
         name: "공지사항",
         description: "중요한 공지사항을 게시하는 게시판입니다",
-        domain: "main",
+        channel: "main",
         isActive: true,
         allowAnonymous: false,
         requireAuth: true,
@@ -71,7 +71,7 @@ export default function BoardManagement() {
         boardId: "free",
         name: "자유게시판",
         description: "자유롭게 의견을 나누는 게시판입니다",
-        domain: "main",
+        channel: "main",
         isActive: true,
         allowAnonymous: true,
         requireAuth: false,
@@ -83,7 +83,7 @@ export default function BoardManagement() {
         boardId: "djmax-news",
         name: "DJMAX 뉴스",
         description: "DJMAX 관련 최신 뉴스",
-        domain: "djmax",
+        channel: "djmax",
         isActive: true,
         allowAnonymous: false,
         requireAuth: true,
@@ -103,7 +103,7 @@ export default function BoardManagement() {
     //     boardId: "",
     //     name: "",
     //     description: "",
-    //     domain: "",
+    //     channel: "",
     //     allowAnonymous: true,
     //     requireAuth: false,
     //     maxPostLength: 10000,
@@ -119,7 +119,7 @@ export default function BoardManagement() {
       boardId: "",
       name: "",
       description: "",
-      domain: "",
+      channel: "",
       allowAnonymous: true,
       requireAuth: false,
       maxPostLength: 10000,
@@ -192,17 +192,17 @@ export default function BoardManagement() {
                   채널
                 </label>
                 <select
-                  value={formData.domain}
+                  value={formData.channel}
                   onChange={(e) =>
-                    setFormData({ ...formData, domain: e.target.value })
+                    setFormData({ ...formData, channel: e.target.value })
                   }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   required
                 >
                   <option value="">채널 선택</option>
-                  {domains.map((domain) => (
-                    <option key={domain.id} value={domain.id}>
-                      {domain.title} ({domain.domain})
+                  {channels.map((channel) => (
+                    <option key={channel.id} value={channel.id}>
+                      {channel.title} ({channel.channel})
                     </option>
                   ))}
                 </select>
@@ -296,7 +296,7 @@ export default function BoardManagement() {
                     {board.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {board.domain}
+                    {board.channel}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span

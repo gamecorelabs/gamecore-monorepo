@@ -2,7 +2,7 @@ import { ChannelConfig } from "@/types/common/channel.types";
 
 export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
   main: {
-    domain: "main",
+    channel: "main",
     title: "게임코어",
     shortTitle: "게임코어",
     description: "게임코어 메인페이지",
@@ -18,7 +18,7 @@ export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
     },
   },
   baram: {
-    domain: "baram",
+    channel: "baram",
     title: "바람의나라 클래식",
     shortTitle: "바클코어",
     description: "바람의나라 클래식 - 게임코어",
@@ -34,7 +34,7 @@ export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
     },
   },
   djmax: {
-    domain: "djmax",
+    channel: "djmax",
     title: "DJMAX Respect V",
     shortTitle: "디맥코어",
     description: "DJMAX Respect V - 게임코어",
