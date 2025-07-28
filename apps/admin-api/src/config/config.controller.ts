@@ -22,9 +22,16 @@ export class ConfigController {
     return this.configService.saveChannelConfig(body);
   }
 
+  // 게시판 설정 저장
   @Post('/channel/:id/board')
   // @UseGuards(AdminRoleUserGuard)
   postBoardConfig(@Param('id') id: number, @Body() body: CreateBoardConfigDto) {
     return this.configService.saveBoardConfig(id, body);
+  }
+
+  // 설정된 게시판 모두 불러오기
+  @Get('/board')
+  getBoardConfig() {
+    // return this.configService.getBoardConfig();
   }
 }

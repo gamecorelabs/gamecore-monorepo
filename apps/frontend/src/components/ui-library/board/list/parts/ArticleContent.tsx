@@ -6,6 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
+import { getUserName } from "@/utils/helpers/getUserName";
 export const ArticleContent = ({
   boardId,
   post,
@@ -57,7 +58,7 @@ export const ArticleContent = ({
                 className="flex items-center gap-4 text-xs"
                 style={{ color: "var(--text-muted)" }}
               >
-                <span>작성자: {post.author?.nickname || "익명"}</span>
+                <span>작성자: {getUserName(post)}</span>
                 <span>조회 {post.view_count || 0}</span>
               </div>
 
@@ -140,7 +141,7 @@ export const ArticleContent = ({
         {/* 작성자 */}
         <div className="col-span-2 text-center">
           <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            {post.author?.nickname || "익명"}
+            {getUserName(post)}
           </span>
         </div>
 
