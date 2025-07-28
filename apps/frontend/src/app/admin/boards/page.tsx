@@ -276,9 +276,6 @@ export default function BoardManagement() {
                   채널
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  설정
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   상태
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -300,23 +297,6 @@ export default function BoardManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {board.domain}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-300">
-                    <div className="space-y-1">
-                      {board.allowAnonymous && (
-                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-                          익명허용
-                        </span>
-                      )}
-                      {board.requireAuth && (
-                        <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                          인증필수
-                        </span>
-                      )}
-                      <div className="text-xs text-gray-400">
-                        최대 {board.maxPostLength.toLocaleString()}자
-                      </div>
-                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
