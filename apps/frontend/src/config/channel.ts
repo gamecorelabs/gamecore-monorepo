@@ -1,48 +1,48 @@
 import { ChannelConfig } from "@/types/common/channel.types";
-import { isSubdomainEnabled, buildDomainUrl, ENV_CONFIGS } from "./environment";
+import { isChannelEnabled, buildUrl, URL_ENV_CONFIGS } from "./environment";
 import { CHANNEL_CONFIG } from "@/config/channel_config";
 
 /**
- * 현재 환경의 도메인 설정 반환
+ * 현재 환경의 URL 정보 반환
  */
-export function getEnvironmentDomainConfig() {
+export function getUrlEnvironmentConfig() {
   const env = (process.env.NODE_ENV || "development") as
     | "development"
     | "staging"
     | "production";
-  return ENV_CONFIGS[env] || ENV_CONFIGS.development;
+  return URL_ENV_CONFIGS[env] || URL_ENV_CONFIGS.development;
 }
 
 /**
- * 서브도메인 설정 반환 (환경별 활성화 확인 포함)
+ * 채널 설정 반환 (환경별 활성화 확인 포함)
  */
-export function getSubdomainConfig(subdomain: string): ChannelConfig | null {
-  if (!isSubdomainEnabled(subdomain)) {
+export function getChannelConfig(channel: string): ChannelConfig | null {
+  if (!isChannelEnabled(channel)) {
     return null;
   }
-  return CHANNEL_CONFIG[subdomain] || null;
+  return CHANNEL_CONFIG[channel] || null;
 }
 
 /**
- * 활성화된 서브도메인 목록 반환
+ * 활성화된 채널 목록 반환
  */
 export function getAllChannels() {
   const channels = Object.entries(CHANNEL_CONFIG).filter(([key]) => {
-    return isSubdomainEnabled(key);
+    return isChannelEnabled(key);
   });
   return channels.map(([key, value]) => value);
 }
 
 /**
- * 서브도메인의 풀 URL 생성 (환경별 대응)
+ * 채널의 풀 URL 생성 (환경별 대응)
  */
-export function getChannelUrl(subdomain: string, path: string = "/"): string {
-  return buildDomainUrl(subdomain, path);
+export function getChannelUrl(channel: string, path: string = "/"): string {
+  return buildUrl(channel, path);
 }
 
 /**
- * 메인 도메인 URL 생성 (환경별 대응)
+ * 메인 URL 생성 (환경별 대응)
  */
-export function getMainDomainUrl(path: string = "/"): string {
-  return buildDomainUrl(undefined, path);
+export function getMainUrl(path: string = "/"): string {
+  return buildUrl(undefined, path);
 }

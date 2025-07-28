@@ -62,10 +62,10 @@ export default async function AdminLayout({
                   대시보드
                 </Link>
                 <Link
-                  href="/admin/domains"
+                  href="/admin/channels"
                   className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
                 >
-                  도메인 관리
+                  채널 관리
                 </Link>
                 <Link
                   href="/admin/boards"

@@ -4,16 +4,16 @@ import {
   BannerImageModule,
 } from "@/components/ui-library/common/modules";
 import { S3_URL } from "@/config/config";
-import { getSubdomainInfo } from "@/utils/hooks/useSubdomain";
+import { getChannelInfo } from "@/utils/hooks/useChannel";
 
 export default async function Page() {
-  const { config } = await getSubdomainInfo();
+  const { config } = await getChannelInfo();
 
   return (
     <div className="container mx-auto p-4 space-y-8">
       <ChannelInfoModule config={config} />
       <BannerImageModule
-        imageUrl={`${S3_URL}/channels/${config?.domain}/banner-image.png`}
+        imageUrl={`${S3_URL}/channels/${config?.channel}/banner-image.png`}
         height={300}
       />
       <ChannelNavigationModule />

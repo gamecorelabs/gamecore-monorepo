@@ -6,7 +6,7 @@ interface Category {
   name: string;
   description: string;
   boardId: string;
-  domain: string;
+  channel: string;
   color: string;
   sortOrder: number;
   isActive: boolean;
@@ -20,7 +20,7 @@ export default function CategoryManagement() {
     name: "",
     description: "",
     boardId: "",
-    domain: "",
+    channel: "",
     color: "#3B82F6",
     sortOrder: 0,
   });
@@ -45,7 +45,7 @@ export default function CategoryManagement() {
         name: "일반공지",
         description: "일반적인 공지사항",
         boardId: "notice",
-        domain: "main",
+        channel: "main",
         color: "#3B82F6",
         sortOrder: 1,
         isActive: true,
@@ -56,7 +56,7 @@ export default function CategoryManagement() {
         name: "긴급공지",
         description: "긴급한 공지사항",
         boardId: "notice",
-        domain: "main",
+        channel: "main",
         color: "#EF4444",
         sortOrder: 0,
         isActive: true,
@@ -67,7 +67,7 @@ export default function CategoryManagement() {
         name: "질문",
         description: "질문 관련 게시글",
         boardId: "free",
-        domain: "main",
+        channel: "main",
         color: "#10B981",
         sortOrder: 1,
         isActive: true,
@@ -78,7 +78,7 @@ export default function CategoryManagement() {
         name: "정보공유",
         description: "유용한 정보 공유",
         boardId: "free",
-        domain: "main",
+        channel: "main",
         color: "#8B5CF6",
         sortOrder: 2,
         isActive: true,
@@ -89,7 +89,7 @@ export default function CategoryManagement() {
         name: "업데이트",
         description: "DJMAX 업데이트 소식",
         boardId: "djmax-news",
-        domain: "djmax",
+        channel: "djmax",
         color: "#06B6D4",
         sortOrder: 0,
         isActive: true,
@@ -108,7 +108,7 @@ export default function CategoryManagement() {
     //     name: "",
     //     description: "",
     //     boardId: "",
-    //     domain: "",
+    //     channel: "",
     //     color: "#3B82F6",
     //     sortOrder: 0,
     //   });
@@ -116,14 +116,14 @@ export default function CategoryManagement() {
     // } catch (error) {
     //   console.error('Failed to create category:', error);
     // }
-    
+
     console.log("Creating category:", formData);
     setShowAddForm(false);
     setFormData({
       name: "",
       description: "",
       boardId: "",
-      domain: "",
+      channel: "",
       color: "#3B82F6",
       sortOrder: 0,
     });
@@ -137,13 +137,13 @@ export default function CategoryManagement() {
     // } catch (error) {
     //   console.error('Failed to update category:', error);
     // }
-    
+
     console.log("Toggling category status:", id, !isActive);
   };
 
   const deleteCategory = async (id: number) => {
     if (!confirm("정말로 이 카테고리를 삭제하시겠습니까?")) return;
-    
+
     // TODO: API 호출
     // try {
     //   await adminApi.delete(`/categories/${id}`);
@@ -151,7 +151,7 @@ export default function CategoryManagement() {
     // } catch (error) {
     //   console.error('Failed to delete category:', error);
     // }
-    
+
     console.log("Deleting category:", id);
   };
 
@@ -163,12 +163,12 @@ export default function CategoryManagement() {
     // } catch (error) {
     //   console.error('Failed to update sort order:', error);
     // }
-    
+
     console.log("Updating sort order:", id, newOrder);
   };
 
   const groupedCategories = categories.reduce((acc, category) => {
-    const key = `${category.domain}-${category.boardId}`;
+    const key = `${category.channel}-${category.boardId}`;
     if (!acc[key]) {
       acc[key] = [];
     }
@@ -191,20 +191,24 @@ export default function CategoryManagement() {
       {/* 카테고리 추가 폼 */}
       {showAddForm && (
         <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-          <h2 className="text-xl font-semibold text-white mb-4">새 카테고리 추가</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">
+            새 카테고리 추가
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  도메인
+                  채널
                 </label>
                 <select
-                  value={formData.domain}
-                  onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
+                  value={formData.channel}
+                  onChange={(e) =>
+                    setFormData({ ...formData, channel: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   required
                 >
-                  <option value="">도메인 선택</option>
+                  <option value="">채널 선택</option>
                   <option value="main">main</option>
                   <option value="djmax">djmax</option>
                   <option value="baram">baram</option>
@@ -217,7 +221,9 @@ export default function CategoryManagement() {
                 <input
                   type="text"
                   value={formData.boardId}
-                  onChange={(e) => setFormData({ ...formData, boardId: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, boardId: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   placeholder="notice, free, news 등"
                   required
@@ -232,7 +238,9 @@ export default function CategoryManagement() {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                   placeholder="일반공지, 질문 등"
                   required
@@ -246,13 +254,17 @@ export default function CategoryManagement() {
                   <input
                     type="color"
                     value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, color: e.target.value })
+                    }
                     className="w-12 h-10 rounded border border-gray-600"
                   />
                   <input
                     type="text"
                     value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, color: e.target.value })
+                    }
                     className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                     pattern="^#[0-9A-Fa-f]{6}$"
                   />
@@ -265,7 +277,9 @@ export default function CategoryManagement() {
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                 placeholder="카테고리에 대한 설명을 입력하세요"
                 rows={3}
@@ -279,7 +293,12 @@ export default function CategoryManagement() {
               <input
                 type="number"
                 value={formData.sortOrder}
-                onChange={(e) => setFormData({ ...formData, sortOrder: parseInt(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    sortOrder: parseInt(e.target.value),
+                  })
+                }
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                 min="0"
                 placeholder="0 (숫자가 작을수록 상위 표시)"
@@ -306,14 +325,19 @@ export default function CategoryManagement() {
 
       {/* 카테고리 목록 (게시판별로 그룹화) */}
       {Object.entries(groupedCategories).map(([key, boardCategories]) => {
-        const [domain, boardId] = key.split("-");
-        const sortedCategories = [...boardCategories].sort((a, b) => a.sortOrder - b.sortOrder);
-        
+        const [channel, boardId] = key.split("-");
+        const sortedCategories = [...boardCategories].sort(
+          (a, b) => a.sortOrder - b.sortOrder
+        );
+
         return (
-          <div key={key} className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+          <div
+            key={key}
+            className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden"
+          >
             <div className="px-6 py-4 border-b border-gray-700">
               <h2 className="text-xl font-semibold text-white">
-                {domain} - {boardId} 게시판 카테고리
+                {channel} - {boardId} 게시판 카테고리
               </h2>
             </div>
             <div className="overflow-x-auto">
@@ -347,7 +371,12 @@ export default function CategoryManagement() {
                         <input
                           type="number"
                           value={category.sortOrder}
-                          onChange={(e) => updateSortOrder(category.id, parseInt(e.target.value))}
+                          onChange={(e) =>
+                            updateSortOrder(
+                              category.id,
+                              parseInt(e.target.value)
+                            )
+                          }
                           className="w-16 px-2 py-1 bg-gray-700 border border-gray-600 rounded text-white text-center"
                           min="0"
                         />
@@ -380,7 +409,9 @@ export default function CategoryManagement() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                         <button
-                          onClick={() => toggleCategoryStatus(category.id, category.isActive)}
+                          onClick={() =>
+                            toggleCategoryStatus(category.id, category.isActive)
+                          }
                           className={`${
                             category.isActive
                               ? "text-yellow-400 hover:text-yellow-300"

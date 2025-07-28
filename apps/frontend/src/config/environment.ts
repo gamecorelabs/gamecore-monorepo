@@ -1,79 +1,80 @@
 /**
- * 환경별 서브도메인 설정을 관리하는 파일
- * 이 파일을 통해 환경별로 다른 서브도메인 설정을 적용할 수 있습니다.
+ * 환경별 URL 설정을 관리하는 파일
+ * 이 파일을 통해 환경별로 다른 URL 설정을 적용할 수 있습니다.
  */
-const ENABLED_SUBDOMAINS = ["main", "baram", "djmax"];
+const ENABLED_CHANNELS = ["main", "baram", "djmax"];
 
 // 공통 경로 설정
 export const COMMON_PATHS = ["/board", "/user", "/api", "/auth", "/admin"];
 
 // 개발 환경 설정
-export const DEV_SUBDOMAIN_CONFIG = {
+export const DEV_URL_CONFIG = {
   prefix: "dev-server",
-  baseDomain: "gamecore.co.kr",
+  siteDomain: "gamecore.co.kr",
   protocol: "https",
-  enabledSubdomains: ENABLED_SUBDOMAINS,
+  enabledChannels: ENABLED_CHANNELS,
 };
 
 // 스테이징 환경 설정
-export const STAGING_SUBDOMAIN_CONFIG = {
+export const STAGING_URL_CONFIG = {
   prefix: "sta",
-  baseDomain: "gamecore.co.kr",
+  siteDomain: "gamecore.co.kr",
   protocol: "https",
-  enabledSubdomains: ENABLED_SUBDOMAINS,
+  enabledChannels: ENABLED_CHANNELS,
 };
 
 // 프로덕션 환경 설정
-export const PRODUCTION_SUBDOMAIN_CONFIG = {
+export const PRODUCTION_URL_CONFIG = {
   prefix: "",
-  baseDomain: "gamecore.co.kr",
+  siteDomain: "gamecore.co.kr",
   protocol: "https",
-  enabledSubdomains: ENABLED_SUBDOMAINS,
+  enabledChannels: ENABLED_CHANNELS,
 };
 
 // 환경별 설정 맵
-export const ENV_CONFIGS = {
-  development: DEV_SUBDOMAIN_CONFIG,
-  staging: STAGING_SUBDOMAIN_CONFIG,
-  production: PRODUCTION_SUBDOMAIN_CONFIG,
+export const URL_ENV_CONFIGS = {
+  development: DEV_URL_CONFIG,
+  staging: STAGING_URL_CONFIG,
+  production: PRODUCTION_URL_CONFIG,
 } as const;
 
 /**
- * 현재 환경의 서브도메인 설정 반환
+ * 현재 환경의 URL 설정 반환
  */
-export function getEnvSubdomainConfig() {
+export function getUrlEnvConfig() {
   const env = process.env.NODE_ENV || "development";
   return (
-    ENV_CONFIGS[env as keyof typeof ENV_CONFIGS] || ENV_CONFIGS.development
+    URL_ENV_CONFIGS[env as keyof typeof URL_ENV_CONFIGS] ||
+    URL_ENV_CONFIGS.development
   );
 }
 
 /**
- * 서브도메인이 현재 환경에서 활성화되어 있는지 확인
+ * 채널이 현재 환경에서 활성화되어 있는지 확인
  */
-export function isSubdomainEnabled(subdomain: string): boolean {
-  const config = getEnvSubdomainConfig();
-  return config.enabledSubdomains.includes(subdomain);
+export function isChannelEnabled(channel: string): boolean {
+  const config = getUrlEnvConfig();
+  return config.enabledChannels.includes(channel);
 }
 
 /**
- * 환경별 도메인 URL 생성
+ * 환경별 URL 생성
  */
-export function buildDomainUrl(subdomain?: string, path: string = "/"): string {
-  const config = getEnvSubdomainConfig();
+export function buildUrl(channel?: string, path: string = "/"): string {
+  const config = getUrlEnvConfig();
 
   let host: string;
-  if (subdomain && subdomain !== "main" && isSubdomainEnabled(subdomain)) {
+  if (channel && channel !== "main" && isChannelEnabled(channel)) {
     if (config.prefix) {
-      host = `${config.prefix}.${subdomain}.${config.baseDomain}`;
+      host = `${config.prefix}.${channel}.${config.siteDomain}`;
     } else {
-      host = `${subdomain}.${config.baseDomain}`;
+      host = `${channel}.${config.siteDomain}`;
     }
   } else {
     if (config.prefix) {
-      host = `${config.prefix}.${config.baseDomain}`;
+      host = `${config.prefix}.${config.siteDomain}`;
     } else {
-      host = config.baseDomain;
+      host = config.siteDomain;
     }
   }
 
@@ -81,29 +82,29 @@ export function buildDomainUrl(subdomain?: string, path: string = "/"): string {
 }
 
 /**
- * 서브도메인 간 이동 URL 생성
+ * 채널 간 이동 URL 생성
  */
-export function getSubdomainNavigationUrl(
-  targetSubdomain: string,
+export function getChannelNavigationUrl(
+  targetChannel: string,
   currentPath: string = "/"
 ): string {
-  return buildDomainUrl(targetSubdomain, currentPath);
+  return buildUrl(targetChannel, currentPath);
 }
 
 /**
  * 환경 정보를 포함한 디버그 정보 반환
  */
-export function getSubdomainDebugInfo() {
-  const config = getEnvSubdomainConfig();
+export function getChannelDebugInfo() {
+  const config = getUrlEnvConfig();
   return {
     environment: process.env.NODE_ENV || "development",
     config,
-    enabledSubdomains: config.enabledSubdomains,
+    enabledChannels: config.enabledChannels,
     sampleUrls: {
-      main: buildDomainUrl(),
-      diablo4: buildDomainUrl("diablo4"),
-      game: buildDomainUrl("game"),
-      wow: buildDomainUrl("wow"),
+      main: buildUrl(),
+      diablo4: buildUrl("diablo4"),
+      game: buildUrl("game"),
+      wow: buildUrl("wow"),
     },
   };
 }

@@ -33,7 +33,6 @@ import { BoardCategory } from '@gamecorelabs/nestjs-core/base-board/entity/board
         Comment,
       ],
       synchronize: true,
-      dropSchema: true, // ⚠️ 모든 테이블 삭제 후 재생성
     }),
     ConfigModule,
   ],

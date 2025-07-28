@@ -1,36 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSubdomainFromHost } from "./useSubdomain";
+import { getChannelFromHost } from "./useChannel";
 import { ChannelConfig } from "@/types/common/channel.types";
 
 /**
- * 클라이언트 컴포넌트에서 서브도메인 정보를 사용하는 훅
+ * 클라이언트 컴포넌트에서 채널 정보를 사용하는 훅
  */
-export function useSubdomainClient() {
-  const [subdomainInfo, setSubdomainInfo] = useState<{
-    subdomain: string | null;
+export function useChannelClient() {
+  const [channelInfo, setChannelInfo] = useState<{
+    channel: string | null;
     config: ChannelConfig | null;
-  }>({ subdomain: null, config: null });
+  }>({ channel: null, config: null });
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const info = getSubdomainFromHost();
-    setSubdomainInfo(info);
+    const info = getChannelFromHost();
+    setChannelInfo(info);
     setIsLoading(false);
   }, []);
 
-  return { ...subdomainInfo, isLoading };
+  return { ...channelInfo, isLoading };
 }
 
 /**
- * 서브도메인 기반 네비게이션 훅
+ * 채널 기반 네비게이션 훅
  */
-export function useSubdomainNavigation() {
-  const { subdomain, config } = useSubdomainClient();
+export function useChannelNavigation() {
+  const { channel, config } = useChannelClient();
 
-  const navigateToSubdomain = (targetSubdomain: string, path: string = "/") => {
+  const navigateToChannel = (targetChannel: string, path: string = "/") => {
     const protocol = window.location.protocol;
     const host = window.location.host;
     const parts = host.split(".");
@@ -39,10 +39,10 @@ export function useSubdomainNavigation() {
 
     if (parts.length >= 4 && parts[0] === "dev") {
       // dev.current.gamecore.co.kr -> dev.target.gamecore.co.kr
-      newHost = `dev.${targetSubdomain}.${parts.slice(2).join(".")}`;
+      newHost = `dev.${targetChannel}.${parts.slice(2).join(".")}`;
     } else {
       // current.gamecore.co.kr -> target.gamecore.co.kr
-      newHost = `${targetSubdomain}.${parts.slice(1).join(".")}`;
+      newHost = `${targetChannel}.${parts.slice(1).join(".")}`;
     }
 
     window.location.href = `${protocol}//${newHost}${path}`;
@@ -67,9 +67,9 @@ export function useSubdomainNavigation() {
   };
 
   return {
-    subdomain,
+    channel,
     config,
-    navigateToSubdomain,
+    navigateToChannel,
     navigateToMain,
   };
 }

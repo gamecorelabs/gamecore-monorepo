@@ -1,9 +1,10 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface SystemStats {
-  totalDomains: number;
+  totalChannels: number;
   totalBoards: number;
   totalCategories: number;
   totalUsers: number;
@@ -11,7 +12,7 @@ interface SystemStats {
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<SystemStats>({
-    totalDomains: 0,
+    totalChannels: 0,
     totalBoards: 0,
     totalCategories: 0,
     totalUsers: 0,
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
 
     // 임시 데이터
     setStats({
-      totalDomains: 3,
+      totalChannels: 3,
       totalBoards: 12,
       totalCategories: 24,
       totalUsers: 156,
@@ -54,8 +55,10 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-400">총 도메인</p>
-              <p className="text-2xl font-semibold text-white">{stats.totalDomains}</p>
+              <p className="text-sm font-medium text-gray-400">총 채널</p>
+              <p className="text-2xl font-semibold text-white">
+                {stats.totalChannels}
+              </p>
             </div>
           </div>
         </div>
@@ -69,7 +72,9 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-400">총 게시판</p>
-              <p className="text-2xl font-semibold text-white">{stats.totalBoards}</p>
+              <p className="text-2xl font-semibold text-white">
+                {stats.totalBoards}
+              </p>
             </div>
           </div>
         </div>
@@ -83,7 +88,9 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-400">총 카테고리</p>
-              <p className="text-2xl font-semibold text-white">{stats.totalCategories}</p>
+              <p className="text-2xl font-semibold text-white">
+                {stats.totalCategories}
+              </p>
             </div>
           </div>
         </div>
@@ -97,7 +104,9 @@ export default function AdminDashboard() {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-400">총 사용자</p>
-              <p className="text-2xl font-semibold text-white">{stats.totalUsers}</p>
+              <p className="text-2xl font-semibold text-white">
+                {stats.totalUsers}
+              </p>
             </div>
           </div>
         </div>
@@ -108,11 +117,11 @@ export default function AdminDashboard() {
         <h2 className="text-xl font-semibold text-white mb-4">빠른 작업</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
-            href="/admin/domains"
+            href="/admin/channels"
             className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
           >
-            <h3 className="text-lg font-medium text-white">새 도메인 추가</h3>
-            <p className="text-gray-400 text-sm">새로운 서브도메인을 등록합니다</p>
+            <h3 className="text-lg font-medium text-white">새 채널 추가</h3>
+            <p className="text-gray-400 text-sm">새로운 채널을 등록합니다</p>
           </Link>
           <Link
             href="/admin/boards"
@@ -126,7 +135,9 @@ export default function AdminDashboard() {
             className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
           >
             <h3 className="text-lg font-medium text-white">카테고리 관리</h3>
-            <p className="text-gray-400 text-sm">게시판 카테고리를 관리합니다</p>
+            <p className="text-gray-400 text-sm">
+              게시판 카테고리를 관리합니다
+            </p>
           </Link>
         </div>
       </div>

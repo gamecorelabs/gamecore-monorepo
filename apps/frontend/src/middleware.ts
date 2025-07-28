@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  extractSubdomain,
-  handleSubdomainRouting,
-} from "@/middleware/subdomain";
+import { extractChannel, handleChannelRouting } from "@/middleware/channel";
 // import { handleAuthentication } from "@/lib/middleware/auth";
 
 /**
@@ -12,13 +9,13 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const url = request.nextUrl.clone();
 
-  // 1. 서브도메인 추출 및 라우팅 처리
-  const subdomain = extractSubdomain(host);
+  // 1. 채널 추출 및 라우팅 처리
+  const channel = extractChannel(host);
   let response: NextResponse;
 
-  if (subdomain) {
-    // response = handleSubdomainRouting(subdomain, url, request);
-    response = handleSubdomainRouting(subdomain, url);
+  if (channel) {
+    // response = handleChannelRouting(channel, url, request);
+    response = handleChannelRouting(channel, url);
   } else {
     response = NextResponse.next();
   }
