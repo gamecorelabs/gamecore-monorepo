@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "@base-common/entity/base.entity";
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { DomainConfig } from "@base-domain/entity/domain-config.entity";
+import { ChannelConfig } from "../../base-channel/entity/channel-config.entity";
 import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { BoardType, BoardStatus } from "../enum/board-config.enum";
 import { BoardCategory } from "@base-board/entity/board-category.entity";
@@ -24,9 +24,9 @@ export class BoardConfig extends BaseModel {
   @Column({ type: "enum", enum: BoardStatus, default: BoardStatus.ACTIVE })
   status: BoardStatus;
 
-  @ManyToOne(() => DomainConfig, (domain) => domain.boardConfigs)
-  @JoinColumn({ name: "domain_id" })
-  domain: DomainConfig;
+  @ManyToOne(() => ChannelConfig, (channel) => channel.boardConfigs)
+  @JoinColumn({ name: "channel_id" })
+  channel: ChannelConfig;
 
   @OneToMany(() => BoardPost, (BoardPost) => BoardPost.boardConfig)
   boardPosts: BoardPost[]; // 게시판에 속한 게시글들

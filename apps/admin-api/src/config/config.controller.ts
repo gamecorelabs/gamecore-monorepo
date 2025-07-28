@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { CreateDomainConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-domain-config.dto';
+import { CreateChannelConfigDto } from '@gamecorelabs/nestjs-core/base-channel/dto/create-channel-config.dto';
 import { CreateBoardConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-board-config.dto';
 import { AdminRoleUserGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/admin-role-user.guard';
 import { GuestOrUserTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard';
@@ -9,20 +9,20 @@ import { GuestOrUserTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard
 export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
-  @Get('/domain')
+  @Get('/channel')
   @UseGuards(GuestOrUserTokenGuard)
   @UseGuards(AdminRoleUserGuard)
-  getDomainConfig() {
-    return this.configService.getDomainConfig();
+  getChannelConfig() {
+    return this.configService.getChannelConfig();
   }
 
-  @Post('/domain')
+  @Post('/channel')
   @UseGuards(AdminRoleUserGuard)
-  postDomainConfig(@Body() body: CreateDomainConfigDto) {
-    return this.configService.saveDomainConfig(body);
+  postChannelConfig(@Body() body: CreateChannelConfigDto) {
+    return this.configService.saveChannelConfig(body);
   }
 
-  @Post('/domain/:id/board')
+  @Post('/channel/:id/board')
   // @UseGuards(AdminRoleUserGuard)
   postBoardConfig(@Param('id') id: number, @Body() body: CreateBoardConfigDto) {
     return this.configService.saveBoardConfig(id, body);
