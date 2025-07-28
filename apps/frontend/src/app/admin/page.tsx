@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface SystemStats {
@@ -114,21 +115,21 @@ export default function AdminDashboard() {
       <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
         <h2 className="text-xl font-semibold text-white mb-4">빠른 작업</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a
+          <Link
             href="/admin/channels"
             className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
           >
             <h3 className="text-lg font-medium text-white">새 채널 추가</h3>
             <p className="text-gray-400 text-sm">새로운 채널을 등록합니다</p>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/admin/boards"
             className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
           >
             <h3 className="text-lg font-medium text-white">게시판 생성</h3>
             <p className="text-gray-400 text-sm">새로운 게시판을 만듭니다</p>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/admin/categories"
             className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
           >
@@ -136,7 +137,7 @@ export default function AdminDashboard() {
             <p className="text-gray-400 text-sm">
               게시판 카테고리를 관리합니다
             </p>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

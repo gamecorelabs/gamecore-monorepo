@@ -3,6 +3,7 @@ import "../globals.css";
 import "@/styles/themes.css";
 import { getCurrentUser } from "@/utils/auth/getCurrentUser";
 import { FallbackPage } from "@/components/ui-library";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "GameCore Admin",
@@ -37,12 +38,12 @@ export default async function AdminLayout({
                 <h1 className="text-xl font-bold text-white">GameCore Admin</h1>
               </div>
               <div className="flex items-center space-x-4">
-                <a
+                <Link
                   href="/"
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   메인 사이트로
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -54,30 +55,30 @@ export default async function AdminLayout({
           <aside className="w-64 bg-gray-800 flex-shrink-0 overflow-y-auto">
             <nav className="mt-8 px-4">
               <div className="space-y-2">
-                <a
+                <Link
                   href="/admin"
                   className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
                 >
                   대시보드
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/admin/channels"
                   className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
                 >
                   채널 관리
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/admin/boards"
                   className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
                 >
                   게시판 설정
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/admin/categories"
                   className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
                 >
                   카테고리 설정
-                </a>
+                </Link>
               </div>
             </nav>
           </aside>
