@@ -6,6 +6,8 @@ import {
   isChannelEnabled,
   buildUrl,
 } from "@/config/environment";
+import adminApi from "@/utils/common-axios/adminApi";
+import { ChannelStatus } from "@/types/channel/channel.types";
 
 /**
  * 호스트에서 채널 추출
@@ -45,8 +47,14 @@ export function isCommonPath(pathname: string): boolean {
 /**
  * 채널이 유효한지 확인
  */
-export function isValidChannel(channel: string): boolean {
-  return isChannelEnabled(channel) && channel in CHANNEL_CONFIG;
+export async function isValidChannel(channel: string) {
+  // 채널 유효한지 확인
+  let response = await adminApi.get(`/config/channel/${channel}/status`);
+  const isActiveChannel = response.data.status === ChannelStatus.ACTIVE;
+
+  return (
+    isActiveChannel && isChannelEnabled(channel) && channel in CHANNEL_CONFIG
+  );
 }
 
 /**
@@ -63,23 +71,25 @@ export function getMainChannelUrl(originalUrl: URL): URL {
 /**
  * 채널별 라우팅 핸들러
  */
-export function handleChannelRouting(
+export async function handleChannelRouting(
   channel: string,
   url: URL
   // request: NextRequest,
-): NextResponse {
+): Promise<NextResponse> {
+  const isValideChannel = await isValidChannel(channel);
+
+  // 유효하지 않은 채널은 메인으로 리다이렉션
+  if (!isValideChannel) {
+    const mainUrl = getMainChannelUrl(url);
+    return NextResponse.redirect(mainUrl);
+  }
+
   // 공통 경로는 그대로 처리하되 채널 정보를 헤더로 전달
   if (isCommonPath(url.pathname)) {
     const response = NextResponse.next();
     response.headers.set("x-channel", channel);
     response.headers.set("x-pathname", url.pathname);
     return response;
-  }
-
-  // 유효하지 않은 채널은 메인으로 리다이렉션
-  if (!isValidChannel(channel)) {
-    const mainUrl = getMainChannelUrl(url);
-    return NextResponse.redirect(mainUrl);
   }
 
   // 채널별 전용 경로 처리

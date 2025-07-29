@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   if (channel) {
     // response = handleChannelRouting(channel, url, request);
-    response = handleChannelRouting(channel, url);
+    response = await handleChannelRouting(channel, url);
   } else {
     response = NextResponse.next();
   }
