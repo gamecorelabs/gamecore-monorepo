@@ -5,11 +5,13 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardConfig } from '@gamecorelabs/nestjs-core/base-board/entity/board-config.entity';
+import { 
+  BoardConfig, 
+  ChannelConfig, 
+  CreateChannelConfigDto, 
+  CreateBoardConfigDto 
+} from '@gamecorelabs/nestjs-core';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
-import { ChannelConfig } from '@gamecorelabs/nestjs-core/base-channel/entity/channel-config.entity';
-import { CreateChannelConfigDto } from '@gamecorelabs/nestjs-core/base-channel/dto/create-channel-config.dto';
-import { CreateBoardConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-board-config.dto';
 
 @Injectable()
 export class ConfigService {

@@ -4,12 +4,14 @@ import { AppService } from './app.service';
 import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
-import { BoardConfig } from '@gamecorelabs/nestjs-core/base-board/entity/board-config.entity';
-import { ChannelConfig } from '@gamecorelabs/nestjs-core/base-channel/entity/channel-config.entity';
-import { BoardPost } from '@gamecorelabs/nestjs-core/base-post/board/entity/board-post.entity';
-import { UserAccount } from '@gamecorelabs/nestjs-core/base-user/entity/user-account.entity';
-import { Comment } from '@gamecorelabs/nestjs-core/base-comment/entity/comment.entity';
-import { BoardCategory } from '@gamecorelabs/nestjs-core/base-board/entity/board-category.entity';
+import { 
+  BoardConfig, 
+  ChannelConfig, 
+  BoardPost, 
+  UserAccount, 
+  Comment, 
+  BoardCategory 
+} from '@gamecorelabs/nestjs-core';
 
 @Module({
   imports: [

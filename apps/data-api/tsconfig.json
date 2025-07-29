@@ -20,6 +20,7 @@
     "paths": {
       "typeorm": ["./node_modules/typeorm"],
 
+      "@gamecorelabs/nestjs-core": ["../../packages/core/src/index"],
       "@gamecorelabs/nestjs-core/*": ["../../packages/core/src/*"],
 
       "@base-auth/*": ["../../packages/core/src/base-auth/*"],

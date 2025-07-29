@@ -7,19 +7,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserAccountDto } from '@gamecorelabs/nestjs-core/base-user/dto/create-user-account.dto';
-import { BaseAuthService } from '@gamecorelabs/nestjs-core/base-auth/base-auth.service';
-import { BasicUserTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/basic-user-token.guard';
-import { RefreshTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/refresh-token.guard';
-import { AccessTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/access-token.guard';
+import { 
+  CreateUserAccountDto, 
+  BaseAuthService, 
+  BasicUserTokenGuard, 
+  RefreshTokenGuard, 
+  AccessTokenGuard, 
+  UserAccount, 
+  CurrentUser 
+} from '@gamecorelabs/nestjs-core';
+import * as userTypes from '@gamecorelabs/nestjs-core';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
-import { UserAccount } from '@gamecorelabs/nestjs-core/base-user/entity/user-account.entity';
-// import { UserLoginRequest } from '@gamecorelabs/nestjs-core/base-user/types/user.types';
-import * as userTypes from '@gamecorelabs/nestjs-core/base-user/types/user.types';
-import { CurrentUser } from '@gamecorelabs/nestjs-core/base-user/decorator/current-user.decorator';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;

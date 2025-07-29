@@ -12,21 +12,23 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { PostService } from "./post.service";
-import { GuestOrUserTokenGuard } from "@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard";
-import { CurrentUser } from "@gamecorelabs/nestjs-core/base-user/decorator/current-user.decorator";
-import { BoardPostService } from "@gamecorelabs/nestjs-core/base-post/board/board-post.service";
-import { BaseLikeService } from "@gamecorelabs/nestjs-core/base-like/base-like.service";
-import * as UserRequestTypes from "@gamecorelabs/nestjs-core/base-user/types/user.types";
-import * as CommonRequestTypes from "@gamecorelabs/nestjs-core/base-common/types/request-types";
-import * as BoardRequestTypes from "@gamecorelabs/nestjs-core/base-post/board/types/request-types";
-import { ResourceExistenceGuard } from "@gamecorelabs/nestjs-core/base-common/guard/resource-existence.guard";
-import { CreateRequestLikeDto } from "@gamecorelabs/nestjs-core/base-like/dto/create-like.dto";
-import { RequestCreateCommentDto } from "@gamecorelabs/nestjs-core/base-comment/dto/create-comment.dto";
-import { UpdateBoardPostDto } from "@gamecorelabs/nestjs-core/base-post/board/dto/update-board-post.dto";
-import { BaseCommentService } from "@gamecorelabs/nestjs-core/base-comment/base-comment.service";
+import {
+  GuestOrUserTokenGuard,
+  CurrentUser,
+  BoardPostService,
+  BaseLikeService,
+  ResourceExistenceGuard,
+  CreateRequestLikeDto,
+  RequestCreateCommentDto,
+  UpdateBoardPostDto,
+  BaseCommentService,
+  QueryRunnerTransactionInterceptor,
+  CurrentQueryRunner
+} from "@gamecorelabs/nestjs-core";
+import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
+import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
+import * as BoardRequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { QueryRunnerTransactionInterceptor } from "@gamecorelabs/nestjs-core/base-common/interceptor/query-runner-transaction.interceptor";
-import { CurrentQueryRunner } from "@gamecorelabs/nestjs-core/base-common/decorator/current-query-runner.decorator";
 import { QueryRunner } from "typeorm";
 
 @Controller(["board-post"])

@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ConfigService } from './config.service';
-import { CreateChannelConfigDto } from '@gamecorelabs/nestjs-core/base-channel/dto/create-channel-config.dto';
-import { CreateBoardConfigDto } from '@gamecorelabs/nestjs-core/base-board/dto/create-board-config.dto';
-import { AdminRoleUserGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/admin-role-user.guard';
-import { GuestOrUserTokenGuard } from '@gamecorelabs/nestjs-core/base-auth/guard/guest-or-user-token.guard';
+import {
+  CreateChannelConfigDto,
+  CreateBoardConfigDto,
+  AdminRoleUserGuard,
+  GuestOrUserTokenGuard,
+} from '@gamecorelabs/nestjs-core';
 
 @Controller('config')
 export class ConfigController {
