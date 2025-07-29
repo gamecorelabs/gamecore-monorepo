@@ -4,7 +4,7 @@ import {
   ChannelCategory,
   ChannelStatus,
   MappingChannelState,
-} from "@/types/common/channel.types";
+} from "@/types/channel/channel.types";
 import adminApi from "@/utils/common-axios/adminApi";
 import { formatDate } from "@/utils/helpers/formatDate";
 import { useEffect, useState } from "react";

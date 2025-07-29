@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getChannelFromHost } from "./useChannel";
-import { ChannelConfig } from "@/types/common/channel.types";
+import { ChannelConfig } from "@/types/channel/channel.types";
 
 /**
  * 클라이언트 컴포넌트에서 채널 정보를 사용하는 훅

@@ -1,33 +1,27 @@
 "use client";
-import { Channel, ChannelCategory } from "@/types/common/channel.types";
+import { Channel } from "@/types/channel/channel.types";
+import {
+  BoardConfig,
+  BoardStatus,
+  BoardType,
+  MappingBoardState,
+  MappingBoardType,
+} from "@/types/board/boardConfig.types";
+
 import adminApi from "@/utils/common-axios/adminApi";
 import { useEffect, useState } from "react";
 
-interface Board {
-  id: number;
-  boardId: string;
-  name: string;
-  description: string;
-  channel: string;
-  isActive: boolean;
-  allowAnonymous: boolean;
-  requireAuth: boolean;
-  maxPostLength: number;
-  createdAt: string;
-}
-
 export default function BoardManagement() {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [boards, setBoards] = useState<Board[]>([]);
+  const [boards, setBoards] = useState<BoardConfig[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     boardId: "",
     name: "",
     description: "",
+    status: BoardStatus.ACTIVE,
+    type: BoardType.FREE,
     channel: "",
-    allowAnonymous: true,
-    requireAuth: false,
-    maxPostLength: 10000,
   });
 
   useEffect(() => {
@@ -51,46 +45,6 @@ export default function BoardManagement() {
     // } catch (error) {
     //   console.error('Failed to load boards:', error);
     // }
-
-    // 임시 데이터
-    setBoards([
-      {
-        id: 1,
-        boardId: "notice",
-        name: "공지사항",
-        description: "중요한 공지사항을 게시하는 게시판입니다",
-        channel: "main",
-        isActive: true,
-        allowAnonymous: false,
-        requireAuth: true,
-        maxPostLength: 5000,
-        createdAt: "2024-01-01",
-      },
-      {
-        id: 2,
-        boardId: "free",
-        name: "자유게시판",
-        description: "자유롭게 의견을 나누는 게시판입니다",
-        channel: "main",
-        isActive: true,
-        allowAnonymous: true,
-        requireAuth: false,
-        maxPostLength: 10000,
-        createdAt: "2024-01-02",
-      },
-      {
-        id: 3,
-        boardId: "djmax-news",
-        name: "DJMAX 뉴스",
-        description: "DJMAX 관련 최신 뉴스",
-        channel: "djmax",
-        isActive: true,
-        allowAnonymous: false,
-        requireAuth: true,
-        maxPostLength: 15000,
-        createdAt: "2024-01-03",
-      },
-    ]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,30 +67,28 @@ export default function BoardManagement() {
     //   console.error('Failed to create board:', error);
     // }
 
-    console.log("Creating board:", formData);
     setShowAddForm(false);
     setFormData({
       boardId: "",
       name: "",
       description: "",
+      status: BoardStatus.ACTIVE,
+      type: BoardType.FREE,
       channel: "",
-      allowAnonymous: true,
-      requireAuth: false,
-      maxPostLength: 10000,
     });
   };
 
-  const toggleBoardStatus = async (id: number, isActive: boolean) => {
-    // TODO: API 호출
-    // try {
-    //   await adminApi.patch(`/boards/${id}`, { isActive: !isActive });
-    //   loadBoards();
-    // } catch (error) {
-    //   console.error('Failed to update board:', error);
-    // }
+  // const toggleBoardStatus = async (id: number, status: BoardStatus) => {
+  //   // TODO: API 호출
+  //   // try {
+  //   //   await adminApi.patch(`/boards/${id}`, { isActive: !isActive });
+  //   //   loadBoards();
+  //   // } catch (error) {
+  //   //   console.error('Failed to update board:', error);
+  //   // }
 
-    console.log("Toggling board status:", id, !isActive);
-  };
+  //   console.log("Toggling board status:");
+  // };
 
   const deleteBoard = async (id: number) => {
     if (!confirm("정말로 이 게시판을 삭제하시겠습니까?")) return;
@@ -171,22 +123,7 @@ export default function BoardManagement() {
             새 게시판 추가
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  게시판 ID
-                </label>
-                <input
-                  type="text"
-                  value={formData.boardId}
-                  onChange={(e) =>
-                    setFormData({ ...formData, boardId: e.target.value })
-                  }
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
-                  placeholder="notice, free, news 등"
-                  required
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   채널
@@ -203,6 +140,50 @@ export default function BoardManagement() {
                   {channels.map((channel) => (
                     <option key={channel.id} value={channel.id}>
                       {channel.title} ({channel.channel})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  게시판 상태
+                </label>
+                <select
+                  value={formData.status}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      status: e.target.value as BoardStatus,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
+                  required
+                >
+                  {Object.entries(BoardStatus).map(([key, value]) => (
+                    <option key={key} value={value}>
+                      {MappingBoardState[value]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  게시판 스킨
+                </label>
+                <select
+                  value={formData.type}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      type: e.target.value as BoardType,
+                    })
+                  }
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
+                  required
+                >
+                  {Object.entries(BoardType).map(([key, value]) => (
+                    <option key={key} value={value}>
+                      {MappingBoardType[value]}
                     </option>
                   ))}
                 </select>
@@ -290,41 +271,25 @@ export default function BoardManagement() {
               {boards.map((board) => (
                 <tr key={board.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                    {board.boardId}
+                    {board.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {board.name}
+                    {board.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {board.channel}
+                    {board?.channel.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        board.isActive
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full`}
                     >
-                      {board.isActive ? "활성" : "비활성"}
+                      {board.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {board.createdAt}
+                    {board.created_at}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button
-                      onClick={() =>
-                        toggleBoardStatus(board.id, board.isActive)
-                      }
-                      className={`${
-                        board.isActive
-                          ? "text-yellow-400 hover:text-yellow-300"
-                          : "text-green-400 hover:text-green-300"
-                      }`}
-                    >
-                      {board.isActive ? "비활성화" : "활성화"}
-                    </button>
                     <button
                       onClick={() => deleteBoard(board.id)}
                       className="text-red-400 hover:text-red-300"

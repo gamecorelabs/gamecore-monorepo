@@ -1,4 +1,4 @@
-import { ChannelConfig } from "@/types/common/channel.types";
+import { ChannelConfig } from "@/types/channel/channel.types";
 import { isChannelEnabled, buildUrl, URL_ENV_CONFIGS } from "./environment";
 import { CHANNEL_CONFIG } from "@/config/channel_config";
 

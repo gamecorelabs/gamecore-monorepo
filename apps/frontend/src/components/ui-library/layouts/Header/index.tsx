@@ -4,7 +4,7 @@ import Link from "next/link";
 import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
 import ThemeToggle from "../../common/ThemeToggle";
-import { ChannelConfig } from "@/types/common/channel.types";
+import { ChannelConfig } from "@/types/channel/channel.types";
 import { getChannelUrl } from "@/config/channel";
 import { getMainUrl } from "@/config/channel";
 import { S3_URL } from "@/config/config";

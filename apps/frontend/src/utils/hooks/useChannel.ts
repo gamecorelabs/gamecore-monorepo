@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { getChannelConfig } from "@/config/channel";
-import { ChannelConfig } from "@/types/common/channel.types";
+import { ChannelConfig } from "@/types/channel/channel.types";
 
 /**
  * 서버 컴포넌트에서 채널 정보를 가져오는 함수
