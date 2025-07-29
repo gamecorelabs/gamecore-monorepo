@@ -24,7 +24,7 @@ export class ConfigController {
 
   // 게시판 설정 저장
   @Post('/channel/:id/board')
-  // @UseGuards(AdminRoleUserGuard)
+  @UseGuards(AdminRoleUserGuard)
   postBoardConfig(@Param('id') id: number, @Body() body: CreateBoardConfigDto) {
     return this.configService.saveBoardConfig(id, body);
   }
