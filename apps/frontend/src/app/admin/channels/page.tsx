@@ -36,12 +36,12 @@ export default function ChannelManagement() {
     e.preventDefault();
     try {
       await adminApi.post("/config/channel", formData);
-      resetForm();
-      loadChannels();
     } catch (error) {
       console.error("채널 생성 오류", error);
+    } finally {
+      resetForm();
+      loadChannels();
     }
-    resetForm();
   };
 
   const resetForm = () => {

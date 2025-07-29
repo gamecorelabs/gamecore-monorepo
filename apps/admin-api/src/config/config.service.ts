@@ -5,11 +5,12 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
-  BoardConfig, 
-  ChannelConfig, 
-  CreateChannelConfigDto, 
-  CreateBoardConfigDto 
+import {
+  BoardConfig,
+  ChannelConfig,
+  CreateChannelConfigDto,
+  CreateBoardConfigDto,
+  BoardStatus,
 } from '@gamecorelabs/nestjs-core';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 
@@ -42,6 +43,19 @@ export class ConfigService {
     });
 
     return await this.channelConfigRepository.save(channel);
+  }
+
+  async getBoardConfig() {
+    try {
+      return await this.boardConfigRepository.find({
+        where: { status: BoardStatus.ACTIVE },
+        relations: ['channel', 'categories'],
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        '게시판 설정을 불러오는 중 오류가 발생했습니다.',
+      );
+    }
   }
 
   async saveBoardConfig(channel_id: number, dto: CreateBoardConfigDto) {

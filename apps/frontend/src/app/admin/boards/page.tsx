@@ -11,23 +11,25 @@ import {
 import adminApi from "@/utils/common-axios/adminApi";
 import { useEffect, useState } from "react";
 
+const initFormData = {
+  title: "",
+  description: "",
+  status: BoardStatus.ACTIVE,
+  type: BoardType.FREE,
+  channel: "",
+};
+
 export default function BoardManagement() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [boards, setBoards] = useState<BoardConfig[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({
-    boardId: "",
-    name: "",
-    description: "",
-    status: BoardStatus.ACTIVE,
-    type: BoardType.FREE,
-    channel: "",
-  });
+  const [formData, setFormData] = useState(initFormData);
 
   useEffect(() => {
     loadChannels();
     loadBoards();
   }, []);
+
   const loadChannels = async () => {
     try {
       const response = await adminApi.get("/config/channel");
@@ -38,57 +40,57 @@ export default function BoardManagement() {
   };
 
   const loadBoards = async () => {
-    // TODO: API 호출로 게시판 목록 로드
-    // try {
-    //   const response = await adminApi.get('/boards');
-    //   setBoards(response.data);
-    // } catch (error) {
-    //   console.error('Failed to load boards:', error);
-    // }
+    try {
+      const response = await adminApi.get("/config/board");
+      setBoards(response.data);
+    } catch (error) {
+      console.error("Failed to load boards:", error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 호출로 새 게시판 생성
-    // try {
-    //   await adminApi.post('/boards', formData);
-    //   setShowAddForm(false);
-    //   setFormData({
-    //     boardId: "",
-    //     name: "",
-    //     description: "",
-    //     channel: "",
-    //     allowAnonymous: true,
-    //     requireAuth: false,
-    //     maxPostLength: 10000,
-    //   });
-    //   loadBoards();
-    // } catch (error) {
-    //   console.error('Failed to create board:', error);
-    // }
+    try {
+      const channelId = formData.channel;
+      if (!channelId) {
+        window.alert("채널을 선택해주세요.");
+        return;
+      }
 
-    setShowAddForm(false);
-    setFormData({
-      boardId: "",
-      name: "",
-      description: "",
-      status: BoardStatus.ACTIVE,
-      type: BoardType.FREE,
-      channel: "",
-    });
+      if (!Object.values(BoardStatus).includes(formData.status)) {
+        window.alert("잘못된 게시판 상태입니다.");
+        return;
+      }
+
+      if (!Object.values(BoardType).includes(formData.type)) {
+        window.alert("잘못된 게시판 스킨입니다.");
+        return;
+      }
+
+      if (!formData.title) {
+        window.alert("게시판 이름은 필수입니다.");
+        return;
+      }
+
+      await adminApi.post(`/config/channel/${channelId}/board`, {
+        title: formData.title,
+        description: formData.description,
+        status: formData.status,
+        type: formData.type,
+      });
+    } catch (error) {
+      console.error("Failed to create board:", error);
+      window.alert("게시판 생성에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      resetForm();
+      loadBoards();
+    }
   };
 
-  // const toggleBoardStatus = async (id: number, status: BoardStatus) => {
-  //   // TODO: API 호출
-  //   // try {
-  //   //   await adminApi.patch(`/boards/${id}`, { isActive: !isActive });
-  //   //   loadBoards();
-  //   // } catch (error) {
-  //   //   console.error('Failed to update board:', error);
-  //   // }
-
-  //   console.log("Toggling board status:");
-  // };
+  const resetForm = () => {
+    setShowAddForm(false);
+    setFormData(initFormData);
+  };
 
   const deleteBoard = async (id: number) => {
     if (!confirm("정말로 이 게시판을 삭제하시겠습니까?")) return;
@@ -195,9 +197,9 @@ export default function BoardManagement() {
               </label>
               <input
                 type="text"
-                value={formData.name}
+                value={formData.title}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, title: e.target.value })
                 }
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white"
                 placeholder="공지사항, 자유게시판 등"
@@ -248,7 +250,7 @@ export default function BoardManagement() {
             <thead className="bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  게시판 ID
+                  ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   이름

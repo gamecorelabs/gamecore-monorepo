@@ -4,13 +4,14 @@ import { AppService } from './app.service';
 import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from './config/config.module';
-import { 
-  BoardConfig, 
-  ChannelConfig, 
-  BoardPost, 
-  UserAccount, 
-  Comment, 
-  BoardCategory 
+import {
+  BoardConfig,
+  ChannelConfig,
+  BoardPost,
+  UserAccount,
+  Comment,
+  BoardCategory,
+  CoreModule,
 } from '@gamecorelabs/nestjs-core';
 
 @Module({
@@ -36,6 +37,7 @@ import {
       ],
       synchronize: true,
     }),
+    CoreModule,
     ConfigModule,
   ],
   controllers: [AppController],

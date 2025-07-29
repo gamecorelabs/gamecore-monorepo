@@ -2,19 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import { ConfigController } from './config.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { 
-  BoardConfig, 
-  BaseAuthModule, 
-  BaseUserModule, 
-  ChannelConfig 
-} from '@gamecorelabs/nestjs-core';
+import { BoardConfig, ChannelConfig } from '@gamecorelabs/nestjs-core';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([BoardConfig, ChannelConfig]),
-    BaseAuthModule,
-    BaseUserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([BoardConfig, ChannelConfig])],
   controllers: [ConfigController],
   providers: [ConfigService],
 })

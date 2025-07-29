@@ -1,21 +1,38 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from './config.service';
 import {
   CreateChannelConfigDto,
   CreateBoardConfigDto,
   AdminRoleUserGuard,
   GuestOrUserTokenGuard,
+  BaseChannelService,
 } from '@gamecorelabs/nestjs-core';
 
 @Controller('config')
 export class ConfigController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly baseChannelService: BaseChannelService,
+  ) {}
 
   @Get('/channel')
   @UseGuards(GuestOrUserTokenGuard)
   @UseGuards(AdminRoleUserGuard)
   getChannelConfig() {
     return this.configService.getChannelConfig();
+  }
+
+  @Get('/channel/:channel/status')
+  async getChannelStatus(@Param('channel') channel: string) {
+    return await this.baseChannelService.getChannelStatusByChannelName(channel);
   }
 
   @Post('/channel')
@@ -34,6 +51,6 @@ export class ConfigController {
   // 설정된 게시판 모두 불러오기
   @Get('/board')
   getBoardConfig() {
-    // return this.configService.getBoardConfig();
+    return this.configService.getBoardConfig();
   }
 }
