@@ -3,9 +3,9 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from './config.service';
 import {
@@ -14,12 +14,17 @@ import {
   AdminRoleUserGuard,
   GuestOrUserTokenGuard,
   BaseChannelService,
+  BaseBoardService,
+  QueryRunnerTransactionInterceptor,
+  CurrentQueryRunner,
 } from '@gamecorelabs/nestjs-core';
+import { QueryRunner } from 'typeorm';
 
 @Controller('config')
 export class ConfigController {
   constructor(
     private readonly configService: ConfigService,
+    private readonly baseBoardService: BaseBoardService,
     private readonly baseChannelService: BaseChannelService,
   ) {}
 
@@ -27,7 +32,7 @@ export class ConfigController {
   @UseGuards(GuestOrUserTokenGuard)
   @UseGuards(AdminRoleUserGuard)
   getChannelConfig() {
-    return this.configService.getChannelConfig();
+    return this.baseChannelService.getChannelConfig();
   }
 
   @Get('/channel/:channel/status')
@@ -38,19 +43,24 @@ export class ConfigController {
   @Post('/channel')
   @UseGuards(AdminRoleUserGuard)
   postChannelConfig(@Body() body: CreateChannelConfigDto) {
-    return this.configService.saveChannelConfig(body);
+    return this.baseChannelService.saveChannelConfig(body);
   }
 
   // 게시판 설정 저장
   @Post('/channel/:id/board')
   @UseGuards(AdminRoleUserGuard)
-  postBoardConfig(@Param('id') id: number, @Body() body: CreateBoardConfigDto) {
-    return this.configService.saveBoardConfig(id, body);
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
+  postBoardConfig(
+    @Param('id') id: number,
+    @CurrentQueryRunner() qr: QueryRunner,
+    @Body() body: CreateBoardConfigDto,
+  ) {
+    return this.baseBoardService.saveBoardConfig(id, body, qr);
   }
 
   // 설정된 게시판 모두 불러오기
   @Get('/board')
   getBoardConfig() {
-    return this.configService.getBoardConfig();
+    return this.baseBoardService.getBoardConfig();
   }
 }
