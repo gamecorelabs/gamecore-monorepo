@@ -15,7 +15,7 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
               color: "white",
             }}
           >
-            {post.category?.name || "카테고리 없음"}
+            {post.category?.title || "카테고리 없음"}
           </span>
         </div>
 
