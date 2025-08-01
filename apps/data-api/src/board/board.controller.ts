@@ -73,11 +73,10 @@ export class BoardController {
     @CurrentUser() user: UserTypes.UserOrGuestLoginRequest,
     @Body() body: RequestCreateBoardPostDto
   ) {
-    // console.log("body", body);
-    // const dto = {
-    //   boardConfig: req.boardConfig,
-    //   ...body,
-    // };
-    // return this.boardPostService.savePost(dto, user);
+    const dto = {
+      boardConfig: req.boardConfig,
+      ...body,
+    };
+    return this.boardPostService.savePost(dto, user);
   }
 }
