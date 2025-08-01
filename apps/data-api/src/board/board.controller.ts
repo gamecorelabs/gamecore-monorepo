@@ -17,7 +17,7 @@ import {
   GuestOrUserTokenGuard,
   RequestCreateBoardPostDto,
   ResourceExistenceGuard,
-  BoardPostPaginationDto
+  BoardPostPaginationDto,
 } from "@gamecorelabs/nestjs-core";
 import * as UserTypes from "@gamecorelabs/nestjs-core";
 import * as RequestTypes from "@gamecorelabs/nestjs-core";
@@ -32,7 +32,7 @@ export class BoardController {
 
   @Get()
   getBoards() {
-    return this.baseBoardService.boardList();
+    // return this.baseBoardService.boardList();
   }
 
   @Get(":id")
