@@ -56,7 +56,6 @@ export class BoardPost extends BaseModel {
   author?: UserAccount;
 
   @ManyToOne(() => BoardCategory, (boardCategory) => boardCategory.boardPosts)
-  @JoinColumn({ name: "categoryId" })
   category?: BoardCategory;
 
   @IsString()

@@ -125,9 +125,7 @@ export const CommentItem = ({
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center space-x-2">
                 <span className="font-medium">{getUserName(comment)}</span>
-                <span className="text-sm">
-                  {formatDate(comment.created_at)}
-                </span>
+                <span className="text-sm">{formatDate(comment.createdAt)}</span>
                 {isGuestAuthorComment || isCommentOwner ? (
                   <button className="text-sm" onClick={handleDelete}>
                     삭제

@@ -150,7 +150,7 @@ export const ArticleContent = ({
         {/* 작성일 */}
         <div className="col-span-2 text-center">
           <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {formatDateSafe(post.created_at)}
+            {formatDateSafe(post.createdAt)}
           </span>
         </div>
 

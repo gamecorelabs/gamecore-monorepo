@@ -35,7 +35,7 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
               className="inline-block w-[1px] h-4"
               style={{ backgroundColor: "var(--border-color)" }}
             ></span>
-            <span>{formatDate(post.created_at, { year: "numeric" })}</span>
+            <span>{formatDate(post.createdAt, { year: "numeric" })}</span>
           </div>
           <div
             className="flex items-center text-sm space-x-3"

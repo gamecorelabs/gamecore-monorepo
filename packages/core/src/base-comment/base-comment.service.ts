@@ -17,10 +17,7 @@ import { ENV_HASH_ROUNDS } from "@base-common/const/env-keys.const";
 import { ResourceType } from "@base-common/enum/common.enum";
 import { getUserInfo } from "@base-user/util/get-user-info.util";
 import * as bcrpyt from "bcrypt";
-import {
-  LikeStatus,
-  LikeType,
-} from "@base-like/enum/like.enum";
+import { LikeStatus, LikeType } from "@base-like/enum/like.enum";
 import { UserAccount } from "@base-user/entity/user-account.entity";
 import { BaseLikeService } from "@base-like/base-like.service";
 import { ResourceRepositoryService } from "@base-common/service/resource-repository.service";
@@ -97,7 +94,7 @@ export class BaseCommentService {
     //     status: CommentStatus.USE,
     //   },
     //   relations: ["author", "children", "children.author"],
-    //   order: { created_at: "ASC" },
+    //   order: { createdAt: "ASC" },
     // });
 
     const result = await this.commentRepository
@@ -123,7 +120,7 @@ export class BaseCommentService {
           }).orWhere("children.id IS NOT NULL");
         })
       )
-      .orderBy("comment.created_at", "ASC")
+      .orderBy("comment.createdAt", "ASC")
       .getMany();
 
     return result;

@@ -5,8 +5,8 @@ export type BoardCategory = {
   name: string;
   description: string;
   status: BoardCategoryStatus;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   boardConfig?: BoardConfig;
 };
 

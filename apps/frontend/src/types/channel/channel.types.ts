@@ -22,7 +22,7 @@ export type Channel = {
   title: string;
   category: ChannelCategory;
   status: ChannelStatus;
-  created_at: string;
+  createdAt: string;
 };
 
 export enum ChannelCategory {

@@ -6,8 +6,8 @@ export type BoardPost = {
   id: number;
   title: string;
   content: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   ip_address: string;
   status: string;
   view_count: number;

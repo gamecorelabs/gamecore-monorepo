@@ -7,8 +7,8 @@ export type BoardConfig = {
   status: string;
   title: string;
   type: string;
-  updated_at: string;
-  created_at: string;
+  updatedAt: string;
+  createdAt: string;
   categories: BoardCategory[];
   channel?: Channel;
 };

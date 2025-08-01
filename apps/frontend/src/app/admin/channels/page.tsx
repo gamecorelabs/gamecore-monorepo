@@ -227,7 +227,7 @@ export default function ChannelManagement() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {formatDate(channel.created_at)}
+                    {formatDate(channel.createdAt)}
                   </td>
                 </tr>
               ))}

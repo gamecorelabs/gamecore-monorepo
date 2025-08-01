@@ -7,8 +7,8 @@ export type UserRole = "user" | "admin" | "super_admin";
 
 export type UserAccount = {
   id: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   nickname: string;
   email: string;
   role: UserRole;

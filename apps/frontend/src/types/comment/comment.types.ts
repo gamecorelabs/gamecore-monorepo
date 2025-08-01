@@ -5,8 +5,8 @@ export type Comment = {
   id: number;
   content: string;
   status: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   resource_info: ResourceInfo;
   author?: UserAccount;
   guest_account?: GuestAccount;

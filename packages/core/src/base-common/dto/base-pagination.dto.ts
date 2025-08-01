@@ -20,7 +20,7 @@ export class BasePaginationDto {
   // 생성시간 기준 정렬
   @IsIn(["ASC", "DESC", "asc", "desc"])
   @IsOptional()
-  order__created_at?: "ASC" | "DESC" | "asc" | "desc" = "DESC";
+  order__createdAt?: "ASC" | "DESC" | "asc" | "desc" = "DESC";
 
   @IsNumber()
   @IsOptional()
