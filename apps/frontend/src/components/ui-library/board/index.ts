@@ -1,1 +1,1 @@
-export { default as ArticleList } from "./list/ArticleList";
+export { default as BoardPostList } from "./list/BoardPostList";

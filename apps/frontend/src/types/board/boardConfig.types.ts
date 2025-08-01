@@ -1,4 +1,5 @@
 import { Channel } from "@/types/channel/channel.types";
+import { BoardCategory } from "./boardCategory.types";
 
 export type BoardConfig = {
   id: number;
@@ -8,7 +9,8 @@ export type BoardConfig = {
   type: string;
   updated_at: string;
   created_at: string;
-  channel: Channel;
+  channel?: Channel;
+  categories?: BoardCategory[];
 };
 
 export enum BoardStatus {

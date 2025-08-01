@@ -1,4 +1,4 @@
-import { ArticleList } from "@ui-library";
+import { BoardPostList } from "@ui-library";
 import React from "react";
 import dataApi from "@/utils/common-axios/dataApi";
 import qs from "qs";
@@ -32,7 +32,7 @@ const BoardPostPage = async ({ params, searchParams }: BoardPostProps) => {
   }
 
   return (
-    <ArticleList
+    <BoardPostList
       boardId={boardId}
       posts={posts}
       paginationInfo={paginationInfo}

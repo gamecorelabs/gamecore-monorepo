@@ -8,7 +8,7 @@ import PaginationContainer from "@ui-library/common/PaginationContainer";
 import { PaginationInfo } from "@/types/common/pagination-types";
 import SearchList from "./parts/SearchInput";
 
-const ArticleList = ({
+const BoardPostList = ({
   boardId,
   posts,
   paginationInfo,
@@ -146,4 +146,4 @@ const ArticleList = ({
   );
 };
 
-export default ArticleList;
+export default BoardPostList;

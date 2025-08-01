@@ -99,20 +99,4 @@ export class BaseBoardService {
       throw new InternalServerErrorException(error.message);
     }
   }
-
-  // async saveBoardCategory(dto: CreateBoardCategoryDto, qr?: QueryRunner) {
-  //   const boardCategory = this.boardCategoryRepository.create(dto);
-
-  //   try {
-  //     const manager =
-  //       this.commonTransactionService.getManagerRepository<BoardCategory>(
-  //         BoardCategory,
-  //         this.boardCategoryRepository,
-  //         qr
-  //       );
-  //     return await manager.save(boardCategory);
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
 }

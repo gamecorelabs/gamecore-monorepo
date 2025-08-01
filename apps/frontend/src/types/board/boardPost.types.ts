@@ -1,4 +1,5 @@
 import { UserAccount, GuestAccount } from "../user/user.types";
+import { BoardConfig } from "./boardConfig.types";
 
 export type BoardPost = {
   id: number;
@@ -16,4 +17,5 @@ export type BoardPost = {
 
   author?: UserAccount;
   guest_account?: GuestAccount;
+  boardConfig?: BoardConfig;
 };

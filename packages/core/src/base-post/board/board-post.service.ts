@@ -16,10 +16,7 @@ import { ENV_HASH_ROUNDS } from "@base-common/const/env-keys.const";
 import { getUserInfo } from "@base-user/util/get-user-info.util";
 import { UpdateBoardPostDto } from "./dto/update-board-post.dto";
 import { ResourceType } from "@base-common/enum/common.enum";
-import {
-  LikeStatus,
-  LikeType,
-} from "@base-like/enum/like.enum";
+import { LikeStatus, LikeType } from "@base-like/enum/like.enum";
 import { BaseLikeService } from "@base-like/base-like.service";
 import { BaseCommentService } from "@base-comment/base-comment.service";
 import { BaseCommonService } from "@base-common/base-common.service";
@@ -163,7 +160,7 @@ export class BoardPostService {
         status: BoardPostStatus.USE,
         boardConfig: { id: board_id },
       },
-      relations: ["author"],
+      relations: ["author", "boardConfig"],
     };
 
     return this.commonPaginationService.pagePaginate(
