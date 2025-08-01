@@ -9,9 +9,9 @@ import { IsEnum, IsNumber } from "class-validator";
 export class ResourceInfo {
   @IsEnum(ResourceType)
   @Column({ type: "enum", enum: ResourceType })
-  resource_type: ResourceType;
+  resourceType: ResourceType;
 
   @IsNumber()
   @Column()
-  resource_id: number;
+  resourceId: number;
 }

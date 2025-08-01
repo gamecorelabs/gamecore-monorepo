@@ -7,14 +7,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { 
-  CreateUserAccountDto, 
-  BaseAuthService, 
-  BasicUserTokenGuard, 
-  RefreshTokenGuard, 
-  AccessTokenGuard, 
-  UserAccount, 
-  CurrentUser 
+import {
+  CreateUserAccountDto,
+  BaseAuthService,
+  BasicUserTokenGuard,
+  RefreshTokenGuard,
+  AccessTokenGuard,
+  UserAccount,
+  CurrentUser,
 } from '@gamecorelabs/nestjs-core';
 import * as userTypes from '@gamecorelabs/nestjs-core';
 import {
@@ -40,7 +40,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const tokenData = this.baseAuthService.getIssuanceToken(
-      user.user_account,
+      user.userAccount,
       'access',
     );
     return await this.baseAuthService.setTokenCookie(res, tokenData);

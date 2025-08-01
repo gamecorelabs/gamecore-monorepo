@@ -7,6 +7,6 @@ export enum ResourceType {
 }
 
 export type ResourceInfo = {
-  resource_type: ResourceType;
-  resource_id: number;
+  resourceType: ResourceType;
+  resourceId: number;
 };

@@ -1,4 +1,4 @@
 [
   { "id": 1, "title": "홈", "href": "/" },
-  { "id": 2, "title": "게시판", "href": "/board/3/post" }
+  { "id": 2, "title": "게시판", "href": "/board/1/post" }
 ]

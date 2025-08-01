@@ -8,17 +8,17 @@ export type BoardPost = {
   content: string;
   createdAt: string;
   updatedAt: string;
-  ip_address: string;
+  ipAddress: string;
   status: string;
-  view_count: number;
+  viewCount: number;
 
-  like_count: number;
-  dislike_count: number;
-  comment_count: number;
+  likeCount: number;
+  dislikeCount: number;
+  commentCount: number;
 
   boardConfig: BoardConfig;
   author?: UserAccount;
-  guest_account?: GuestAccount;
+  guestAccount?: GuestAccount;
 
   category?: BoardCategory;
 };

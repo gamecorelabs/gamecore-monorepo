@@ -42,10 +42,10 @@ export const CommentItem = ({
   const isReplying = activeReplyId === comment.id;
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<"delete" | null>(null);
-  const isGuestAuthorComment = !!comment.guest_account?.guest_author_id;
+  const isGuestAuthorComment = !!comment.guestAccount?.guestAuthorId;
   const isCommentOwner =
     currentUser && currentUser.type === "user"
-      ? currentUser.user_account.id === comment.author?.id
+      ? currentUser.userAccount.id === comment.author?.id
       : false;
 
   const getReplyContentPrefix = () => {
@@ -80,7 +80,7 @@ export const CommentItem = ({
       const headers: Record<string, string> = {};
       if (password) {
         const encoded = encodeBase64Unicode(
-          `${comment.guest_account?.guest_author_id}:${password}`
+          `${comment.guestAccount?.guestAuthorId}:${password}`
         );
         headers["Authorization"] = `Basic ${encoded}`;
       }
@@ -136,8 +136,8 @@ export const CommentItem = ({
                 <LikeDetail
                   resourceType={ResourceType.COMMENT}
                   resourceId={comment.id}
-                  likeCount={comment.like_count}
-                  dislikeCount={comment.dislike_count}
+                  likeCount={comment.likeCount}
+                  dislikeCount={comment.dislikeCount}
                   selectedMap={selectedMap}
                   size="comment"
                 />
@@ -176,7 +176,7 @@ export const CommentItem = ({
       {isReplying && (
         <ReplyForm
           parentId={isChildrenComment ? parentId : comment.id}
-          postId={comment.resource_info.resource_id}
+          postId={comment.resourceInfo.resourceId}
           onCancel={() => setActiveReplyId(null)}
           placeholder={`${getUserName(comment)}님에게 답글을 작성하세요...`}
           defaultValue={getReplyContentPrefix()}

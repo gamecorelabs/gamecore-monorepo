@@ -26,15 +26,15 @@ export class CommentInPostGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const comment_id = request.params.id;
+    const commentId = request.params.id;
 
-    if (!comment_id) {
+    if (!commentId) {
       throw new BadRequestException("존재하지 않은 댓글입니다.");
     }
 
     const comment = await this.commentRepository.findOne({
       where: {
-        id: comment_id,
+        id: commentId,
       },
     });
 
@@ -45,7 +45,7 @@ export class CommentInPostGuard implements CanActivate {
     // 게시판에 속한 게시물인지 확인
     const post = await this.boardPostRepository.findOne({
       where: {
-        id: comment.resource_info.resource_id,
+        id: comment.resourceInfo.resourceId,
       },
       relations: ["boardConfig"], // 게시판 정보도 함께 가져오기
     });

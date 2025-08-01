@@ -59,7 +59,7 @@ export const ArticleContent = ({
                 style={{ color: "var(--text-muted)" }}
               >
                 <span>작성자: {getUserName(post)}</span>
-                <span>조회 {post.view_count || 0}</span>
+                <span>조회 {post.viewCount || 0}</span>
               </div>
 
               <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ export const ArticleContent = ({
                     className="text-xs"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    {post.like_count || 0}
+                    {post.likeCount || 0}
                   </span>
                 </span>
                 <span className="flex items-center gap-1">
@@ -84,7 +84,7 @@ export const ArticleContent = ({
                     className="text-xs"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    {post.comment_count || 0}
+                    {post.commentCount || 0}
                   </span>
                 </span>
               </div>
@@ -119,12 +119,12 @@ export const ArticleContent = ({
                 >
                   {post.title}
                 </h3>
-                {post.comment_count > 0 && (
+                {post.commentCount > 0 && (
                   <span
                     className="text-sm"
                     style={{ color: "var(--primary-color)" }}
                   >
-                    [{post.comment_count}]
+                    [{post.commentCount}]
                   </span>
                 )}
               </div>
@@ -157,7 +157,7 @@ export const ArticleContent = ({
         {/* 조회수 */}
         <div className="col-span-1 text-center">
           <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {post.view_count || 0}
+            {post.viewCount || 0}
           </span>
         </div>
 
@@ -169,7 +169,7 @@ export const ArticleContent = ({
               style={{ color: "var(--primary-color)" }}
             />
             <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-              {post.like_count || 0}
+              {post.likeCount || 0}
             </span>
           </div>
         </div>

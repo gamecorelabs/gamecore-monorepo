@@ -4,15 +4,15 @@ import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { BoardModule } from "./board/board.module";
-import { 
-  BoardConfig, 
-  BoardPost, 
-  ChannelConfig, 
-  Comment, 
-  UserAccount, 
-  Like, 
-  CoreModule, 
-  BoardCategory 
+import {
+  BoardConfig,
+  BoardPost,
+  ChannelConfig,
+  Comment,
+  UserAccount,
+  Like,
+  CoreModule,
+  BoardCategory,
 } from "@gamecorelabs/nestjs-core";
 import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";

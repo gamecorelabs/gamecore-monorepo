@@ -12,21 +12,19 @@ import { CommentStatus } from "@base-comment/enum/comment.enum";
 import { UserAccount } from "@base-user/entity/user-account.entity";
 import { ResourceInfo } from "@base-common/entity/resource-info.embeddable";
 import { GuestAccount } from "@base-common/entity/guest-account.embeddable";
-import { Like } from "@base-like/entity/like.entity";
-import { BoardPost } from "@base-post/board/entity/board-post.entity";
 
 @Index("IDX_resource", [
-  "resource_info.resource_type",
-  "resource_info.resource_id",
+  "resourceInfo.resourceType",
+  "resourceInfo.resourceId",
   "status",
 ])
 @Entity()
 export class Comment extends BaseModel {
   @Column(() => GuestAccount, { prefix: "" })
-  guest_account: GuestAccount;
+  guestAccount: GuestAccount;
 
   @Column(() => ResourceInfo, { prefix: "" })
-  resource_info: ResourceInfo;
+  resourceInfo: ResourceInfo;
 
   @IsString()
   @Column()
@@ -40,7 +38,7 @@ export class Comment extends BaseModel {
     nullable: true,
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "parent_id" })
+  @JoinColumn({ name: "parentId" })
   parent?: Comment;
 
   @OneToMany(() => Comment, (comment) => comment.parent, {
@@ -51,18 +49,18 @@ export class Comment extends BaseModel {
   // 좋아요 수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  like_count: number = 0;
+  likeCount: number = 0;
 
   // 싫어요 수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  dislike_count: number = 0;
+  dislikeCount: number = 0;
 
   @IsString()
-  @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
-  ip_address?: string;
+  @Column({ name: "ipAddress", type: "varchar", length: 45, nullable: true })
+  ipAddress?: string;
 
   @ManyToOne(() => UserAccount, (userAccount) => userAccount.comments)
-  @JoinColumn({ name: "author_id" })
+  @JoinColumn({ name: "userAccountId" })
   author?: UserAccount;
 }

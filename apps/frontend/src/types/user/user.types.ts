@@ -1,6 +1,6 @@
 type BaseUserInfo = {
   type: "user" | "guest";
-  ip_address: string;
+  ipAddress: string;
 };
 
 export type UserRole = "user" | "admin" | "super_admin";
@@ -16,9 +16,9 @@ export type UserAccount = {
 };
 
 export type GuestAccount = {
-  guest_author_id: string;
+  guestAuthorId: string;
 };
 
 export type User =
-  | (BaseUserInfo & { type: "user"; user_account: UserAccount })
-  | (BaseUserInfo & { type: "guest"; guest_account: GuestAccount });
+  | (BaseUserInfo & { type: "user"; userAccount: UserAccount })
+  | (BaseUserInfo & { type: "guest"; guestAccount: GuestAccount });

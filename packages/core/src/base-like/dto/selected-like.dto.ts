@@ -3,8 +3,8 @@ import { IsNumber, IsString } from "class-validator";
 
 export class SelectedLikeDto {
   @IsString()
-  resource_type: ResourceType;
+  resourceType: ResourceType;
 
   @IsNumber({}, { each: true })
-  resource_ids: number[];
+  resourceIds: number[];
 }

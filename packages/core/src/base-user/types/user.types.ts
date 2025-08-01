@@ -3,14 +3,14 @@ import { UserAccount } from "../entity/user-account.entity";
 
 export type UserLoginRequest = ExpressRequest & {
   type: "user";
-  user_account: UserAccount;
+  userAccount: UserAccount;
 };
 
 export type GuestLoginRequest = ExpressRequest & {
   type: "guest";
-  guest_account: {
-    guest_author_id: string;
-    guest_author_password: string;
+  guestAccount: {
+    guestAuthorId: string;
+    guestAuthorPassword: string;
   };
 };
 
@@ -20,5 +20,5 @@ export type FingerprintRequest = ExpressRequest & {
 };
 
 export type UserOrGuestLoginRequest = {
-  ip_address: string;
+  ipAddress: string;
 } & (UserLoginRequest | GuestLoginRequest | FingerprintRequest);

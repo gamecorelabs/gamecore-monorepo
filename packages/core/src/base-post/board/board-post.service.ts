@@ -47,22 +47,20 @@ export class BoardPostService {
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
-    const userInfo = await getUserInfo(
-      user,
-      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
-    );
-
-    const boardPost = this.boardPostRepository.create({
-      ...dto,
-      ...userInfo,
-      ip_address: user.ip_address,
-    });
-
-    try {
-      return await this.boardPostRepository.save(boardPost);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
+    // const userInfo = await getUserInfo(
+    //   user,
+    //   parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+    // );
+    // const boardPost = this.boardPostRepository.create({
+    //   ...dto,
+    //   ...userInfo,
+    //   ipAddress: user.ipAddress,
+    // });
+    // try {
+    //   return await this.boardPostRepository.save(boardPost);
+    // } catch (error) {
+    //   throw new InternalServerErrorException(error.message);
+    // }
   }
 
   async checkOwnerPost(
@@ -88,17 +86,17 @@ export class BoardPostService {
         throw new ConflictException("게시글 작성자가 아닙니다.");
       }
       return true;
-    } else if ("guest_account" in userInfo && user.type === "guest") {
+    } else if ("guestAccount" in userInfo && user.type === "guest") {
       if (
-        !post.guest_account?.guest_author_password ||
-        !user.guest_account?.guest_author_password
+        !post.guestAccount?.guestAuthorPassword ||
+        !user.guestAccount?.guestAuthorPassword
       ) {
         throw new ConflictException("비밀번호 정보가 확인되지 않습니다.");
       }
 
       const isPasswordValid = await bcrpyt.compare(
-        user.guest_account.guest_author_password,
-        post.guest_account.guest_author_password
+        user.guestAccount.guestAuthorPassword,
+        post.guestAccount.guestAuthorPassword
       );
 
       if (!isPasswordValid) {
@@ -159,11 +157,11 @@ export class BoardPostService {
     return post;
   }
 
-  async getPostsPaginate(board_id: number, dto: BoardPostPaginationDto) {
+  async getPostsPaginate(boardId: number, dto: BoardPostPaginationDto) {
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
-        boardConfig: { id: board_id },
+        boardConfig: { id: boardId },
       },
       relations: ["author", "boardConfig"],
     };
@@ -182,12 +180,12 @@ export class BoardPostService {
    */
   async getPostWithLikeCount(id?: number) {
     const queryBuilder = this.boardPostRepository
-      .createQueryBuilder("board_post")
+      .createQueryBuilder("boardPost")
       .leftJoin(
         "like",
         "like",
-        `like.resource_id = board_post.id
-          AND like.resource_type = :likeResourceType
+        `like.resourceId = boardPost.id
+          AND like.resourceType = :likeResourceType
           AND like.status = :likeStatus`,
         {
           likeResourceType: ResourceType.BOARD_POST,
@@ -198,17 +196,17 @@ export class BoardPostService {
         `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
         `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
       ])
-      .where("board_post.status = :boardPostStatus", {
+      .where("boardPost.status = :boardPostStatus", {
         boardPostStatus: BoardPostStatus.USE,
       })
-      .groupBy("board_post.id")
+      .groupBy("boardPost.id")
       .setParameters({
         likeType: LikeType.LIKE,
         dislikeType: LikeType.DISLIKE,
       });
 
     if (id) {
-      queryBuilder.andWhere("board_post.id = :id", { id });
+      queryBuilder.andWhere("boardPost.id = :id", { id });
     }
 
     const result = await queryBuilder.getRawAndEntities();

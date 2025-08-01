@@ -49,8 +49,8 @@ export class UserTokenGuard implements CanActivate {
 
     request.user = {
       type: "user",
-      user_account: user,
-      ip_address:
+      userAccount: user,
+      ipAddress:
         request.headers["x-forwarded-for"] || request.socket.remoteAddress,
     } as UserOrGuestLoginRequest;
     return true;
@@ -61,13 +61,10 @@ export class UserTokenGuard implements CanActivate {
       .split(";")
       .map((cookie) => cookie.trim())
       .filter((cookie) => cookie.includes("="))
-      .reduce(
-        (acc, cookie) => {
-          const [key, value] = cookie.split("=");
-          acc[key] = value;
-          return acc;
-        },
-        {} as Record<string, string>
-      );
+      .reduce((acc, cookie) => {
+        const [key, value] = cookie.split("=");
+        acc[key] = value;
+        return acc;
+      }, {} as Record<string, string>);
   }
 }

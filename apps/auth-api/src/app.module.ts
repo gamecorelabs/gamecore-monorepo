@@ -4,14 +4,14 @@ import { AppService } from './app.service';
 import { ConfigModule as CM } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { 
-  UserAccount, 
-  BoardPost, 
-  BoardConfig, 
-  ChannelConfig, 
-  Comment, 
-  Like, 
-  BoardCategory 
+import {
+  UserAccount,
+  BoardPost,
+  BoardConfig,
+  ChannelConfig,
+  Comment,
+  Like,
+  BoardCategory,
 } from '@gamecorelabs/nestjs-core';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 

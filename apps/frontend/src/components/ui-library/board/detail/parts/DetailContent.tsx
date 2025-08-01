@@ -21,8 +21,8 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
         <LikeDetail
           resourceType={ResourceType.BOARD_POST}
           resourceId={post.id}
-          likeCount={post.like_count}
-          dislikeCount={post.dislike_count}
+          likeCount={post.likeCount}
+          dislikeCount={post.dislikeCount}
           selectedMap={selectedMap}
         />
       )}

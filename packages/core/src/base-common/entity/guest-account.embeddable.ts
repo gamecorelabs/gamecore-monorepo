@@ -10,7 +10,7 @@ export class GuestAccount {
   // (비회원) 작성자 닉네임
   @IsString()
   @Column({ type: "varchar", length: 20, nullable: true })
-  guest_author_id?: string;
+  guestAuthorId?: string;
 
   // (비회원) 작성자 패스워드
   @IsString()
@@ -18,5 +18,5 @@ export class GuestAccount {
     toPlainOnly: true, // 응답에서만 제외
   })
   @Column({ type: "varchar", length: 200, nullable: true })
-  guest_author_password?: string;
+  guestAuthorPassword?: string;
 }

@@ -39,18 +39,18 @@ export class GuestUserTokenGuard implements CanActivate {
 
         request.user = {
           type: "guest",
-          guest_account: {
-            guest_author_id: guestAuthorId,
-            guest_author_password: guestAuthorPassword,
+          guestAccount: {
+            guestAuthorId: guestAuthorId,
+            guestAuthorPassword: guestAuthorPassword,
           },
-          ip_address:
+          ipAddress:
             request.headers["x-forwarded-for"] || request.socket.remoteAddress,
         };
       } else {
         request.user = {
           type: "fingerprint",
           fingerprint: decodedToken,
-          ip_address:
+          ipAddress:
             request.headers["x-forwarded-for"] || request.socket.remoteAddress,
         };
       }

@@ -17,7 +17,7 @@ export default async function AdminLayout({
 }) {
   const user = await getCurrentUser();
 
-  if (!user || !["admin", "super_admin"].includes(user.user_account.role)) {
+  if (!user || !["admin", "super_admin"].includes(user.userAccount.role)) {
     return (
       <FallbackPage
         message="존재하지 않는 페이지입니다."

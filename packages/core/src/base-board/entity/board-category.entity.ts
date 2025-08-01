@@ -26,7 +26,7 @@ export class BoardCategory extends BaseModel {
   @ManyToOne(() => BoardConfig, (board) => board.categories, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "board_config_id" })
+  @JoinColumn({ name: "boardConfigId" })
   boardConfig: BoardConfig;
 
   @OneToMany(() => BoardPost, (post) => post.category)

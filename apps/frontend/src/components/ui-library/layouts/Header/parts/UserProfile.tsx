@@ -18,7 +18,7 @@ const UserProfile = () => {
       {/* TODO: Profile 이미지 추가 */}
       <span>
         {currentUser && currentUser.type === "user"
-          ? currentUser?.user_account.nickname
+          ? currentUser?.userAccount.nickname
           : ""}
       </span>
       <Link href="/user/profile" className="">

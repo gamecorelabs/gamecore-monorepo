@@ -28,10 +28,10 @@ export class AccessTokenGuard implements CanActivate {
 
       request.user = {
         type: "user",
-        user_account: user,
+        userAccount: user,
       };
       // client IP 주소 설정
-      request.user.ip_address =
+      request.user.ipAddress =
         request.headers["x-forwarded-for"] || request.socket.remoteAddress;
       return true;
     } catch (err) {

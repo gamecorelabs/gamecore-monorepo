@@ -19,7 +19,7 @@ import {
   CreateRequestLikeDto,
   BaseLikeService,
   CurrentQueryRunner,
-  QueryRunnerTransactionInterceptor
+  QueryRunnerTransactionInterceptor,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
@@ -65,7 +65,7 @@ export class CommentController {
   ) {
     const dto = {
       ...body,
-      resource_info: req.resource_info,
+      resourceInfo: req.resourceInfo,
     };
 
     return this.baseLikeService.toggleLike(dto, user, qr);

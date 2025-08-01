@@ -54,19 +54,19 @@ export class BaseCommentService {
 
     const commentData: Partial<Comment> = {
       ...dto,
-      ip_address: user.ip_address,
+      ipAddress: user.ipAddress,
     };
 
     if ("author" in userInfo && userInfo.author) {
       commentData.author = this.userAccountRepository.create({
         id: userInfo.author.id,
       });
-    } else if ("guest_account" in userInfo) {
-      commentData.guest_account = userInfo.guest_account;
+    } else if ("guestAccount" in userInfo) {
+      commentData.guestAccount = userInfo.guestAccount;
     }
 
-    if (dto.parent_id) {
-      commentData.parent = this.commentRepository.create({ id: dto.parent_id });
+    if (dto.parentId) {
+      commentData.parent = this.commentRepository.create({ id: dto.parentId });
     }
 
     const manager = this.commonTransactionService.getManagerRepository<Comment>(
@@ -75,20 +75,20 @@ export class BaseCommentService {
       qr
     );
     const result = await manager.save(commentData);
-    await this.refreshCommentCount(dto.resource_info, "increment", qr);
+    await this.refreshCommentCount(dto.resourceInfo, "increment", qr);
 
     return result;
   }
 
   async getCommentsByResource(
-    resource_type: ResourceType,
-    resource_id: number
+    resourceType: ResourceType,
+    resourceId: number
   ): Promise<Comment[]> {
     // return this.commentRepository.find({
     //   where: {
-    //     resource_info: {
-    //       resource_type,
-    //       resource_id,
+    //     resourceInfo: {
+    //       resourceType,
+    //       resourceId,
     //     },
     //     parent: IsNull(),
     //     status: CommentStatus.USE,
@@ -102,13 +102,13 @@ export class BaseCommentService {
       .leftJoinAndSelect("comment.author", "author")
       .leftJoinAndSelect("comment.children", "children")
       .leftJoinAndSelect("children.author", "childAuthor")
-      .where("comment.resource_type = :resource_type", {
-        resource_type,
+      .where("comment.resourceType = :resourceType", {
+        resourceType,
       })
-      .andWhere("comment.resource_id = :resource_id", {
-        resource_id,
+      .andWhere("comment.resourceId = :resourceId", {
+        resourceId,
       })
-      .andWhere("comment.parent_id IS NULL")
+      .andWhere("comment.parentId IS NULL")
       .andWhere(
         new Brackets((qb) => {
           /**
@@ -160,17 +160,17 @@ export class BaseCommentService {
 
     if ("author" in userInfo && comment.author) {
       return comment.author.id === userInfo.author.id;
-    } else if ("guest_account" in userInfo && user.type === "guest") {
+    } else if ("guestAccount" in userInfo && user.type === "guest") {
       if (
-        !comment.guest_account?.guest_author_password ||
-        !user.guest_account?.guest_author_password
+        !comment.guestAccount?.guestAuthorPassword ||
+        !user.guestAccount?.guestAuthorPassword
       ) {
         throw new ConflictException("비밀번호 정보가 확인되지 않습니다.");
       }
 
       const isPasswordValid = await bcrpyt.compare(
-        user.guest_account.guest_author_password,
-        comment.guest_account.guest_author_password
+        user.guestAccount.guestAuthorPassword,
+        comment.guestAccount.guestAuthorPassword
       );
 
       if (!isPasswordValid) {
@@ -188,7 +188,7 @@ export class BaseCommentService {
     req: CommentRequest,
     qr?: QueryRunner
   ): Promise<UpdateResult> {
-    const resource_info = req.comment.resource_info;
+    const resourceInfo = req.comment.resourceInfo;
     const manager = this.commonTransactionService.getManagerRepository<Comment>(
       Comment,
       this.commentRepository,
@@ -197,7 +197,7 @@ export class BaseCommentService {
     const result = await manager.update(id, {
       status: CommentStatus.DELETED,
     });
-    await this.refreshCommentCount(resource_info, "decrement", qr);
+    await this.refreshCommentCount(resourceInfo, "decrement", qr);
     return result;
   }
 
@@ -244,26 +244,26 @@ export class BaseCommentService {
   }
 
   async getCommentCountByResourceInId(
-    resource_type: ResourceType,
+    resourceType: ResourceType,
     idList: number[]
   ) {
     const rawCounts = await this.commentRepository
       .createQueryBuilder("comment")
-      .select("comment.resource_info.resource_id", "resource_id")
+      .select("comment.resourceInfo.resourceId", "resourceId")
       .addSelect("COUNT(comment.id)", "count")
-      .where("comment.resource_info.resource_type = :resourceType", {
-        resourceType: resource_type,
+      .where("comment.resourceInfo.resourceType = :resourceType", {
+        resourceType: resourceType,
       })
-      .andWhere("comment.resource_info.resource_id IN (:...idList)", { idList })
+      .andWhere("comment.resourceInfo.resourceId IN (:...idList)", { idList })
       .andWhere("comment.status = :status", {
         status: CommentStatus.USE,
       })
-      .groupBy("comment.resource_info.resource_id")
+      .groupBy("comment.resourceInfo.resourceId")
       .getRawMany();
 
     const commentCounts: Record<number, number> = rawCounts.reduce(
       (acc, row) => {
-        acc[row.resource_id] = parseInt(row.count, 10);
+        acc[row.resourceId] = parseInt(row.count, 10);
         return acc;
       },
       {}
@@ -276,8 +276,8 @@ export class BaseCommentService {
    * @deprecated Use getCommentsByResource instead
    */
   async getCommentsByResourceWithLikeCount(
-    resource_type: ResourceType,
-    resource_id: number,
+    resourceType: ResourceType,
+    resourceId: number,
     id?: number
   ) {
     const queryBuilder = this.commentRepository
@@ -285,15 +285,15 @@ export class BaseCommentService {
       .leftJoin(
         "like",
         "like",
-        `like.resource_id = comment.id
-        AND like.resource_type = :likeResourceType
+        `like.resourceId = comment.id
+        AND like.resourceType = :likeResourceType
         AND like.status = :likeStatus`,
         {
           likeResourceType: ResourceType.COMMENT,
           likeStatus: LikeStatus.SELECTED,
         }
       )
-      .leftJoinAndSelect("comment.author", "user_account")
+      .leftJoinAndSelect("comment.author", "userAccount")
       .leftJoinAndSelect("comment.children", "child_comment")
       .leftJoinAndSelect("child_comment.author", "child_author")
       .addSelect([
@@ -303,11 +303,11 @@ export class BaseCommentService {
       .where("comment.status = :commentStatus", {
         commentStatus: CommentStatus.USE,
       })
-      .andWhere("comment.resource_info.resource_id = :commentResourceId", {
-        commentResourceId: resource_id,
+      .andWhere("comment.resourceInfo.resourceId = :commentResourceId", {
+        commentResourceId: resourceId,
       })
-      .andWhere("comment.resource_info.resource_type = :commentResourceType", {
-        commentResourceType: resource_type,
+      .andWhere("comment.resourceInfo.resourceType = :commentResourceType", {
+        commentResourceType: resourceType,
       })
       .groupBy("comment.id")
       .addGroupBy("child_comment.id")
@@ -364,18 +364,18 @@ export class BaseCommentService {
   }
 
   private async refreshCommentCount(
-    resource_info: ResourceInfo,
+    resourceInfo: ResourceInfo,
     action: "increment" | "decrement",
     qr?: QueryRunner
   ): Promise<void> {
-    const { resource_type, resource_id } = resource_info;
+    const { resourceType, resourceId } = resourceInfo;
 
     const repository =
-      this.resourceRepositoryService.getRepository(resource_type);
+      this.resourceRepositoryService.getRepository(resourceType);
 
     if (!repository) {
       throw new ConflictException(
-        `지원하지 않는 리소스 타입입니다: ${resource_type}`
+        `지원하지 않는 리소스 타입입니다: ${resourceType}`
       );
     }
 
@@ -383,9 +383,9 @@ export class BaseCommentService {
 
     if (qr) {
       const manager = qr.manager.getRepository(targetEntity);
-      await manager[action]({ id: resource_id }, "comment_count", 1);
+      await manager[action]({ id: resourceId }, "commentCount", 1);
     } else {
-      await repository[action]({ id: resource_id }, "comment_count", 1);
+      await repository[action]({ id: resourceId }, "commentCount", 1);
     }
   }
 }

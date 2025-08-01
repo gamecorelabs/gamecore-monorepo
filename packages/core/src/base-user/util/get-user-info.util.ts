@@ -7,9 +7,9 @@ type UserInfo =
       author: { id: number };
     }
   | {
-      guest_account: {
-        guest_author_id: string;
-        guest_author_password: string;
+      guestAccount: {
+        guestAuthorId: string;
+        guestAuthorPassword: string;
       };
     }
   | {
@@ -24,18 +24,18 @@ export const getUserInfo = async (
   switch (user.type) {
     case "user":
       userInfo = {
-        author: { id: user.user_account.id },
+        author: { id: user.userAccount.id },
       };
       break;
     case "guest":
       const hash = await bcrpyt.hash(
-        user.guest_account.guest_author_password,
+        user.guestAccount.guestAuthorPassword,
         hashRounds
       );
       userInfo = {
-        guest_account: {
-          guest_author_id: user.guest_account.guest_author_id,
-          guest_author_password: hash,
+        guestAccount: {
+          guestAuthorId: user.guestAccount.guestAuthorId,
+          guestAuthorPassword: hash,
         },
       };
       break;

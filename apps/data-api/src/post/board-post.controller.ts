@@ -23,7 +23,7 @@ import {
   UpdateBoardPostDto,
   BaseCommentService,
   QueryRunnerTransactionInterceptor,
-  CurrentQueryRunner
+  CurrentQueryRunner,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
@@ -82,8 +82,8 @@ export class BoardPostController {
     @Param("id", ParseIntPipe) id: number
   ) {
     return await this.baseCommentService.getPostCommentList(
-      req.resource_info.resource_type,
-      req.resource_info.resource_id
+      req.resourceInfo.resourceType,
+      req.resourceInfo.resourceId
     );
   }
 
@@ -99,7 +99,7 @@ export class BoardPostController {
     @Body() body: RequestCreateCommentDto
   ) {
     const dto = {
-      resource_info: req.resource_info,
+      resourceInfo: req.resourceInfo,
       ...body,
     };
 
@@ -119,7 +119,7 @@ export class BoardPostController {
   ) {
     const dto = {
       ...body,
-      resource_info: req.resource_info,
+      resourceInfo: req.resourceInfo,
     };
 
     return this.baseLikeService.toggleLike(dto, user, qr);

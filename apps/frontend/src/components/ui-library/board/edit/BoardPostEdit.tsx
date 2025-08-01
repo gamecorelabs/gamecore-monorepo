@@ -20,8 +20,8 @@ const BoardPostEdit = ({ post }: { post: BoardPost }) => {
 
   useEffect(() => {
     if (post?.author?.id && currentUser?.type === "user") {
-      setCanAccessPage(post.author.id === currentUser.user_account.id);
-    } else if (post.guest_account?.guest_author_id) {
+      setCanAccessPage(post.author.id === currentUser.userAccount.id);
+    } else if (post.guestAccount?.guestAuthorId) {
       const guestInfo = sessionStorage.getItem(
         `post_edit_guest_auth_${post?.id}`
       );
@@ -30,7 +30,7 @@ const BoardPostEdit = ({ post }: { post: BoardPost }) => {
         const decoded = decodeBase64Unicode(guestInfo);
         const [guestAuthorId, guestAuthorPassword] = decoded.split(":");
 
-        if (guestAuthorId === post.guest_account.guest_author_id) {
+        if (guestAuthorId === post.guestAccount.guestAuthorId) {
           setCanAccessPage(true);
           setGuestMode(true);
           setGuestInfo({

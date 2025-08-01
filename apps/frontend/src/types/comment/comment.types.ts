@@ -7,12 +7,12 @@ export type Comment = {
   status: string;
   createdAt: string;
   updatedAt: string;
-  resource_info: ResourceInfo;
+  resourceInfo: ResourceInfo;
   author?: UserAccount;
-  guest_account?: GuestAccount;
-  ip_address: string;
-  like_count: number;
-  dislike_count: number;
+  guestAccount?: GuestAccount;
+  ipAddress: string;
+  likeCount: number;
+  dislikeCount: number;
   children?: Comment[];
 };
 

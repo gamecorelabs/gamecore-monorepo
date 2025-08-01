@@ -18,10 +18,10 @@ const BottomSection = ({ post }: { post: BoardPost }) => {
     null
   );
 
-  const isGuestAuthorPost = !!post.guest_account?.guest_author_id;
+  const isGuestAuthorPost = !!post.guestAccount?.guestAuthorId;
   const isPostOwner =
     currentUser && currentUser.type === "user"
-      ? currentUser.user_account.id === post.author?.id
+      ? currentUser.userAccount.id === post.author?.id
       : false;
 
   const handlePostEdit = () => {
@@ -60,7 +60,7 @@ const BottomSection = ({ post }: { post: BoardPost }) => {
     if (password) {
       const headers: Record<string, string> = {};
       const encoded = encodeBase64Unicode(
-        `${post.guest_account?.guest_author_id}:${password}`
+        `${post.guestAccount?.guestAuthorId}:${password}`
       );
       headers["Authorization"] = `Basic ${encoded}`;
       try {
@@ -93,7 +93,7 @@ const BottomSection = ({ post }: { post: BoardPost }) => {
       const headers: Record<string, string> = {};
       if (password) {
         const encoded = encodeBase64Unicode(
-          `${post.guest_account?.guest_author_id}:${password}`
+          `${post.guestAccount?.guestAuthorId}:${password}`
         );
         headers["Authorization"] = `Basic ${encoded}`;
       }
@@ -127,7 +127,7 @@ const BottomSection = ({ post }: { post: BoardPost }) => {
       <div>
         <button className=" hover:text-blue-600">
           <span className="text-lg font-semibold mb-4">
-            댓글 {post.comment_count || 0}개
+            댓글 {post.commentCount || 0}개
           </span>
         </button>
       </div>

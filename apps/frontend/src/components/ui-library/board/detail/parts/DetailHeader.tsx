@@ -41,7 +41,7 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
             className="flex items-center text-sm space-x-3"
             style={{ color: "var(--text-muted)" }}
           >
-            <span>조회수 {post.view_count || 0}</span>
+            <span>조회수 {post.viewCount || 0}</span>
           </div>
         </div>
       </div>

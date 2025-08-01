@@ -10,7 +10,7 @@ import { BoardCategory } from "@base-board/entity/board-category.entity";
 @Entity()
 export class BoardPost extends BaseModel {
   @Column(() => GuestAccount, { prefix: "" })
-  guest_account: GuestAccount;
+  guestAccount: GuestAccount;
 
   // 제목
   @IsString()
@@ -30,35 +30,35 @@ export class BoardPost extends BaseModel {
   // 조회수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  view_count: number = 0;
+  viewCount: number = 0;
 
   // 좋아요 수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  like_count: number = 0;
+  likeCount: number = 0;
 
   // 싫어요 수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  dislike_count: number = 0;
+  dislikeCount: number = 0;
 
   // 댓글 수
   @IsNumber()
   @Column({ type: "int", default: 0 })
-  comment_count: number = 0;
+  commentCount: number = 0;
 
   @ManyToOne(() => BoardConfig, (boardConfig) => boardConfig.boardPosts)
-  @JoinColumn({ name: "board_id" })
+  @JoinColumn({ name: "boardConfigId" })
   boardConfig: BoardConfig;
 
   @ManyToOne(() => UserAccount, (userAccount) => userAccount.posts)
-  @JoinColumn({ name: "author_id" })
+  @JoinColumn({ name: "userAccountId" })
   author?: UserAccount;
 
   @ManyToOne(() => BoardCategory, (boardCategory) => boardCategory.boardPosts)
   category?: BoardCategory;
 
   @IsString()
-  @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })
-  ip_address?: string;
+  @Column({ name: "ipAddress", type: "varchar", length: 45, nullable: true })
+  ipAddress?: string;
 }

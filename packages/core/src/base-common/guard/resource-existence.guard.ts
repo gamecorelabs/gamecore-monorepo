@@ -12,8 +12,8 @@ import { Observable } from "rxjs";
 
 /**
  * ResourceExistenceGuard
- * resource_type을 구분하는 api 처리시,
- * resource_type에 따라 해당 리소스 존재 여부를 확인하는 guard로 분기한다.
+ * resourceType을 구분하는 api 처리시,
+ * resourceType에 따라 해당 리소스 존재 여부를 확인하는 guard로 분기한다.
  */
 @Injectable()
 export class ResourceExistenceGuard implements CanActivate {
@@ -30,21 +30,21 @@ export class ResourceExistenceGuard implements CanActivate {
     const fullPath = request.route.path;
 
     const apiResourceType =
-      fullPath.split("/").filter(Boolean)[0] || request.params.resource_type;
+      fullPath.split("/").filter(Boolean)[0] || request.params.resourceType;
 
     if (
       !apiResourceType ||
       !Object.values(ResourceType).includes(apiResourceType)
     ) {
-      throw new BadRequestException("유효하지 않은 resource_type입니다.");
+      throw new BadRequestException("유효하지 않은 resourceType입니다.");
     }
 
-    request.resource_info = {
-      resource_type: apiResourceType,
-      resource_id: request.params.id,
+    request.resourceInfo = {
+      resourceType: apiResourceType,
+      resourceId: request.params.id,
     };
 
-    // resource_type에 따라 다른 가드 적용
+    // resourceType에 따라 다른 가드 적용
     switch (apiResourceType) {
       case "board":
         return this.boardExistsGuard.canActivate(context);
@@ -56,7 +56,7 @@ export class ResourceExistenceGuard implements CanActivate {
         return this.commentInPostGuard.canActivate(context);
       default:
         throw new BadRequestException(
-          `지원하지 않는 resource_type: ${apiResourceType}`
+          `지원하지 않는 resourceType: ${apiResourceType}`
         );
     }
   }

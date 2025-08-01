@@ -25,7 +25,7 @@ export class BoardConfig extends BaseModel {
   status: BoardStatus;
 
   @ManyToOne(() => ChannelConfig, (channel) => channel.boardConfigs)
-  @JoinColumn({ name: "channel_id" })
+  @JoinColumn({ name: "channelId" })
   channel: ChannelConfig;
 
   @OneToMany(() => BoardPost, (BoardPost) => BoardPost.boardConfig)

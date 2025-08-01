@@ -39,12 +39,12 @@ export class BaseBoardService {
   }
 
   async saveBoardConfig(
-    channel_id: number,
+    channelId: number,
     dto: CreateBoardConfigDto,
     qr?: QueryRunner
   ) {
     const channel = await this.channelConfigRepository.findOne({
-      where: { id: channel_id },
+      where: { id: channelId },
     });
 
     if (!channel) {

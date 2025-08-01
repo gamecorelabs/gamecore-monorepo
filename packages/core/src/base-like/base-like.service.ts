@@ -20,8 +20,8 @@ import { CommonTransactionService } from "@base-common/service/common-transactio
 @Injectable()
 export class BaseLikeService {
   private readonly countFieldMap: Record<LikeType, string> = {
-    [LikeType.LIKE]: "like_count",
-    [LikeType.DISLIKE]: "dislike_count",
+    [LikeType.LIKE]: "likeCount",
+    [LikeType.DISLIKE]: "dislikeCount",
   };
 
   constructor(
@@ -32,22 +32,19 @@ export class BaseLikeService {
     private readonly commonTransactionService: CommonTransactionService
   ) {}
 
-  async getLikeCountByResource(
-    resource_type: ResourceType,
-    resource_id: number
-  ) {
+  async getLikeCountByResource(resourceType: ResourceType, resourceId: number) {
     const counts = await this.likeRepository
       .createQueryBuilder("like")
       .select("type")
       .addSelect("COUNT(*)", "count")
-      .where("resource_type = :resource_type", {
-        resource_type,
+      .where("resourceType = :resourceType", {
+        resourceType,
       })
       .where("status", {
         status: LikeStatus.SELECTED,
       })
-      .andWhere("resource_id = :resource_id", {
-        resource_id: resource_id,
+      .andWhere("resourceId = :resourceId", {
+        resourceId: resourceId,
       })
       .groupBy("type")
       .getRawMany();
@@ -79,14 +76,14 @@ export class BaseLikeService {
     action: "increment" | "decrement",
     qr?: QueryRunner
   ): Promise<void> {
-    const { resource_type, resource_id } = dto.resource_info;
+    const { resourceType, resourceId } = dto.resourceInfo;
 
     const repository =
-      this.resourceRepositoryService.getRepository(resource_type);
+      this.resourceRepositoryService.getRepository(resourceType);
 
     if (!repository) {
       throw new ConflictException(
-        `지원하지 않는 리소스 타입입니다: ${resource_type}`
+        `지원하지 않는 리소스 타입입니다: ${resourceType}`
       );
     }
     const field = this.countFieldMap[dto.type];
@@ -99,9 +96,9 @@ export class BaseLikeService {
 
     if (qr) {
       const manager = qr.manager.getRepository(targetEntity);
-      await manager[action]({ id: resource_id }, field, 1);
+      await manager[action]({ id: resourceId }, field, 1);
     } else {
-      await repository[action]({ id: resource_id }, field, 1);
+      await repository[action]({ id: resourceId }, field, 1);
     }
   }
 
@@ -112,13 +109,13 @@ export class BaseLikeService {
   ) {
     let conditions = {
       where: {
-        resource_info: dto.resource_info,
+        resourceInfo: dto.resourceInfo,
       },
     };
 
     switch (user.type) {
       case "user":
-        conditions.where["author"] = { id: user.user_account.id };
+        conditions.where["author"] = { id: user.userAccount.id };
         break;
       case "fingerprint":
         conditions.where["fingerprint"] = user.fingerprint;
@@ -196,7 +193,7 @@ export class BaseLikeService {
     const like = this.likeRepository.create({
       ...dto,
       ...userInfo,
-      ip_address: user.ip_address,
+      ipAddress: user.ipAddress,
     });
 
     return this.likeRepository.save(like);
@@ -224,24 +221,24 @@ export class BaseLikeService {
   }
 
   async getLikeCountByResourceInId(
-    resource_type: ResourceType,
+    resourceType: ResourceType,
     idList: number[]
   ) {
     const rawCounts = await this.likeRepository
       .createQueryBuilder("like")
-      .select("like.resource_id", "resource_id")
+      .select("like.resourceId", "resourceId")
       .addSelect([
         `COUNT(CASE WHEN like.type = :likeType THEN 1 END) AS likeCount`,
         `COUNT(CASE WHEN like.type = :dislikeType THEN 1 END) AS dislikeCount`,
       ])
-      .where("like.resource_type = :resourceType", {
-        resourceType: resource_type,
+      .where("like.resourceType = :resourceType", {
+        resourceType: resourceType,
       })
-      .andWhere("like.resource_id IN (:...idList)", { idList })
+      .andWhere("like.resourceId IN (:...idList)", { idList })
       .andWhere("like.status = :status", {
         status: LikeStatus.SELECTED,
       })
-      .groupBy("like.resource_id")
+      .groupBy("like.resourceId")
       .setParameters({
         likeType: LikeType.LIKE,
         dislikeType: LikeType.DISLIKE,
@@ -252,7 +249,7 @@ export class BaseLikeService {
       number,
       { likeCount: number; dislikeCount: number }
     > = rawCounts.reduce((acc, row) => {
-      acc[row.resource_id] = {
+      acc[row.resourceId] = {
         likeCount: parseInt(row.likeCount, 10),
         dislikeCount: parseInt(row.dislikeCount, 10),
       };
@@ -266,12 +263,12 @@ export class BaseLikeService {
     dto: SelectedLikeDto,
     user: UserOrGuestLoginRequest
   ): Promise<Record<number, { type: LikeType } | null>> {
-    const { resource_type, resource_ids } = dto;
+    const { resourceType, resourceIds } = dto;
     const conditions = {
       where: {
-        resource_info: {
-          resource_type: resource_type,
-          resource_id: In(resource_ids),
+        resourceInfo: {
+          resourceType: resourceType,
+          resourceId: In(resourceIds),
         },
         status: LikeStatus.SELECTED,
       },
@@ -279,7 +276,7 @@ export class BaseLikeService {
 
     switch (user.type) {
       case "user":
-        conditions.where["author"] = { id: user.user_account.id };
+        conditions.where["author"] = { id: user.userAccount.id };
         break;
       case "fingerprint":
         conditions.where["fingerprint"] = user.fingerprint;
@@ -290,15 +287,15 @@ export class BaseLikeService {
 
     const results = await this.likeRepository.find(conditions);
 
-    // 결과를 resource_id별로 매핑
+    // 결과를 resourceId별로 매핑
     const likeStatusMap: Record<number, { type: LikeType } | null> = {};
 
     // 모든 요청된 ID를 null로 초기화
-    resource_ids.forEach((id) => (likeStatusMap[id] = null));
+    resourceIds.forEach((id) => (likeStatusMap[id] = null));
 
     // 실제 결과로 업데이트
     results.forEach((like) => {
-      likeStatusMap[like.resource_info.resource_id] = { type: like.type };
+      likeStatusMap[like.resourceInfo.resourceId] = { type: like.type };
     });
 
     return likeStatusMap;
