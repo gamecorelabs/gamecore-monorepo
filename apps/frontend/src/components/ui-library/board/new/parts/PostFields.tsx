@@ -26,7 +26,7 @@ const PostFields = ({
         >
           {boardConfig.categories.map((category) => (
             <option key={category.id} value={category.id}>
-              {category.name}
+              {category.title}
             </option>
           ))}
         </select>

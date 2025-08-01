@@ -47,20 +47,21 @@ export class BoardPostService {
   }
 
   async savePost(dto: CreateBoardPostDto, user: UserOrGuestLoginRequest) {
-    // const userInfo = await getUserInfo(
-    //   user,
-    //   parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
-    // );
-    // const boardPost = this.boardPostRepository.create({
-    //   ...dto,
-    //   ...userInfo,
-    //   ipAddress: user.ipAddress,
-    // });
-    // try {
-    //   return await this.boardPostRepository.save(boardPost);
-    // } catch (error) {
-    //   throw new InternalServerErrorException(error.message);
-    // }
+    const userInfo = await getUserInfo(
+      user,
+      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
+    );
+    const boardPost = this.boardPostRepository.create({
+      category: { id: dto.categoryId },
+      ipAddress: user.ipAddress,
+      ...userInfo,
+      ...dto,
+    });
+    try {
+      return await this.boardPostRepository.save(boardPost);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   async checkOwnerPost(
@@ -117,7 +118,10 @@ export class BoardPostService {
       throw new ConflictException("게시글이 존재하지 않습니다.");
     }
 
-    Object.assign(post, dto);
+    Object.assign(post, {
+      category: { id: dto.categoryId },
+      ...dto,
+    });
 
     try {
       return await this.boardPostRepository.save(post);
@@ -163,7 +167,7 @@ export class BoardPostService {
         status: BoardPostStatus.USE,
         boardConfig: { id: boardId },
       },
-      relations: ["author", "boardConfig"],
+      relations: ["author", "boardConfig", "category"],
     };
 
     return this.commonPaginationService.pagePaginate(

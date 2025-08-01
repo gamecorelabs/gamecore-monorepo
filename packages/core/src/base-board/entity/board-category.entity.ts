@@ -9,7 +9,7 @@ import { BoardPost } from "@base-post/board/entity/board-post.entity";
 export class BoardCategory extends BaseModel {
   @IsString()
   @Column({ type: "varchar", length: 50 })
-  name: string;
+  title: string;
 
   @IsNumber()
   @Column({ type: "int", default: 0 })

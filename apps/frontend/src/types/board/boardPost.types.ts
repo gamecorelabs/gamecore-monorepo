@@ -20,5 +20,5 @@ export type BoardPost = {
   author?: UserAccount;
   guestAccount?: GuestAccount;
 
-  category?: BoardCategory;
+  category: BoardCategory;
 };

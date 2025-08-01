@@ -24,17 +24,15 @@ export const ArticleContent = ({
         <div className="flex items-start gap-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              {(post as any).category && (
-                <span
-                  className="px-2 py-1 text-xs rounded-full"
-                  style={{
-                    backgroundColor: "var(--primary-color)",
-                    color: "white",
-                  }}
-                >
-                  {(post as any).category}
-                </span>
-              )}
+              <span
+                className="px-2 py-1 text-xs rounded-full"
+                style={{
+                  backgroundColor: "var(--primary-color)",
+                  color: "white",
+                }}
+              >
+                {post.category.title}
+              </span>
             </div>
 
             <h3
@@ -104,7 +102,7 @@ export const ArticleContent = ({
               color: "white",
             }}
           >
-            테스트
+            {post.category.title}
           </span>
         </div>
 
