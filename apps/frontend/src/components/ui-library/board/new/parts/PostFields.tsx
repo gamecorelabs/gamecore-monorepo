@@ -12,7 +12,7 @@ const PostFields = ({
     <>
       <div className="w-full mb-4">
         <label htmlFor="categoryId" className="block font-semibold mb-2">
-          카테고리
+          분류
         </label>
         <select
           id="categoryId"

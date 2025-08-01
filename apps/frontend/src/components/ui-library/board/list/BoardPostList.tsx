@@ -7,23 +7,25 @@ import PaginationContainer from "@ui-library/common/PaginationContainer";
 import { PaginationInfo } from "@/types/common/pagination-types";
 import SearchList from "./parts/SearchInput";
 import TableHeader from "./parts/TableHeader";
+import { BoardConfig } from "@/types/board/boardConfig.types";
 
 const BoardPostList = ({
-  boardId,
+  boardConfig,
   posts,
   paginationInfo,
 }: {
-  boardId: string;
+  boardConfig: BoardConfig;
   posts: BoardPost[];
   paginationInfo: PaginationInfo;
 }) => {
   const router = useRouter();
+  const boardId = boardConfig.id;
   const hasPost = posts && posts.length > 0;
 
   return (
     <div className="min-h-screen">
       {/* 게시글 헤더 */}
-      <TableHeader />
+      <TableHeader boardConfig={boardConfig} />
 
       {/* 컨텐츠 영역 */}
       {hasPost ? (

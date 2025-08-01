@@ -11,7 +11,7 @@ export const ArticleContent = ({
   boardId,
   post,
 }: {
-  boardId: string;
+  boardId: number;
   post: BoardPost;
 }) => {
   return (

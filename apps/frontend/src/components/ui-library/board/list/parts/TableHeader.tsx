@@ -1,4 +1,6 @@
-const TableHeader = () => {
+import { BoardConfig } from "@/types/board/boardConfig.types";
+
+const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -7,7 +9,7 @@ const TableHeader = () => {
             className="text-2xl font-bold"
             style={{ color: "var(--text-color)" }}
           >
-            게시판 이름
+            {boardConfig.title || "게시판 이름을 설정해주세요."}
           </h2>
         </div>
       </div>
@@ -22,36 +24,19 @@ const TableHeader = () => {
           >
             전체
           </button>
-          <button
-            className="px-3 py-1 text-sm rounded-full transition-colors border"
-            style={{
-              borderColor: "var(--border-color)",
-              color: "var(--text-secondary)",
-              backgroundColor: "transparent",
-            }}
-          >
-            테스트
-          </button>
-          <button
-            className="px-3 py-1 text-sm rounded-full transition-colors border"
-            style={{
-              borderColor: "var(--border-color)",
-              color: "var(--text-secondary)",
-              backgroundColor: "transparent",
-            }}
-          >
-            일반공지
-          </button>
-          <button
-            className="px-3 py-1 text-sm rounded-full transition-colors border"
-            style={{
-              borderColor: "var(--border-color)",
-              color: "var(--text-secondary)",
-              backgroundColor: "transparent",
-            }}
-          >
-            질문
-          </button>
+          {boardConfig.categories.map((category) => (
+            <button
+              key={category.id}
+              className="px-3 py-1 text-sm rounded-full transition-colors border"
+              style={{
+                borderColor: "var(--border-color)",
+                color: "var(--text-secondary)",
+                backgroundColor: "transparent",
+              }}
+            >
+              {category.title}
+            </button>
+          ))}
         </div>
       </div>
       <div
@@ -62,7 +47,7 @@ const TableHeader = () => {
           color: "var(--text-secondary)",
         }}
       >
-        <div className="col-span-1 text-center">카테고리</div>
+        <div className="col-span-1 text-center">분류</div>
         <div className="col-span-5">제목</div>
         <div className="col-span-2 text-center">작성자</div>
         <div className="col-span-2 text-center">작성일</div>
