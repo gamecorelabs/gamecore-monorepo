@@ -5,6 +5,7 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BoardPostStatus } from "@base-post/board/enum/board-post.enum";
 import { UserAccount } from "@base-user/entity/user-account.entity";
 import { GuestAccount } from "@base-common/entity/guest-account.embeddable";
+import { BoardCategory } from "@base-board/entity/board-category.entity";
 
 @Entity()
 export class BoardPost extends BaseModel {
@@ -53,6 +54,10 @@ export class BoardPost extends BaseModel {
   @ManyToOne(() => UserAccount, (userAccount) => userAccount.posts)
   @JoinColumn({ name: "author_id" })
   author?: UserAccount;
+
+  @ManyToOne(() => BoardCategory, (boardCategory) => boardCategory.boardPosts)
+  @JoinColumn({ name: "categoryId" })
+  category?: BoardCategory;
 
   @IsString()
   @Column({ name: "ip_address", type: "varchar", length: 45, nullable: true })

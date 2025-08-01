@@ -32,6 +32,7 @@ export class BoardExistsGuard implements CanActivate {
       where: {
         id: boardId,
       },
+      relations: ["channel", "categories"],
     });
 
     if (!boardConfig) {

@@ -95,22 +95,24 @@ export const ArticleContent = ({
 
       {/* 데스크톱 레이아웃 */}
       <div className="hidden md:grid md:grid-cols-12 gap-4 py-4 px-4 items-center">
+        {/* 카테고리 */}
+        <div className="col-span-1 text-center">
+          <span
+            className="px-2 py-0.5 text-xs rounded-full"
+            style={{
+              backgroundColor: "var(--primary-color)",
+              color: "white",
+            }}
+          >
+            테스트
+          </span>
+        </div>
+
         {/* 제목 영역 */}
-        <div className="col-span-6">
+        <div className="col-span-5">
           <div className="flex items-center gap-3">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                {(post as any).category && (
-                  <span
-                    className="px-2 py-0.5 text-xs rounded-full"
-                    style={{
-                      backgroundColor: "var(--primary-color)",
-                      color: "white",
-                    }}
-                  >
-                    {(post as any).category}
-                  </span>
-                )}
                 <h3
                   className="font-medium line-clamp-1"
                   style={{ color: "var(--text-color)" }}

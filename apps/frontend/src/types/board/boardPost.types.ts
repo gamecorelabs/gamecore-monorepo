@@ -1,4 +1,5 @@
 import { UserAccount, GuestAccount } from "../user/user.types";
+import { BoardCategory } from "./boardCategory.types";
 import { BoardConfig } from "./boardConfig.types";
 
 export type BoardPost = {
@@ -15,7 +16,9 @@ export type BoardPost = {
   dislike_count: number;
   comment_count: number;
 
+  boardConfig: BoardConfig;
   author?: UserAccount;
   guest_account?: GuestAccount;
-  boardConfig?: BoardConfig;
+
+  category?: BoardCategory;
 };

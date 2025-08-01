@@ -1,11 +1,12 @@
 "use client";
+import { BoardConfig } from "@/types/board/boardConfig.types";
 import WriteForm from "./parts/WriteForm";
 import { useUserStore } from "@/store/userStore";
 
-const BoardPostNew = ({ boardId }: { boardId: string }) => {
+const BoardPostNew = ({ boardConfig }: { boardConfig: BoardConfig }) => {
   const currentUser = useUserStore((state) => state.user);
 
-  return <WriteForm boardId={boardId} guestMode={!currentUser} />;
+  return <WriteForm boardConfig={boardConfig} guestMode={!currentUser} />;
 };
 
 export default BoardPostNew;

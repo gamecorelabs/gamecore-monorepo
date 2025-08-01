@@ -144,7 +144,12 @@ export class BoardPostService {
   async getPostById(id: number) {
     const post = await this.boardPostRepository.findOne({
       where: { id, status: BoardPostStatus.USE },
-      relations: ["author"],
+      relations: [
+        "author",
+        "category",
+        "boardConfig",
+        "boardConfig.categories",
+      ],
     });
 
     if (!post) {

@@ -7,13 +7,8 @@ import { FallbackPage } from "../../fallback";
 import WriteForm from "../new/parts/WriteForm";
 import useHydrated from "@/utils/hooks/useHydrated";
 
-const BoardPostEdit = ({
-  boardId,
-  post,
-}: {
-  boardId: string;
-  post: BoardPost;
-}) => {
+const BoardPostEdit = ({ post }: { post: BoardPost }) => {
+  const boardId = post.boardConfig.id;
   const currentUser = useUserStore((state) => state.user);
   const [guestMode, setGuestMode] = useState<boolean>(!currentUser);
   const [canAccessPage, setCanAccessPage] = useState<boolean>(false);
@@ -66,7 +61,7 @@ const BoardPostEdit = ({
 
   return (
     <WriteForm
-      boardId={boardId}
+      boardConfig={post.boardConfig}
       post={post}
       guestMode={guestMode}
       guestInfo={guestInfo}

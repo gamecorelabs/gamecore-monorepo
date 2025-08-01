@@ -9,15 +9,10 @@ import { StatusCodes } from "http-status-codes";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import axios from "axios";
 
-const BottomSection = ({
-  boardId,
-  post,
-}: {
-  boardId: string;
-  post: BoardPost;
-}) => {
+const BottomSection = ({ post }: { post: BoardPost }) => {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.user);
+  const boardId = post.boardConfig.id;
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<"edit" | "delete" | null>(
     null

@@ -26,7 +26,7 @@ const BoardPostEditPage = async ({ params }: BoardPostDetailProps) => {
     );
   }
 
-  return <BoardPostEdit boardId={boardId} post={post} />;
+  return <BoardPostEdit post={post} />;
 };
 
 export default BoardPostEditPage;

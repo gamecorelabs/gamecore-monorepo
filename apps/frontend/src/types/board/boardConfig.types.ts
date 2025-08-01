@@ -9,8 +9,8 @@ export type BoardConfig = {
   type: string;
   updated_at: string;
   created_at: string;
+  categories: BoardCategory[];
   channel?: Channel;
-  categories?: BoardCategory[];
 };
 
 export enum BoardStatus {

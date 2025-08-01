@@ -35,6 +35,57 @@ const BoardPostList = ({
             </div>
           </div>
 
+          {/* 카테고리 필터 */}
+          <div className="mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                분류
+              </span>
+              <button
+                className="px-3 py-1 text-sm rounded-full transition-colors"
+                style={{
+                  backgroundColor: "var(--primary-color)",
+                  color: "white",
+                }}
+              >
+                전체
+              </button>
+              <button
+                className="px-3 py-1 text-sm rounded-full transition-colors border"
+                style={{
+                  borderColor: "var(--border-color)",
+                  color: "var(--text-secondary)",
+                  backgroundColor: "transparent",
+                }}
+              >
+                테스트
+              </button>
+              <button
+                className="px-3 py-1 text-sm rounded-full transition-colors border"
+                style={{
+                  borderColor: "var(--border-color)",
+                  color: "var(--text-secondary)",
+                  backgroundColor: "transparent",
+                }}
+              >
+                일반공지
+              </button>
+              <button
+                className="px-3 py-1 text-sm rounded-full transition-colors border"
+                style={{
+                  borderColor: "var(--border-color)",
+                  color: "var(--text-secondary)",
+                  backgroundColor: "transparent",
+                }}
+              >
+                질문
+              </button>
+            </div>
+          </div>
+
           {/* 게시글 테이블 헤더 (데스크톱만) */}
           <div
             className="hidden md:grid md:grid-cols-12 gap-4 py-3 px-4 text-sm font-medium border-b-2"
@@ -44,7 +95,8 @@ const BoardPostList = ({
               color: "var(--text-secondary)",
             }}
           >
-            <div className="col-span-6">제목</div>
+            <div className="col-span-1 text-center">분류</div>
+            <div className="col-span-5">제목</div>
             <div className="col-span-2 text-center">작성자</div>
             <div className="col-span-2 text-center">작성일</div>
             <div className="col-span-1 text-center">조회</div>
@@ -87,6 +139,51 @@ const BoardPostList = ({
           </div>
         </div>
 
+        {/* 카테고리 필터 */}
+        <div className="mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              className="px-3 py-1 text-sm rounded-full transition-colors"
+              style={{
+                backgroundColor: "var(--primary-color)",
+                color: "white",
+              }}
+            >
+              전체
+            </button>
+            <button
+              className="px-3 py-1 text-sm rounded-full transition-colors border"
+              style={{
+                borderColor: "var(--border-color)",
+                color: "var(--text-secondary)",
+                backgroundColor: "transparent",
+              }}
+            >
+              테스트
+            </button>
+            <button
+              className="px-3 py-1 text-sm rounded-full transition-colors border"
+              style={{
+                borderColor: "var(--border-color)",
+                color: "var(--text-secondary)",
+                backgroundColor: "transparent",
+              }}
+            >
+              일반공지
+            </button>
+            <button
+              className="px-3 py-1 text-sm rounded-full transition-colors border"
+              style={{
+                borderColor: "var(--border-color)",
+                color: "var(--text-secondary)",
+                backgroundColor: "transparent",
+              }}
+            >
+              질문
+            </button>
+          </div>
+        </div>
+
         {/* 게시글 테이블 헤더 (데스크톱만) */}
         <div
           className="hidden md:grid md:grid-cols-12 gap-4 py-3 px-4 text-sm font-medium border-b-2"
@@ -96,7 +193,8 @@ const BoardPostList = ({
             color: "var(--text-secondary)",
           }}
         >
-          <div className="col-span-6">제목</div>
+          <div className="col-span-1 text-center">분류</div>
+          <div className="col-span-5">제목</div>
           <div className="col-span-2 text-center">작성자</div>
           <div className="col-span-2 text-center">작성일</div>
           <div className="col-span-1 text-center">조회</div>

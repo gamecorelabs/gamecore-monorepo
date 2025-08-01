@@ -1,8 +1,9 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BoardConfig } from "@base-board/entity/board-config.entity";
 import { BaseModel } from "@base-common/entity/base.entity";
 import { BoardCategoryStatus } from "../enum/board-category.enum";
+import { BoardPost } from "@base-post/board/entity/board-post.entity";
 
 @Entity()
 export class BoardCategory extends BaseModel {
@@ -27,4 +28,7 @@ export class BoardCategory extends BaseModel {
   })
   @JoinColumn({ name: "board_config_id" })
   boardConfig: BoardConfig;
+
+  @OneToMany(() => BoardPost, (post) => post.category)
+  boardPosts: BoardPost[];
 }

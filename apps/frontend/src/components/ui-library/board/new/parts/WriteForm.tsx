@@ -15,14 +15,15 @@ import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import { BoardPost } from "@/types/board/boardPost.types";
 import GuestAuthorFields from "./GuestAuthorFields";
 import PostFields from "./PostFields";
+import { BoardConfig } from "@/types/board/boardConfig.types";
 
 const WriteForm = ({
-  boardId,
+  boardConfig,
   guestMode,
   post,
   guestInfo,
 }: {
-  boardId: string;
+  boardConfig: BoardConfig;
   guestMode: boolean;
   post?: BoardPost;
   guestInfo?: {
@@ -31,6 +32,7 @@ const WriteForm = ({
   };
 }) => {
   const isEditMode = !!post;
+  const boardId = boardConfig.id;
   const currentUser = useUserStore((state) => state.user);
   const hydrated = useHydrated();
   const router = useRouter();
@@ -130,7 +132,7 @@ const WriteForm = ({
         <GuestAuthorFields isEditMode={isEditMode} guestInfo={guestInfo} />
       )}
 
-      <PostFields post={post} />
+      <PostFields boardConfig={boardConfig} post={post} />
 
       <button
         type="submit"

@@ -2,7 +2,7 @@ import { BoardConfig } from "./boardConfig.types";
 
 export type BoardCategory = {
   id: number;
-  title: string;
+  name: string;
   description: string;
   status: BoardCategoryStatus;
   created_at: string;

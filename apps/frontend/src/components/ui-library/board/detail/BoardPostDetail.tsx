@@ -5,13 +5,7 @@ import BottomSection from "./parts/BottomSection";
 import DetailContent from "./parts/DetailContent";
 import DetailHeader from "./parts/DetailHeader";
 
-const BoardPostDetail = ({
-  boardId,
-  post,
-}: {
-  boardId: string;
-  post: BoardPost;
-}) => {
+const BoardPostDetail = ({ post }: { post: BoardPost }) => {
   return (
     <div
       className="mx-auto rounded-lg shadow-md"
@@ -22,7 +16,7 @@ const BoardPostDetail = ({
     >
       <DetailHeader post={post} />
       <DetailContent post={post} />
-      <BottomSection boardId={boardId} post={post} />
+      <BottomSection post={post} />
       <CommentContainer
         resourceType={ResourceType.BOARD_POST}
         resourceId={post.id}
