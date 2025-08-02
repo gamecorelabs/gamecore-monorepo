@@ -75,19 +75,19 @@ export class BaseBoardService {
 
       const categories = [
         {
-          name: "잡담",
+          title: "잡담",
           order: 1,
           status: BoardCategoryStatus.ACTIVE,
           boardConfig: { id: result.id },
         },
         {
-          name: "질문",
+          title: "질문",
           order: 2,
           status: BoardCategoryStatus.ACTIVE,
           boardConfig: { id: result.id },
         },
         {
-          name: "기타",
+          title: "기타",
           order: 3,
           status: BoardCategoryStatus.ACTIVE,
           boardConfig: { id: result.id },
