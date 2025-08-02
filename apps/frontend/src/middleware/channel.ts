@@ -49,7 +49,7 @@ export function isCommonPath(pathname: string): boolean {
  */
 export async function isValidChannel(channel: string) {
   // 채널 유효한지 확인
-  let response = await adminApi.get(`/config/channel/${channel}/status`);
+  const response = await adminApi.get(`/config/channel/${channel}/status`);
   const isActiveChannel = response.data.status === ChannelStatus.ACTIVE;
 
   return (

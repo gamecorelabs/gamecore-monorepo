@@ -8,7 +8,10 @@ export { BasePostService } from "./base-post.service";
 export { BoardPostService } from "./board/board-post.service";
 
 // Board Post DTOs
-export { BoardPostPaginationDto } from "./board/dto/board-post-pagination.dto";
+export {
+  BoardPostPaginationDto,
+  RequestBoardPostPaginationDto,
+} from "./board/dto/board-post-pagination.dto";
 export {
   CreateBoardPostDto,
   RequestCreateBoardPostDto,

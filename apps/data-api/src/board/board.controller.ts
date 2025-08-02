@@ -17,12 +17,11 @@ import {
   GuestOrUserTokenGuard,
   RequestCreateBoardPostDto,
   ResourceExistenceGuard,
-  BoardPostPaginationDto,
+  RequestBoardPostPaginationDto,
 } from "@gamecorelabs/nestjs-core";
 import * as UserTypes from "@gamecorelabs/nestjs-core";
 import * as RequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { RequestBoardPostPaginationDto } from "@gamecorelabs/nestjs-core/base-post/board/dto/board-post-pagination.dto";
 
 @Controller("board")
 export class BoardController {
