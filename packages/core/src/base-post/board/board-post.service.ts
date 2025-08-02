@@ -19,8 +19,10 @@ import { ResourceType } from "@base-common/enum/common.enum";
 import { LikeStatus, LikeType } from "@base-like/enum/like.enum";
 import { BaseLikeService } from "@base-like/base-like.service";
 import { BaseCommentService } from "@base-comment/base-comment.service";
-import { BaseCommonService } from "@base-common/base-common.service";
-import { BoardPostPaginationDto } from "./const/board-post-pagination.dto";
+import {
+  BoardPostPaginationDto,
+  RequestBoardPostPaginationDto,
+} from "./dto/board-post-pagination.dto";
 import { CommonPaginationService } from "@base-common/service/common-pagination.service";
 
 @Injectable()
@@ -161,14 +163,21 @@ export class BoardPostService {
     return post;
   }
 
-  async getPostsPaginate(boardId: number, dto: BoardPostPaginationDto) {
+  async getPostsPaginate(boardId: number, dto: RequestBoardPostPaginationDto) {
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
         boardConfig: { id: boardId },
+        ...(dto.where__categoryId && {
+          category: { id: dto.where__categoryId },
+        }),
       },
       relations: ["author", "boardConfig", "category"],
     };
+
+    if (dto.where__categoryId) {
+      delete dto.where__categoryId;
+    }
 
     return this.commonPaginationService.pagePaginate(
       dto,

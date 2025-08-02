@@ -1,6 +1,21 @@
+"use client";
 import { BoardConfig } from "@/types/board/boardConfig.types";
+import { useSearchParams } from "next/navigation";
 
 const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
+  const searchParams = useSearchParams();
+  const currentCategoryId = searchParams.get("where__categoryId");
+
+  const handleCategoryClick = (categoryId?: string) => {
+    const url = new URL(window.location.href);
+    if (!categoryId) {
+      url.searchParams.delete("where__categoryId");
+    } else {
+      url.searchParams.set("where__categoryId", categoryId);
+    }
+    window.location.href = url.toString();
+  };
+
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -16,27 +31,41 @@ const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
       <div className="mb-4">
         <div className="flex flex-wrap items-center gap-2">
           <button
-            className="px-3 py-1 text-sm rounded-full transition-colors"
+            className="px-3 py-1 text-sm rounded-full transition-colors border"
             style={{
-              backgroundColor: "var(--primary-color)",
-              color: "white",
+              backgroundColor: !currentCategoryId
+                ? "var(--primary-color)"
+                : "transparent",
+              color: !currentCategoryId ? "white" : "var(--text-secondary)",
+              borderColor: !currentCategoryId
+                ? "var(--primary-color)"
+                : "var(--border-color)",
             }}
+            onClick={() => handleCategoryClick()}
           >
             전체
           </button>
-          {boardConfig.categories.map((category) => (
-            <button
-              key={category.id}
-              className="px-3 py-1 text-sm rounded-full transition-colors border"
-              style={{
-                borderColor: "var(--border-color)",
-                color: "var(--text-secondary)",
-                backgroundColor: "transparent",
-              }}
-            >
-              {category.title}
-            </button>
-          ))}
+          {boardConfig.categories.map((category) => {
+            const isActive = currentCategoryId === category.id.toString();
+            return (
+              <button
+                key={category.id}
+                className="px-3 py-1 text-sm rounded-full transition-colors border"
+                style={{
+                  borderColor: isActive
+                    ? "var(--primary-color)"
+                    : "var(--border-color)",
+                  color: isActive ? "white" : "var(--text-secondary)",
+                  backgroundColor: isActive
+                    ? "var(--primary-color)"
+                    : "transparent",
+                }}
+                onClick={() => handleCategoryClick(category.id + "")}
+              >
+                {category.title}
+              </button>
+            );
+          })}
         </div>
       </div>
       <div
