@@ -24,7 +24,7 @@ export class BaseUserService {
       }
     } catch (error) {
       throw new InternalServerErrorException(
-        `Failed to save user: ${error.message}`
+        `Failed to save user2: ${error.message}`
       );
     }
   }

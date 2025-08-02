@@ -279,7 +279,7 @@ export default function BoardManagement() {
                     {board.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {board?.channel.title}
+                    {board.channel?.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
