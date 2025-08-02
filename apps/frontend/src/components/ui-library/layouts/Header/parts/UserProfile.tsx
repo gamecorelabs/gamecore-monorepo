@@ -21,9 +21,9 @@ const UserProfile = () => {
           ? currentUser?.userAccount.nickname
           : ""}
       </span>
-      <Link href="/user/profile" className="">
+      {/* <Link href="/user/profile" className="">
         프로필
-      </Link>
+      </Link> */}
       <Link href="" className="" onClick={handleLogout}>
         로그아웃
       </Link>
