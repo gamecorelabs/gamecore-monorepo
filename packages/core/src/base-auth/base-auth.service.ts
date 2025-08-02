@@ -5,6 +5,7 @@ import { UserAccount } from "@base-user/entity/user-account.entity";
 import { TOKEN_EXPIRE } from "./const/auth.const";
 import { JwtService } from "@nestjs/jwt";
 import { Response as ExpressResponse } from "express";
+import { randomBytes } from "crypto";
 
 @Injectable()
 export class BaseAuthService {
@@ -145,5 +146,11 @@ export class BaseAuthService {
     });
 
     return { success: true };
+  }
+
+  /** CSRF 토큰 생성 */
+  async getCsrfToken(): Promise<string> {
+    const csrfToken = randomBytes(32).toString("hex");
+    return csrfToken;
   }
 }

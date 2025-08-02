@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Request,
   Res,
@@ -83,5 +84,10 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   async getMe(@CurrentUser() user: userTypes.UserLoginRequest) {
     return user;
+  }
+
+  @Get('/csrf-token')
+  async getCsrfToken(): Promise<string> {
+    return await this.baseAuthService.getCsrfToken();
   }
 }
