@@ -16,10 +16,7 @@ export class BoardPostPaginationDto extends BasePaginationDto {
   where__content__like?: string;
 }
 
-export class RequestBoardPostPaginationDto extends PickType(
-  BoardPostPaginationDto,
-  ["take", "where__title__like", "where__content__like"]
-) {
+export class RequestBoardPostPaginationDto extends BoardPostPaginationDto {
   @IsNumber()
   @IsOptional()
   where__categoryId?: number;
