@@ -41,11 +41,13 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
         Like,
       ],
       synchronize: true,
+      dropSchema: true, // DB 초기화 용도 목적, 초기화 후 삭제
     }),
     CoreModule,
     BoardModule,
     PostModule,
     CommentModule,
+
     LikeModule,
   ],
   controllers: [AppController],

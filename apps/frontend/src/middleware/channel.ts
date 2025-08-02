@@ -79,10 +79,11 @@ export async function handleChannelRouting(
   const isValideChannel = await isValidChannel(channel);
 
   // 유효하지 않은 채널은 메인으로 리다이렉션
-  if (!isValideChannel) {
-    const mainUrl = getMainChannelUrl(url);
-    return NextResponse.redirect(mainUrl);
-  }
+  // FIXME: 임시 제외
+  // if (!isValideChannel) {
+  //   const mainUrl = getMainChannelUrl(url);
+  //   return NextResponse.redirect(mainUrl);
+  // }
 
   // 공통 경로는 그대로 처리하되 채널 정보를 헤더로 전달
   if (isCommonPath(url.pathname)) {
