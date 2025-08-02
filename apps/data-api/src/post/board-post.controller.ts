@@ -24,6 +24,7 @@ import {
   BaseCommentService,
   QueryRunnerTransactionInterceptor,
   CurrentQueryRunner,
+  CsrfTokenProtectionGuard,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
@@ -51,8 +52,11 @@ export class BoardPostController {
   }
 
   @Patch(":id")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(AnyFilesInterceptor())
   async patchPost(
     @Param("id", ParseIntPipe) id: number,
@@ -64,8 +68,11 @@ export class BoardPostController {
   }
 
   @Delete(":id")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   async deletePost(
     @Param("id", ParseIntPipe) id: number,
     @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest
@@ -89,8 +96,11 @@ export class BoardPostController {
 
   // 특정 게시글 댓글 저장
   @Post(":id/comment")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   postComment(
     @Request() req: BoardRequestTypes.BoardPostRequest,
@@ -108,8 +118,11 @@ export class BoardPostController {
 
   // 특정 게시글 좋아요
   @Post(":id/like")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
     @Request() req: CommonRequestTypes.CommonRequest,
@@ -126,8 +139,7 @@ export class BoardPostController {
   }
 
   @Get(":id/owner-check")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(ResourceExistenceGuard, GuestOrUserTokenGuard)
   async getOwnerCheck(
     @Request() req: CommonRequestTypes.CommonRequest,
     @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,

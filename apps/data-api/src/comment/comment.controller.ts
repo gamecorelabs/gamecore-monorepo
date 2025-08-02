@@ -20,6 +20,7 @@ import {
   BaseLikeService,
   CurrentQueryRunner,
   QueryRunnerTransactionInterceptor,
+  CsrfTokenProtectionGuard,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
@@ -39,8 +40,11 @@ export class CommentController {
 
   // 댓글 삭제
   @Delete(":id")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async deleteComment(
     @Request() req: CommentRequestTypes.CommentRequest,
@@ -54,8 +58,11 @@ export class CommentController {
 
   // 특정 댓글 좋아요/싫어요
   @Post(":id/like")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
     @Request() req: CommonRequestTypes.CommonRequest,

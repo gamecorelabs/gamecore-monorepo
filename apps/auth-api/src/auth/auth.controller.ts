@@ -16,6 +16,7 @@ import {
   AccessTokenGuard,
   UserAccount,
   CurrentUser,
+  CsrfTokenProtectionGuard,
 } from '@gamecorelabs/nestjs-core';
 import * as userTypes from '@gamecorelabs/nestjs-core';
 import {
@@ -35,7 +36,7 @@ export class AuthController {
 
   // access token 만료시 재발급
   @Post('token/access')
-  @UseGuards(RefreshTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, RefreshTokenGuard)
   async accessToken(
     @CurrentUser() user: userTypes.UserLoginRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
@@ -48,6 +49,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @UseGuards(CsrfTokenProtectionGuard)
   async registerUser(
     @Body() dto: CreateUserAccountDto,
     @Res({ passthrough: true }) res: ExpressResponse,
@@ -57,7 +59,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(BasicUserTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, BasicUserTokenGuard)
   async loginUser(
     @Request() req: LoginRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
@@ -73,6 +75,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(CsrfTokenProtectionGuard)
   async logoutUser(@Res({ passthrough: true }) res: ExpressResponse) {
     // 후속 처리 여부에 따라 authService 추가 로직 작성 필요
     // await this.authService.logoutUser(res);
@@ -81,7 +84,7 @@ export class AuthController {
   }
 
   @Post('me')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, AccessTokenGuard)
   async getMe(@CurrentUser() user: userTypes.UserLoginRequest) {
     return user;
   }

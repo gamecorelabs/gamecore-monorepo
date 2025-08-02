@@ -17,6 +17,7 @@ import {
   BaseBoardService,
   QueryRunnerTransactionInterceptor,
   CurrentQueryRunner,
+  CsrfTokenProtectionGuard,
 } from '@gamecorelabs/nestjs-core';
 import { QueryRunner } from 'typeorm';
 
@@ -29,8 +30,7 @@ export class ConfigController {
   ) {}
 
   @Get('/channel')
-  @UseGuards(GuestOrUserTokenGuard)
-  @UseGuards(AdminRoleUserGuard)
+  @UseGuards(GuestOrUserTokenGuard, AdminRoleUserGuard)
   getChannelConfig() {
     return this.baseChannelService.getChannelConfig();
   }
@@ -41,14 +41,14 @@ export class ConfigController {
   }
 
   @Post('/channel')
-  @UseGuards(AdminRoleUserGuard)
+  @UseGuards(CsrfTokenProtectionGuard, AdminRoleUserGuard)
   postChannelConfig(@Body() body: CreateChannelConfigDto) {
     return this.baseChannelService.saveChannelConfig(body);
   }
 
   // 게시판 설정 저장
   @Post('/channel/:id/board')
-  @UseGuards(AdminRoleUserGuard)
+  @UseGuards(CsrfTokenProtectionGuard, AdminRoleUserGuard)
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   postBoardConfig(
     @Param('id') id: number,

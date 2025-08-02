@@ -4,7 +4,8 @@ import {
   GuestOrUserTokenGuard,
   CurrentUser,
   BaseLikeService,
-  SelectedLikeDto
+  SelectedLikeDto,
+  CsrfTokenProtectionGuard,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 
@@ -17,7 +18,7 @@ export class LikeController {
 
   // 특정 게시글에 좋아요 누른 여부
   @Post("selected")
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, GuestOrUserTokenGuard)
   checkSelectedLike(
     @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
     @Body() dto: SelectedLikeDto

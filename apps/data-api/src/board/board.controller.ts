@@ -18,6 +18,7 @@ import {
   RequestCreateBoardPostDto,
   ResourceExistenceGuard,
   RequestBoardPostPaginationDto,
+  CsrfTokenProtectionGuard,
 } from "@gamecorelabs/nestjs-core";
 import * as UserTypes from "@gamecorelabs/nestjs-core";
 import * as RequestTypes from "@gamecorelabs/nestjs-core";
@@ -64,8 +65,11 @@ export class BoardController {
 
   // 해당 게시판에 글쓰기
   @Post(":id/post")
-  @UseGuards(ResourceExistenceGuard)
-  @UseGuards(GuestOrUserTokenGuard)
+  @UseGuards(
+    CsrfTokenProtectionGuard,
+    ResourceExistenceGuard,
+    GuestOrUserTokenGuard
+  )
   @UseInterceptors(AnyFilesInterceptor()) // 파일 없어도 formData 파싱을 위해 필요
   postBoardPost(
     @Request() req: RequestTypes.BoardConfigRequest,
