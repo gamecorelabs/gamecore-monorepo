@@ -13,11 +13,3 @@ export const createApi = (config: ApiConfig, options?: ApiOptions) => {
 
   return createBaseApi(url, options);
 };
-
-// 런타임에 환경 변경 감지 (HMR 등)
-export const createDynamicApi = (config: ApiConfig, options: ApiOptions) => {
-  return createBaseApi(
-    isServer() ? config.internalUrl : config.publicUrl,
-    options
-  );
-};
