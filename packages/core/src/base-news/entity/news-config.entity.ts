@@ -4,16 +4,25 @@ import { IsEnum, IsNumber, IsString } from "class-validator";
 import { NewsPost } from "@base-post/news/entity/news-post.entity";
 import { NewsStatus } from "../enum/news-config.enum";
 import { NewsCategory } from "./news-category.entity";
+import { NewsType } from "../enum/news-type.enum";
 
 @Entity()
 export class NewsConfig extends BaseModel {
   @IsString()
   @Column({ type: "varchar", length: 100 })
-  title: string; // 바람의나라 자유게시판
+  title: string;
 
   @IsString()
   @Column({ type: "varchar", length: 255 })
   description?: string;
+
+  @IsEnum(NewsType)
+  @Column({
+    type: "enum",
+    enum: NewsType,
+    default: NewsType.GAME, // 기본값은 GAME
+  })
+  type: NewsType;
 
   @IsEnum(NewsStatus)
   @Column({ type: "enum", enum: NewsStatus, default: NewsStatus.ACTIVE })
