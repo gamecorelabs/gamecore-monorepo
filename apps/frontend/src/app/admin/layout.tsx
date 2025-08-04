@@ -79,6 +79,12 @@ export default async function AdminLayout({
                 >
                   카테고리 설정
                 </Link>
+                <Link
+                  href="/admin/news"
+                  className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors whitespace-nowrap"
+                >
+                  뉴스 페이지 설정
+                </Link>
               </div>
             </nav>
           </aside>

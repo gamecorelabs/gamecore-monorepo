@@ -3,6 +3,7 @@ import { NewsConfig } from "../entity/news-config.entity";
 
 export class CreateNewsConfigDto extends PickType(NewsConfig, [
   "title",
+  "type",
   "description",
   "status",
 ]) {}

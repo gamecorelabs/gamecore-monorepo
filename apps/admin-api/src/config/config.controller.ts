@@ -18,6 +18,8 @@ import {
   QueryRunnerTransactionInterceptor,
   CurrentQueryRunner,
   CsrfTokenProtectionGuard,
+  BaseNewsService,
+  CreateNewsConfigDto,
 } from '@gamecorelabs/nestjs-core';
 import { QueryRunner } from 'typeorm';
 
@@ -27,6 +29,7 @@ export class ConfigController {
     private readonly configService: ConfigService,
     private readonly baseBoardService: BaseBoardService,
     private readonly baseChannelService: BaseChannelService,
+    private readonly baseNewsService: BaseNewsService,
   ) {}
 
   @Get('/channel')
@@ -62,5 +65,22 @@ export class ConfigController {
   @Get('/board')
   getBoardConfig() {
     return this.baseBoardService.getBoardConfig();
+  }
+
+  // 설정된 뉴스 설정 모두 불러오기
+  @Get('/news')
+  getNewsConfig() {
+    return this.baseNewsService.getNewsConfig();
+  }
+
+  // 뉴스 설정 저장
+  @Post('/news')
+  @UseGuards(CsrfTokenProtectionGuard, AdminRoleUserGuard)
+  @UseInterceptors(QueryRunnerTransactionInterceptor)
+  postNewsConfig(
+    @Body() body: CreateNewsConfigDto,
+    @CurrentQueryRunner() qr?: QueryRunner,
+  ) {
+    return this.baseNewsService.saveNewsConfig(body, qr);
   }
 }

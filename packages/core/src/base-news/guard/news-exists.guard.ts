@@ -26,7 +26,7 @@ export class NewsExistsGuard implements CanActivate {
       throw new BadRequestException("알 수 없는 뉴스 번호입니다.");
     }
 
-    // 게시판에 속한 게시물인지 확인
+    // 뉴스 대분류에 속한 뉴스인지 확인
     const newsConfig = await this.newsConfigRepository.findOne({
       where: {
         id: newsId,

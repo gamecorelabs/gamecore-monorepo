@@ -12,6 +12,9 @@ import {
   Comment,
   BoardCategory,
   CoreModule,
+  NewsPost,
+  NewsCategory,
+  NewsConfig,
 } from '@gamecorelabs/nestjs-core';
 
 @Module({
@@ -32,6 +35,9 @@ import {
         BoardConfig,
         BoardCategory,
         BoardPost,
+        NewsConfig,
+        NewsCategory,
+        NewsPost,
         UserAccount,
         Comment,
       ],

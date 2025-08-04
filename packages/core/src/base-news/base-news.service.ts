@@ -57,19 +57,19 @@ export class BaseNewsService {
 
       const categories = [
         {
-          title: "잡담",
+          title: "소식",
           order: 1,
           status: NewsCategoryStatus.ACTIVE,
           newsConfig: { id: result.id },
         },
         {
-          title: "질문",
+          title: "정보",
           order: 2,
           status: NewsCategoryStatus.ACTIVE,
           newsConfig: { id: result.id },
         },
         {
-          title: "기타",
+          title: "업데이트",
           order: 3,
           status: NewsCategoryStatus.ACTIVE,
           newsConfig: { id: result.id },
