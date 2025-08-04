@@ -50,16 +50,16 @@ export class ResourceExistenceGuard implements CanActivate {
 
     // resourceType에 따라 다른 가드 적용
     switch (apiResourceType) {
-      case "board":
+      case ResourceType.BOARD:
         return this.boardExistsGuard.canActivate(context);
-      case "news":
+      case ResourceType.NEWS:
         return this.newsExistsGuard.canActivate(context);
-      case "board-post":
+      case ResourceType.BOARD_POST:
         return this.postInBoardGuard.canActivate(context);
-      case "news-post":
+      case ResourceType.NEWS_POST:
         return this.postInNewsGuard.canActivate(context);
-      // case "guide-post":
-      case "comment":
+      // case ResourceType.GUIDE_POST:
+      case ResourceType.COMMENT:
         return this.commentInPostGuard.canActivate(context);
       default:
         throw new BadRequestException(

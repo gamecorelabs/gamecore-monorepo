@@ -1,8 +1,8 @@
 import { getUserName } from "@/utils/helpers/getUserName";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
 
-const DetailHeader = ({ post }: { post: BoardPost }) => {
+const DetailHeader = ({ post }: { post: NewsPost }) => {
   return (
     <>
       <div className="mb-6">

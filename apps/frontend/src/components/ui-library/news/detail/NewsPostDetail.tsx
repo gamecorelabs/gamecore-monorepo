@@ -1,11 +1,11 @@
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 import { ResourceType } from "@/types/common/resource.types";
 import CommentContainer from "@ui-library/comment/CommentContainer";
 import BottomSection from "./parts/BottomSection";
 import DetailContent from "./parts/DetailContent";
 import DetailHeader from "./parts/DetailHeader";
 
-const NewsPostDetail = ({ post }: { post: BoardPost }) => {
+const NewsPostDetail = ({ post }: { post: NewsPost }) => {
   return (
     <div
       className="mx-auto rounded-lg shadow-md"

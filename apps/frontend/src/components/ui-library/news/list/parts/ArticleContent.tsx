@@ -1,5 +1,5 @@
 "use client";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 import {
   ChatBubbleOvalLeftIcon,
   HandThumbUpIcon,
@@ -8,15 +8,15 @@ import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
 export const ArticleContent = ({
-  boardId,
+  newsId,
   post,
 }: {
-  boardId: number;
-  post: BoardPost;
+  newsId: number;
+  post: NewsPost;
 }) => {
   return (
     <Link
-      href={`/board/${boardId}/post/${post.id}`}
+      href={`/news/${newsId}/post/${post.id}`}
       className="block transition-colors board-article-link"
     >
       {/* 모바일 레이아웃 */}

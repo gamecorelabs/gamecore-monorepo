@@ -1,8 +1,8 @@
 "use client";
-import { BoardConfig } from "@/types/board/boardConfig.types";
+import { NewsConfig } from "@/types/news/newsConfig.types";
 import { useSearchParams } from "next/navigation";
 
-const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
+const TableHeader = ({ newsConfig }: { newsConfig: NewsConfig }) => {
   const searchParams = useSearchParams();
   const currentCategoryId = searchParams.get("where__categoryId");
 
@@ -24,7 +24,7 @@ const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
             className="text-2xl font-bold"
             style={{ color: "var(--text-color)" }}
           >
-            {boardConfig.title || "게시판 이름을 설정해주세요."}
+            {newsConfig.title || "뉴스 페이지 이름을 설정해주세요."}
           </h2>
         </div>
       </div>
@@ -45,7 +45,7 @@ const TableHeader = ({ boardConfig }: { boardConfig: BoardConfig }) => {
           >
             전체
           </button>
-          {boardConfig.categories.map((category) => {
+          {newsConfig.categories.map((category) => {
             const isActive = currentCategoryId === category.id.toString();
             return (
               <button

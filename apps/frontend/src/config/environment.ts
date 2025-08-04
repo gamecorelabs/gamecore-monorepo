@@ -5,7 +5,14 @@
 const ENABLED_CHANNELS = ["main", "baram", "djmax"];
 
 // 공통 경로 설정
-export const COMMON_PATHS = ["/board", "/user", "/api", "/auth", "/admin"];
+export const COMMON_PATHS = [
+  "/board",
+  "/user",
+  "/api",
+  "/auth",
+  "/admin",
+  "/news",
+];
 
 // 개발 환경 설정
 export const DEV_URL_CONFIG = {

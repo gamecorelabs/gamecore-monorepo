@@ -1,13 +1,13 @@
 "use client";
 import LikeDetail from "@/components/ui-library/like/LikeDetail";
 import { useLikeSelection } from "@/utils/hooks/useLikeSelection";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 import { ResourceType } from "@/types/common/resource.types";
 import { useMemo } from "react";
 
-const DetailContent = ({ post }: { post: BoardPost }) => {
+const DetailContent = ({ post }: { post: NewsPost }) => {
   const { selectedMap, isLoading } = useLikeSelection(
-    ResourceType.BOARD_POST,
+    ResourceType.NEWS_POST,
     useMemo(() => [post.id], [post.id])
   );
 
@@ -19,7 +19,7 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
 
       {!isLoading && (
         <LikeDetail
-          resourceType={ResourceType.BOARD_POST}
+          resourceType={ResourceType.NEWS_POST}
           resourceId={post.id}
           likeCount={post.likeCount}
           dislikeCount={post.dislikeCount}

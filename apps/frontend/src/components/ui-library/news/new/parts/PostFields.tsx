@@ -1,12 +1,12 @@
-import { BoardConfig } from "@/types/board/boardConfig.types";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsConfig } from "@/types/news/newsConfig.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 
 const PostFields = ({
-  boardConfig,
+  newsConfig,
   post,
 }: {
-  boardConfig: BoardConfig;
-  post?: BoardPost;
+  newsConfig: NewsConfig;
+  post?: NewsPost;
 }) => {
   return (
     <>
@@ -24,7 +24,7 @@ const PostFields = ({
           }}
           defaultValue={post?.category?.id || ""}
         >
-          {boardConfig.categories.map((category) => (
+          {newsConfig.categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.title}
             </option>

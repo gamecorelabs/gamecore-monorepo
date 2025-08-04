@@ -1,7 +1,7 @@
 import { getUserName } from "@/utils/helpers/getUserName";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 
-export const ArticleInfo = ({ post }: { post: BoardPost }) => (
+export const ArticleInfo = ({ post }: { post: NewsPost }) => (
   <div className="flex justify-between text-sm mt-2">
     <div className="font-medium flex items-center">
       {/* TODO: Profile Image 노출 */}

@@ -1,33 +1,33 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { ArticleContent } from "./parts/ArticleContent";
-import { BoardPost } from "@/types/board/boardPost.types";
+import { NewsPost } from "@/types/news/newsPost.types";
 import EmptyArticle from "./parts/EmptyArticle";
 import PaginationContainer from "@ui-library/common/PaginationContainer";
 import { PaginationInfo } from "@/types/common/pagination-types";
 import SearchList from "./parts/SearchInput";
 import TableHeader from "./parts/TableHeader";
-import { BoardConfig } from "@/types/board/boardConfig.types";
+import { NewsConfig } from "@/types/news/newsConfig.types";
 
 const NewsPostList = ({
-  boardConfig,
+  newsConfig,
   posts,
   paginationInfo,
 }: {
-  boardConfig: BoardConfig;
-  posts: BoardPost[];
+  newsConfig: NewsConfig;
+  posts: NewsPost[];
   paginationInfo: PaginationInfo;
 }) => {
   const router = useRouter();
-  const boardId = boardConfig.id;
+  const newsId = newsConfig.id;
   const hasPost = posts && posts.length > 0;
 
   return (
     <div className="min-h-screen">
-      {/* 게시글 헤더 */}
-      <TableHeader boardConfig={boardConfig} />
+      {/* 뉴스 페이지 헤더 */}
+      <TableHeader newsConfig={newsConfig} />
 
-      {/* 컨텐츠 영역 */}
+      {/* 뉴스 컨텐츠 영역 */}
       {hasPost ? (
         <div className="space-y-0">
           {posts.map((post) => (
@@ -37,7 +37,7 @@ const NewsPostList = ({
               style={{ borderColor: "var(--border-color)" }}
               data-id={post.id}
             >
-              <ArticleContent boardId={boardId} post={post} />
+              <ArticleContent newsId={newsId} post={post} />
             </article>
           ))}
         </div>
@@ -48,7 +48,7 @@ const NewsPostList = ({
       {/* 하단 컨트롤 */}
       <div className="flex mt-6 justify-end">
         <button
-          onClick={() => router.push(`/board/${boardId}/post/new`)}
+          onClick={() => router.push(`/news/${newsId}/post/new`)}
           className="px-4 py-1 rounded-sm font-medium transition-all whitespace-nowrap"
           style={{
             backgroundColor: "var(--primary-color)",
@@ -65,7 +65,7 @@ const NewsPostList = ({
           <PaginationContainer
             {...paginationInfo}
             onPageChange={(page) => {
-              router.push(`/board/${boardId}/post?page=${page}`);
+              router.push(`/news/${newsId}/post?page=${page}`);
             }}
           />
         </div>

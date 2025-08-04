@@ -6,6 +6,7 @@ export const getNewsConfig = async (newsId: string) => {
   try {
     const response = await dataApi.get(`/news/${newsId}`);
     config = response?.data || null;
+    console.log("News config fetched:", config);
   } catch (error) {
     console.error("Error fetching news config:", error);
   }

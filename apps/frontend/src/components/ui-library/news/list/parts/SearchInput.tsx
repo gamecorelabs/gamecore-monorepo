@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
 import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
-import { boardListSearchSchema } from "@/utils/validation/board/boardListSearchSchema";
+import { newsListSearchSchema } from "@/utils/validation/news/newsListSearchSchema";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
@@ -37,7 +37,7 @@ const SearchList = ({ defaultValue = "title" }: { defaultValue?: string }) => {
       return;
     }
 
-    const validation = boardListSearchSchema.safeParse(formObject);
+    const validation = newsListSearchSchema.safeParse(formObject);
     if (!validation.success) {
       const firstIssue = validation.error.issues[0];
       getZodErrorMessage(formRef, firstIssue);
