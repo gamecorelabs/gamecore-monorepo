@@ -26,9 +26,6 @@ const TableHeader = ({ newsConfig }: { newsConfig: NewsConfig }) => {
           >
             {newsConfig.title || "뉴스"}
           </h1>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            최신 게임 소식을 확인하세요
-          </p>
         </div>
       </div>
 

@@ -1,24 +1,26 @@
 import { getUserName } from "@/utils/helpers/getUserName";
 import { NewsPost } from "@/types/news/newsPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
-import { 
-  EyeIcon, 
-  ClockIcon, 
+import {
+  EyeIcon,
+  ClockIcon,
   UserIcon,
-  CalendarIcon 
+  CalendarIcon,
 } from "@heroicons/react/24/outline";
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 
 const DetailHeader = ({ post }: { post: NewsPost }) => {
   return (
     <div className="relative">
       {/* 그라데이션 헤더 배경 */}
-      <div 
+      <div
         className="absolute inset-0 rounded-t-lg opacity-5"
-        style={{ 
-          background: "linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark, #1e40af) 100%)"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark, #1e40af) 100%)",
         }}
       />
-      
+
       <div className="relative p-8 pb-6">
         {/* 카테고리 및 메타 정보 */}
         <div className="flex items-center justify-between mb-4">
@@ -32,17 +34,6 @@ const DetailHeader = ({ post }: { post: NewsPost }) => {
             >
               {post.category?.title || "일반"}
             </span>
-          </div>
-          
-          <div className="flex items-center gap-4 text-sm" style={{ color: "var(--text-muted)" }}>
-            <div className="flex items-center gap-1">
-              <EyeIcon className="h-4 w-4" />
-              <span>{post.viewCount || 0}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <ClockIcon className="h-4 w-4" />
-              <span>{formatDate(post.createdAt, { month: "short", day: "numeric" })}</span>
-            </div>
           </div>
         </div>
 
@@ -68,22 +59,50 @@ const DetailHeader = ({ post }: { post: NewsPost }) => {
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <UserIcon className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
-                <span className="font-medium" style={{ color: "var(--text-color)" }}>
+                <UserIcon
+                  className="h-4 w-4"
+                  style={{ color: "var(--text-muted)" }}
+                />
+                <span
+                  className="font-medium"
+                  style={{ color: "var(--text-color)" }}
+                >
                   {getUserName(post)}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
+              <div
+                className="flex items-center gap-2 text-sm"
+                style={{ color: "var(--text-muted)" }}
+              >
                 <CalendarIcon className="h-4 w-4" />
-                <span>{formatDate(post.createdAt, { year: "numeric", month: "long", day: "numeric" })}</span>
+                <span>
+                  {formatDate(post.createdAt, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </span>
               </div>
+            </div>
+          </div>
+          <div
+            className="flex items-center gap-4 text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <div className="flex items-center gap-1">
+              <EyeIcon className="h-4 w-4" />
+              <span>{post.viewCount || 0}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <HandThumbUpIcon className="h-4 w-4" />
+              <span>{post.likeCount || 0}</span>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* 구분선 */}
-      <div 
+      <div
         className="h-px mx-8"
         style={{ backgroundColor: "var(--border-color)" }}
       />
