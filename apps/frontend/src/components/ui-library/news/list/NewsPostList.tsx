@@ -30,12 +30,12 @@ const NewsPostList = ({
       {/* 뉴스 컨텐츠 영역 */}
       {hasPost ? (
         <div className="space-y-0">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <article
               key={post.id}
-              className="article-row transition-colors border-b last:border-b-0"
-              style={{ borderColor: "var(--border-color)" }}
-              data-id={post.id}
+              className={`news-article-row transition-colors hover:bg-opacity-50 ${
+                index % 2 === 0 ? "bg-opacity-30" : "bg-opacity-0"
+              }`}
             >
               <ArticleContent newsId={newsId} post={post} />
             </article>
@@ -59,7 +59,7 @@ const NewsPostList = ({
         </button>
       </div>
 
-      {/* 페이지네이션 (게시글이 있을 때만) */}
+      {/* 페이지네이션 */}
       {hasPost && (
         <div className="mt-8 space-y-6">
           <PaginationContainer

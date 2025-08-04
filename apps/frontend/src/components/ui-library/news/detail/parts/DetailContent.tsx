@@ -12,21 +12,39 @@ const DetailContent = ({ post }: { post: NewsPost }) => {
   );
 
   return (
-    <>
-      <div className="max-w-none min-h-48 mb-6 ">
-        <div className="whitespace-pre-wrap">{post.content}</div>
-      </div>
+    <div className="px-8 py-6">
+      {/* 뉴스 본문 */}
+      <article
+        className="prose prose-lg max-w-none min-h-48 mb-8"
+        style={{ color: "var(--text-color)" }}
+      >
+        <div
+          className="whitespace-pre-wrap leading-relaxed text-base"
+          style={{
+            lineHeight: "1.8",
+            color: "var(--text-color)",
+          }}
+        >
+          {post.content}
+        </div>
+      </article>
 
+      {/* 좋아요/싫어요 섹션 */}
       {!isLoading && (
-        <LikeDetail
-          resourceType={ResourceType.NEWS_POST}
-          resourceId={post.id}
-          likeCount={post.likeCount}
-          dislikeCount={post.dislikeCount}
-          selectedMap={selectedMap}
-        />
+        <div
+          className="flex justify-center py-6 border-t border-b"
+          style={{ borderColor: "var(--border-color)" }}
+        >
+          <LikeDetail
+            resourceType={ResourceType.NEWS_POST}
+            resourceId={post.id}
+            likeCount={post.likeCount}
+            dislikeCount={post.dislikeCount}
+            selectedMap={selectedMap}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

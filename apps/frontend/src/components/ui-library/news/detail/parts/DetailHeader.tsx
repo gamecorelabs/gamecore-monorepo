@@ -1,51 +1,93 @@
 import { getUserName } from "@/utils/helpers/getUserName";
 import { NewsPost } from "@/types/news/newsPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
+import { 
+  EyeIcon, 
+  ClockIcon, 
+  UserIcon,
+  CalendarIcon 
+} from "@heroicons/react/24/outline";
 
 const DetailHeader = ({ post }: { post: NewsPost }) => {
   return (
-    <>
-      <div className="mb-6">
-        {/* 카테고리 */}
-        <div className="mb-3">
-          <span
-            className="px-3 py-1 text-sm rounded-full"
-            style={{
-              backgroundColor: "var(--primary-color)",
-              color: "white",
-            }}
-          >
-            {post.category?.title || "카테고리 없음"}
-          </span>
+    <div className="relative">
+      {/* 그라데이션 헤더 배경 */}
+      <div 
+        className="absolute inset-0 rounded-t-lg opacity-5"
+        style={{ 
+          background: "linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-dark, #1e40af) 100%)"
+        }}
+      />
+      
+      <div className="relative p-8 pb-6">
+        {/* 카테고리 및 메타 정보 */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <span
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full"
+              style={{
+                backgroundColor: "var(--primary-color)",
+                color: "white",
+              }}
+            >
+              {post.category?.title || "일반"}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-4 text-sm" style={{ color: "var(--text-muted)" }}>
+            <div className="flex items-center gap-1">
+              <EyeIcon className="h-4 w-4" />
+              <span>{post.viewCount || 0}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <ClockIcon className="h-4 w-4" />
+              <span>{formatDate(post.createdAt, { month: "short", day: "numeric" })}</span>
+            </div>
+          </div>
         </div>
 
+        {/* 제목 */}
         <h1
-          className="text-2xl font-bold mb-2"
+          className="text-3xl font-bold leading-tight mb-6"
           style={{ color: "var(--text-color)" }}
         >
           {post.title}
         </h1>
-        <div
-          className="flex items-center text-sm space-x-3 justify-between"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          <div className="flex gap-3">
-            <span>{getUserName(post)}</span>
-            <span
-              className="inline-block w-[1px] h-4"
-              style={{ backgroundColor: "var(--border-color)" }}
-            ></span>
-            <span>{formatDate(post.createdAt, { year: "numeric" })}</span>
-          </div>
-          <div
-            className="flex items-center text-sm space-x-3"
-            style={{ color: "var(--text-muted)" }}
-          >
-            <span>조회수 {post.viewCount || 0}</span>
+
+        {/* 작성자 정보 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold"
+              style={{
+                backgroundColor: "var(--primary-color)",
+                color: "white",
+              }}
+            >
+              {getUserName(post).charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <UserIcon className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
+                <span className="font-medium" style={{ color: "var(--text-color)" }}>
+                  {getUserName(post)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
+                <CalendarIcon className="h-4 w-4" />
+                <span>{formatDate(post.createdAt, { year: "numeric", month: "long", day: "numeric" })}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </>
+      
+      {/* 구분선 */}
+      <div 
+        className="h-px mx-8"
+        style={{ backgroundColor: "var(--border-color)" }}
+      />
+    </div>
   );
 };
 

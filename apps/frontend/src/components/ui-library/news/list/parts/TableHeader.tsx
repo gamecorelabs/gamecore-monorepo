@@ -18,16 +18,21 @@ const TableHeader = ({ newsConfig }: { newsConfig: NewsConfig }) => {
 
   return (
     <div className="mb-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h2
-            className="text-2xl font-bold"
+          <h1
+            className="text-2xl font-bold mb-1"
             style={{ color: "var(--text-color)" }}
           >
-            {newsConfig.title || "뉴스 페이지 이름을 설정해주세요."}
-          </h2>
+            {newsConfig.title || "뉴스"}
+          </h1>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            최신 게임 소식을 확인하세요
+          </p>
         </div>
       </div>
+
+      {/* 카테고리 필터 */}
       <div className="mb-4">
         <div className="flex flex-wrap items-center gap-2">
           <button
@@ -45,6 +50,7 @@ const TableHeader = ({ newsConfig }: { newsConfig: NewsConfig }) => {
           >
             전체
           </button>
+
           {newsConfig.categories.map((category) => {
             const isActive = currentCategoryId === category.id.toString();
             return (
@@ -68,20 +74,22 @@ const TableHeader = ({ newsConfig }: { newsConfig: NewsConfig }) => {
           })}
         </div>
       </div>
+
+      {/* 테이블 헤더 (데스크톱) - 뉴스 전용 */}
       <div
-        className="hidden md:grid md:grid-cols-12 gap-4 py-3 px-4 text-sm font-medium border-b-2"
+        className="hidden md:flex items-center px-4 py-3 text-sm font-medium border-b"
         style={{
           borderColor: "var(--border-color)",
           backgroundColor: "var(--input-bg)",
           color: "var(--text-secondary)",
         }}
       >
-        <div className="col-span-1 text-center">분류</div>
-        <div className="col-span-5">제목</div>
-        <div className="col-span-2 text-center">작성자</div>
-        <div className="col-span-2 text-center">작성일</div>
-        <div className="col-span-1 text-center">조회</div>
-        <div className="col-span-1 text-center">추천</div>
+        <div className="w-24 flex-shrink-0 text-center">썸네일</div>
+        <div className="w-24 flex-shrink-0 text-center">분류</div>
+        <div className="flex-1">제목</div>
+        <div className="w-28 flex-shrink-0 text-center">작성자</div>
+        <div className="w-24 flex-shrink-0 text-center">작성일</div>
+        <div className="w-16 flex-shrink-0 text-center">추천</div>
       </div>
     </div>
   );
