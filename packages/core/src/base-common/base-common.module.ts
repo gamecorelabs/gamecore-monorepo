@@ -9,9 +9,23 @@ import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { Comment } from "@base-comment/entity/comment.entity";
 import { Like } from "@base-like/entity/like.entity";
 import { BoardCategory } from "@base-board/entity/board-category.entity";
+import { NewsConfig } from "@base-news/entity/news-config.entity";
+import { NewsCategory } from "@base-news/entity/news-category.entity";
+import { NewsPost } from "@base-post/news/entity/news-post.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BoardConfig, BoardPost, BoardCategory, Comment, Like])],
+  imports: [
+    TypeOrmModule.forFeature([
+      BoardConfig,
+      BoardPost,
+      BoardCategory,
+      NewsConfig,
+      NewsCategory,
+      NewsPost,
+      Comment,
+      Like,
+    ]),
+  ],
   providers: [
     BaseCommonService,
     CommonPaginationService,

@@ -7,12 +7,13 @@ import {
   BoardPost,
   Comment,
   Like,
-  BoardCategory
+  BoardCategory,
 } from "@gamecorelabs/nestjs-core";
 import { BoardPostController } from "./board-post.controller";
+import { NewsPostController } from "./news-post.controller";
 
 @Module({
-  controllers: [PostController, BoardPostController],
+  controllers: [PostController, BoardPostController, NewsPostController],
   providers: [PostService],
   imports: [
     TypeOrmModule.forFeature([

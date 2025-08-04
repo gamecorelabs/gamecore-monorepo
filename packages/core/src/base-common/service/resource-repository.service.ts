@@ -5,6 +5,7 @@ import { ResourceType } from "@base-common/enum/common.enum";
 import { BaseModel } from "@base-common/entity/base.entity";
 import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { Comment } from "@base-comment/entity/comment.entity";
+import { NewsPost } from "@base-post/news/entity/news-post.entity";
 
 @Injectable()
 export class ResourceRepositoryService {
@@ -15,11 +16,14 @@ export class ResourceRepositoryService {
   constructor(
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>,
+    @InjectRepository(NewsPost)
+    private readonly newsPostRepository: Repository<NewsPost>,
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>
   ) {
     this.repositoryMap = {
       [ResourceType.BOARD_POST]: this.boardPostRepository,
+      [ResourceType.NEWS_POST]: this.newsPostRepository,
       [ResourceType.COMMENT]: this.commentRepository,
     };
   }

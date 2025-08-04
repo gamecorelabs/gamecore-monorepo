@@ -18,7 +18,7 @@ const NewsPostDetail = ({ post }: { post: NewsPost }) => {
       <DetailContent post={post} />
       <BottomSection post={post} />
       <CommentContainer
-        resourceType={ResourceType.BOARD_POST}
+        resourceType={ResourceType.NEWS_POST}
         resourceId={post.id}
       />
     </div>

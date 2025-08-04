@@ -1,34 +1,19 @@
 "use client";
+import { buildAuthUrl } from "@/utils/helpers/buildAuthUrl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const AuthBlock = () => {
-  const [redirectUrl, setRedirectUrl] = useState("");
-
-  useEffect(() => {
-    setRedirectUrl(window.location.href);
-  }, []);
-
-  const buildAuthUrl = (path: string) => {
-    let url = `${path}`;
-    if (redirectUrl) {
-      url +=
-        (url.includes("?") ? "&" : "?") +
-        `redirect_url=${encodeURIComponent(redirectUrl)}`;
-    }
-    return url;
-  };
-
   return (
     <div className="flex items-center space-x-4">
       <Link
-        href={buildAuthUrl("/user/auth/login/")}
+        href={buildAuthUrl("/user/auth/login/", window.location.href)}
         className="hover:text-blue-500 transition-colors"
       >
         로그인
       </Link>
       <Link
-        href={buildAuthUrl("/user/auth/register/")}
+        href={buildAuthUrl("/user/auth/register/", window.location.href)}
         className="hover:text-blue-500 transition-colors"
       >
         회원가입

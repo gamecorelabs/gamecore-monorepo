@@ -176,7 +176,8 @@ export const CommentItem = ({
       {isReplying && (
         <ReplyForm
           parentId={isChildrenComment ? parentId : comment.id}
-          postId={comment.resourceInfo.resourceId}
+          resourceId={comment.resourceInfo.resourceId}
+          resourceType={comment.resourceInfo.resourceType}
           onCancel={() => setActiveReplyId(null)}
           placeholder={`${getUserName(comment)}님에게 답글을 작성하세요...`}
           defaultValue={getReplyContentPrefix()}

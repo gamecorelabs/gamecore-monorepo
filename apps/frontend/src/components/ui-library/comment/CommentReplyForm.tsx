@@ -1,6 +1,7 @@
 "use client";
 
 import { useUserStore } from "@/store/userStore";
+import { ResourceType } from "@/types/common/resource.types";
 import dataApi from "@/utils/common-axios/dataApi";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { formDataToObject } from "@/utils/helpers/formDataToObject";
@@ -15,7 +16,8 @@ import { useEffect, useRef } from "react";
 
 interface ReplyFormProps {
   parentId: number | undefined;
-  postId: number;
+  resourceId: number;
+  resourceType: ResourceType;
   onCancel: () => void;
   placeholder?: string;
   defaultValue?: string;
@@ -23,7 +25,8 @@ interface ReplyFormProps {
 
 const CommentReplyForm = ({
   parentId,
-  postId,
+  resourceId,
+  resourceType,
   onCancel,
   placeholder = "답글을 작성하세요...",
   defaultValue,
@@ -81,7 +84,7 @@ const CommentReplyForm = ({
 
     try {
       const result = await dataApi.post(
-        `/board-post/${postId}/comment`,
+        `/${resourceType}/${resourceId}/comment`,
         formData,
         {
           headers,

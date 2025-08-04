@@ -20,11 +20,9 @@ const CommentContainer = async ({
     comments = null;
   }
 
-  if (!comments) return;
-
   return (
     <div className="mt-3">
-      <CommentList comments={comments} />
+      {comments && <CommentList comments={comments} />}
       <CommentWriteForm resourceId={resourceId} resourceType={resourceType} />
     </div>
   );
