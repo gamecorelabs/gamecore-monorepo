@@ -9,6 +9,8 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
+import { NewsExistsGuard } from "@base-news/guard/news-exists.guard";
+import { PostInNewsGuard } from "@base-post/news/guard/post-in-news.guard";
 
 /**
  * ResourceExistenceGuard
@@ -19,7 +21,9 @@ import { Observable } from "rxjs";
 export class ResourceExistenceGuard implements CanActivate {
   constructor(
     private readonly boardExistsGuard: BoardExistsGuard,
+    private readonly newsExistsGuard: NewsExistsGuard,
     private readonly postInBoardGuard: PostInBoardGuard,
+    private readonly postInNewsGuard: PostInNewsGuard,
     private readonly commentInPostGuard: CommentInPostGuard
   ) {}
 
@@ -48,9 +52,12 @@ export class ResourceExistenceGuard implements CanActivate {
     switch (apiResourceType) {
       case "board":
         return this.boardExistsGuard.canActivate(context);
+      case "news":
+        return this.newsExistsGuard.canActivate(context);
       case "board-post":
         return this.postInBoardGuard.canActivate(context);
-      // case "news-post":
+      case "news-post":
+        return this.postInNewsGuard.canActivate(context);
       // case "guide-post":
       case "comment":
         return this.commentInPostGuard.canActivate(context);

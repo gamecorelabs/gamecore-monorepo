@@ -13,11 +13,15 @@ import {
   Like,
   CoreModule,
   BoardCategory,
+  NewsCategory,
+  NewsPost,
+  NewsConfig,
 } from "@gamecorelabs/nestjs-core";
 import { PostModule } from "./post/post.module";
 import { CommentModule } from "./comment/comment.module";
 import { LikeModule } from "./like/like.module";
 import { APP_INTERCEPTOR } from "@nestjs/core";
+import { NewsModule } from "./news/news.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,6 +43,9 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
         UserAccount,
         Comment,
         Like,
+        NewsConfig,
+        NewsCategory,
+        NewsPost,
       ],
       synchronize: true,
     }),
@@ -46,8 +53,8 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
     BoardModule,
     PostModule,
     CommentModule,
-
     LikeModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [
