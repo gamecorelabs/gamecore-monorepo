@@ -19,6 +19,7 @@
       "@/*": ["./*"],
       "@base-auth/*": ["./base-auth/*"],
       "@base-board/*": ["./base-board/*"],
+      "@base-news/*": ["./base-news/*"],
       "@base-comment/*": ["./base-comment/*"],
       "@base-common/*": ["./base-common/*"],
       "@base-channel/*": ["./base-channel/*"],

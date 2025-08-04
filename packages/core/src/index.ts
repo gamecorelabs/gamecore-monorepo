@@ -1,26 +1,29 @@
 // Base Auth
-export * from './base-auth';
+export * from "./base-auth";
 
 // Base Board
-export * from './base-board';
+export * from "./base-board";
+
+// Base News
+export * from "./base-news";
 
 // Base Channel
-export * from './base-channel';
+export * from "./base-channel";
 
 // Base Comment
-export * from './base-comment';
+export * from "./base-comment";
 
 // Base Common
-export * from './base-common';
+export * from "./base-common";
 
 // Base Like
-export * from './base-like';
+export * from "./base-like";
 
 // Base Post
-export * from './base-post';
+export * from "./base-post";
 
 // Base User
-export * from './base-user';
+export * from "./base-user";
 
 // Core Module
-export { CoreModule } from './core.module';
+export { CoreModule } from "./core.module";

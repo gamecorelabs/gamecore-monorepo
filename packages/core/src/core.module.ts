@@ -7,6 +7,7 @@ import { BaseAuthModule } from "./base-auth/base-auth.module";
 import { BaseLikeModule } from "./base-like/base-like.module";
 import { BaseCommonModule } from "./base-common/base-common.module";
 import { BaseChannelModule } from "./base-channel/base-channel.module";
+import { BaseNewsModule } from "./base-news/base-news.module";
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import { BaseChannelModule } from "./base-channel/base-channel.module";
     BaseLikeModule,
     BaseCommonModule,
     BaseChannelModule,
+    BaseNewsModule,
   ],
   exports: [
     BaseBoardModule,
@@ -29,6 +31,7 @@ import { BaseChannelModule } from "./base-channel/base-channel.module";
     BaseLikeModule,
     BaseCommonModule,
     BaseChannelModule,
+    BaseNewsModule,
   ],
 })
 export class CoreModule {}
