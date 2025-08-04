@@ -25,6 +25,7 @@
 
       "@base-auth/*": ["../../packages/core/src/base-auth/*"],
       "@base-board/*": ["../../packages/core/src/base-board/*"],
+      "@base-news/*": ["../../packages/core/src/base-news/*"],
       "@base-comment/*": ["../../packages/core/src/base-comment/*"],
       "@base-common/*": ["../../packages/core/src/base-common/*"],
       "@base-channel/*": ["../../packages/core/src/base-channel/*"],
