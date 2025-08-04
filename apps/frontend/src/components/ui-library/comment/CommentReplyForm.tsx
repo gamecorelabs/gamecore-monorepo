@@ -9,7 +9,7 @@ import { getZodErrorMessage } from "@/utils/helpers/getZodErrorMessage";
 import {
   guestCommentSchema,
   userCommentSchema,
-} from "@/utils/validation/board/newPostCommentSchema";
+} from "@/utils/validation/comment/newCommentSchema";
 import { StatusCodes } from "http-status-codes";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";

@@ -7,7 +7,7 @@ import useHydrated from "@/utils/hooks/useHydrated";
 import {
   guestCommentSchema,
   userCommentSchema,
-} from "@/utils/validation/board/newPostCommentSchema";
+} from "@/utils/validation/comment/newCommentSchema";
 import React, { useRef } from "react";
 import { encodeBase64Unicode } from "@/utils/helpers/base64Unicode";
 import { StatusCodes } from "http-status-codes";
