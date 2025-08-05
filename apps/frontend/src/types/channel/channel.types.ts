@@ -14,6 +14,16 @@ export type ChannelConfig = {
     color?: string;
     keywords?: string[];
   };
+  menuItems: MenuItem[];
+};
+
+type MenuItem = {
+  id: number;
+  title: string;
+  href: string;
+  icon?: string;
+  badge?: string;
+  children?: MenuItem[];
 };
 
 export type Channel = {

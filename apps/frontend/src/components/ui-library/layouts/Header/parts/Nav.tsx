@@ -1,22 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import defaultMenuJson from "@/mocks/default-menu.mock.json";
+import { MenuItem } from "@/types/channel/channel.types";
 
-// FIXME: 타입 분리
-type NavItem = {
-  id: number;
-  title: string;
-  href: string;
-};
-
-const defaultMenu: NavItem[] = defaultMenuJson as NavItem[];
-
-// FIXME: 추후 캐시를 이용하여 nav items를 불러오기
-const Nav = ({ items }: { items?: NavItem[] }) => {
+const Nav = ({ menuItems }: { menuItems?: MenuItem[] }) => {
   const pathname = usePathname();
-  const menuItems = items && items.length > 0 ? items : defaultMenu;
+
+  if (menuItems === undefined || menuItems.length === 0) return;
 
   return (
     <nav
@@ -31,11 +20,12 @@ const Nav = ({ items }: { items?: NavItem[] }) => {
           {menuItems.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + "/");
+
             return (
-              <li key={item.id}>
+              <li key={item.id} className="relative">
                 <Link
                   href={item.href}
-                  className={`nav-link relative px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 inline-block ${
+                  className={`nav-link relative px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 inline-flex items-center gap-2 ${
                     isActive ? "nav-active" : ""
                   }`}
                   style={{
@@ -44,7 +34,6 @@ const Nav = ({ items }: { items?: NavItem[] }) => {
                       : "var(--text-secondary)",
                   }}
                 >
-                  {/* Active indicator */}
                   {isActive && (
                     <div
                       className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
@@ -53,6 +42,20 @@ const Nav = ({ items }: { items?: NavItem[] }) => {
                   )}
 
                   <span className="relative z-10">{item.title}</span>
+
+                  {item.badge && (
+                    <span
+                      className="absolute -top-1 -right-1 text-xs px-1 py-0.5 rounded-full font-bold min-w-4 h-4 flex items-center justify-center"
+                      style={{
+                        backgroundColor: "#ff4444",
+                        color: "white",
+                        fontSize: "10px",
+                        lineHeight: "1",
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               </li>
             );

@@ -171,7 +171,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
         </div>
 
         {/* Navigation Bar */}
-        <Nav />
+        <Nav menuItems={config.menuItems} />
       </div>
     </header>
   );
