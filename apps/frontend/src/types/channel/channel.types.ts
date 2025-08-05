@@ -17,7 +17,7 @@ export type ChannelConfig = {
   menuItems: MenuItem[];
 };
 
-type MenuItem = {
+export type MenuItem = {
   id: number;
   title: string;
   href: string;
