@@ -12,7 +12,7 @@ describe("BaseNewsService", () => {
     service = module.get<BaseNewsService>(BaseNewsService);
   });
 
-  it("should be defined", () => {
+  it("should be defined2", () => {
     expect(service).toBeDefined();
   });
 });
