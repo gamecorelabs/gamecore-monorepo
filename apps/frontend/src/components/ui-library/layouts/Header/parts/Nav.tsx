@@ -15,7 +15,7 @@ const Nav = ({ menuItems }: { menuItems?: MenuItem[] }) => {
         borderColor: "var(--border-color)",
       }}
     >
-      <div className="mx-auto px-6">
+      <div className="mx-auto px-6 py-1">
         <ul className="flex space-x-1 min-w-max">
           {menuItems.map((item) => {
             const isActive =
@@ -44,15 +44,7 @@ const Nav = ({ menuItems }: { menuItems?: MenuItem[] }) => {
                   <span className="relative z-10">{item.title}</span>
 
                   {item.badge && (
-                    <span
-                      className="absolute -top-1 -right-1 text-xs px-1 py-0.5 rounded-full font-bold min-w-4 h-4 flex items-center justify-center"
-                      style={{
-                        backgroundColor: "#ff4444",
-                        color: "white",
-                        fontSize: "10px",
-                        lineHeight: "1",
-                      }}
-                    >
+                    <span className="absolute -top-1 -right-1 text-xs px-1 py-0.5 rounded-full font-bold min-w-4 h-4 flex items-center justify-center bg-[#ff4444] text-white leading-none">
                       {item.badge}
                     </span>
                   )}
