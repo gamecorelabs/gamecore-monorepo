@@ -1,6 +1,6 @@
 import { ChannelConfig } from "@/types/channel/channel.types";
 import { isChannelEnabled, buildUrl, URL_ENV_CONFIGS } from "./environment";
-import { CHANNEL_CONFIG } from "@/config/channel_config";
+import { CHANNEL_CONFIG } from "@/config/channel-config";
 
 /**
  * 현재 환경의 URL 정보 반환

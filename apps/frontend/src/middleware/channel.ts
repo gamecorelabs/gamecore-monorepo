@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { COMMON_PATHS } from "@/config/environment";
-import { CHANNEL_CONFIG } from "@/config/channel_config";
+import { CHANNEL_CONFIG } from "@/config/channel-config";
 import {
   getUrlEnvConfig,
   isChannelEnabled,
