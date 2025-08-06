@@ -8,6 +8,7 @@ import {
   CalendarIcon,
 } from "@heroicons/react/24/outline";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import CurrentProfile from "@/components/ui-library/common/CurrentProfile";
 
 const DetailHeader = ({ post }: { post: NewsPost }) => {
   return (
@@ -48,15 +49,9 @@ const DetailHeader = ({ post }: { post: NewsPost }) => {
         {/* 작성자 정보 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold"
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "white",
-              }}
-            >
-              {getUserName(post).charAt(0)}
-            </div>
+            {post.author && (
+              <CurrentProfile user={post.author} width={48} height={48} />
+            )}
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <UserIcon
