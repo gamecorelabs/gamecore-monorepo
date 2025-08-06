@@ -13,6 +13,7 @@ export type UserAccount = {
   email: string;
   role: UserRole;
   grade: string;
+  profileImage?: string;
 };
 
 export type GuestAccount = {

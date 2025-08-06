@@ -60,10 +60,13 @@ export class UserAccount extends BaseModel {
   })
   grade: UserGrade;
 
-  // @Expose()
-  // get nicknameAndEmail() {
-  //   return this.nickname + '/' + this.email;
-  // }
+  @Column({
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
+  @IsString()
+  profileImage?: string;
 
   @OneToMany(() => BoardPost, (boardPost) => boardPost.author)
   posts: BoardPost[];

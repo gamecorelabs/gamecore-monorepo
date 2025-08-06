@@ -12,8 +12,10 @@ import {
   Comment,
   Like,
   BoardCategory,
+  CoreModule,
 } from '@gamecorelabs/nestjs-core';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -39,7 +41,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       ],
       synchronize: true,
     }),
+    CoreModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
