@@ -11,3 +11,15 @@ export enum UserGrade {
   PLATINUM = "platinum",
   DIAMOND = "diamond",
 }
+
+export enum ProviderType {
+  DISCORD = "discord",
+  GOOGLE = "google",
+  NAVER = "naver",
+  APPLE = "apple",
+  FACEBOOK = "facebook",
+  TWITTER = "twitter",
+  GITHUB = "github",
+  INSTAGRAM = "instagram",
+  KAKAO = "kakao",
+}

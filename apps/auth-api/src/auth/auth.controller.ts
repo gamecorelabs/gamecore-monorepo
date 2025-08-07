@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Request,
   Res,
   UseGuards,
@@ -23,6 +24,7 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
@@ -92,5 +94,30 @@ export class AuthController {
   @Get('/csrf-token')
   async getCsrfToken(): Promise<string> {
     return await this.baseAuthService.getCsrfToken();
+  }
+
+  @Get('/discord')
+  async discordLogin(
+    @Query('returnUrl') returnUrl: string,
+    @Res() res: ExpressResponse,
+  ) {
+    const discordAuthUrl = this.authService.discordRedirect(returnUrl);
+    res.redirect(discordAuthUrl);
+  }
+
+  @Get('/discord/callback')
+  async discordCallback(
+    @Query('code') code: string,
+    @Query('state') state: string,
+    @Res({ passthrough: true }) res: ExpressResponse,
+  ) {
+    const { FRONTEND_URL } = this.authService.getDiscordConfigEnv();
+    const tokenData = await this.authService.discordLogin(code);
+    await this.baseAuthService.setTokenCookie(res, tokenData);
+
+    const returnUrl = state
+      ? decodeURIComponent(state)
+      : FRONTEND_URL || 'https://gamecore.co.kr';
+    res.redirect(returnUrl);
   }
 }

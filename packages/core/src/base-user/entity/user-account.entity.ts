@@ -5,7 +5,7 @@ import { BoardPost } from "@base-post/board/entity/board-post.entity";
 import { stringValidationMessage } from "@base-common/validation/string-validation-mesage";
 import { emailValidationMessage } from "@base-common/validation/email-validation.message";
 import { lengthValidationMessage } from "@base-common/validation/length-validation.message";
-import { UserGrade, UserRoles } from "../enum/user.enum";
+import { ProviderType, UserGrade, UserRoles } from "../enum/user.enum";
 import { Exclude } from "class-transformer";
 import { Comment } from "@base-comment/entity/comment.entity";
 
@@ -24,6 +24,16 @@ export class UserAccount extends BaseModel {
   nickname: string;
 
   @Column({
+    type: "enum",
+    enum: ProviderType,
+    default: null,
+  })
+  providerType?: ProviderType; // 소셜 로그인 제공자 타입 (예: GOOGLE, KAKAO 등)
+
+  @Column({ nullable: true })
+  providerId?: string; // 소셜 로그인 시 사용되는 ID
+
+  @Column({
     unique: true,
   })
   @IsString({
@@ -34,7 +44,11 @@ export class UserAccount extends BaseModel {
   })
   email: string;
 
-  @Column()
+  @Column({
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
   @IsString({
     message: stringValidationMessage,
   })
@@ -44,7 +58,7 @@ export class UserAccount extends BaseModel {
   @Exclude({
     toPlainOnly: true, // 응답에서만 제외
   })
-  password: string;
+  password?: string;
 
   @Column({
     type: "enum",
