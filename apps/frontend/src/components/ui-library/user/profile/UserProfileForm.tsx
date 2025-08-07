@@ -17,6 +17,7 @@ const UserProfileForm = () => {
   const {
     nickname,
     profileImageFile,
+    isImageRemoved,
     nicknameCheckStatus,
     initializeProfile,
     reset,
@@ -56,6 +57,9 @@ const UserProfileForm = () => {
 
       if (profileImageFile) {
         formData.append("profileImageFile", profileImageFile);
+        formData.append("isImageRemoved", "0");
+      } else if (isImageRemoved) {
+        formData.append("isImageRemoved", "1");
       }
 
       const result = await authApi.post("/user/profile", formData, {

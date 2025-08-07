@@ -81,8 +81,6 @@ export class BaseUserService {
         );
       }
 
-      console.log("dto", dto);
-
       let saveData: Partial<UserAccount> = {
         id: user.userAccount.id,
       };
@@ -93,6 +91,8 @@ export class BaseUserService {
 
       if (dto.profileImageFileName) {
         saveData.profileImage = dto.profileImageFileName;
+      } else if (dto.isImageRemoved) {
+        saveData.profileImage = "";
       }
 
       if (Object.keys(saveData).length === 1) {

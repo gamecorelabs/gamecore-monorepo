@@ -11,6 +11,7 @@ interface ProfileEditState {
   // 프로필 사진 관련
   profileImage: string | null;
   profileImageFile: File | null;
+  isImageRemoved: boolean;
 
   // Actions
   setNickname: (nickname: string) => void;
@@ -35,6 +36,7 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
   nicknameCheckStatus: "idle",
   profileImage: null,
   profileImageFile: null,
+  isImageRemoved: false,
 
   // Nickname actions
   setNickname: (nickname) => {
@@ -76,7 +78,7 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
   handleImageUpload: (event) => {
     const file = event.target.files?.[0];
     if (file) {
-      set({ profileImageFile: file });
+      set({ profileImageFile: file, isImageRemoved: false });
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -90,6 +92,7 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
     set({
       profileImage: null,
       profileImageFile: null,
+      isImageRemoved: true,
     });
 
     // 파일 입력 초기화는 컴포넌트에서 처리
@@ -100,8 +103,9 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
     set({
       nickname: user.nickname || "",
       nicknameCheckStatus: "idle",
-      profileImage: `${S3_URL}/${user.profileImage}` || null,
+      profileImage: user.profileImage ? `${S3_URL}/${user.profileImage}` : null,
       profileImageFile: null,
+      isImageRemoved: false,
     });
   },
 
@@ -111,6 +115,7 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
       nicknameCheckStatus: "idle",
       profileImage: null,
       profileImageFile: null,
+      isImageRemoved: false,
     });
   },
 }));
