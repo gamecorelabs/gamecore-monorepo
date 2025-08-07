@@ -4,9 +4,6 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   UserAccount,
-  BaseUserModule,
-  BaseAuthModule,
-  BaseLikeModule,
   BoardPost,
   BoardConfig,
   ChannelConfig,
