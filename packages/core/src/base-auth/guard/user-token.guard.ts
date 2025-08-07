@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   HttpException,
@@ -46,6 +47,10 @@ export class UserTokenGuard implements CanActivate {
     }
 
     const user = await this.baseUserService.getUserByEmail(decoded.email);
+
+    if (!user) {
+      throw new BadRequestException("존재하지 않는 사용자입니다.");
+    }
 
     request.user = {
       type: "user",

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -25,6 +26,10 @@ export class RefreshTokenGuard implements CanActivate {
     try {
       const decoded = await this.baseAuthService.verifyToken(refreshToken);
       const user = await this.baseUserService.getUserByEmail(decoded.email);
+
+      if (!user) {
+        throw new BadRequestException("존재하지 않는 사용자입니다.");
+      }
 
       request.user = {
         type: "user",

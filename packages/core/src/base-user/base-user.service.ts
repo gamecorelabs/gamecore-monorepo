@@ -53,14 +53,10 @@ export class BaseUserService {
     return true;
   }
 
-  async getUserByEmail(email: string): Promise<UserAccount> {
+  async getUserByEmail(email: string): Promise<UserAccount | null> {
     const user = await this.userAccountRepository.findOne({
       where: { email },
     });
-
-    if (!user) {
-      throw new BadRequestException("존재하지 않는 사용자입니다.");
-    }
 
     return user;
   }
