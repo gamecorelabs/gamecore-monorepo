@@ -562,6 +562,10 @@ jobs:
             HASH_ROUNDS=${{ secrets.HASH_ROUNDS }}
             ACME_EMAIL=${{ secrets.ACME_EMAIL }}
             CLOUDFLARE_DNS_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
+            DISCORD_CLIENT_ID=${{ secrets.DISCORD_CLIENT_ID }}
+            DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }}
+            DISCORD_REDIRECT_URI=${{ secrets.DISCORD_REDIRECT_URI }}
+            FRONTEND_URL=${{ secrets.FRONTEND_URL }}
             CORS_ORIGIN=https://gamecore.co.kr,https://*.gamecore.co.kr
             EOF
 
