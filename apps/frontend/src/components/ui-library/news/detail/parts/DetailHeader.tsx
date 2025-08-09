@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import CurrentProfile from "@/components/ui-library/common/CurrentProfile";
+import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
 
 const DetailHeader = ({ post }: { post: NewsPost }) => {
   return (
@@ -59,9 +60,12 @@ const DetailHeader = ({ post }: { post: NewsPost }) => {
                   style={{ color: "var(--text-muted)" }}
                 />
                 <span
-                  className="font-medium"
+                  className="font-medium flex items-center justify-center gap-2"
                   style={{ color: "var(--text-color)" }}
                 >
+                  {post.author && post.author.providerType && (
+                    <ProviderIcon type={post.author.providerType} />
+                  )}
                   {getUserName(post)}
                 </span>
               </div>

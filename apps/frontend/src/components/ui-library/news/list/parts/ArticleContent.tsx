@@ -4,6 +4,7 @@ import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
+import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
 
 export const ArticleContent = ({
   newsId,
@@ -64,7 +65,12 @@ export const ArticleContent = ({
               style={{ color: "var(--text-muted)" }}
             >
               <div className="flex items-center gap-3">
-                <span>{getUserName(post)}</span>
+                <span className="flex items-center justify-center gap-1">
+                  {post.author && post.author.providerType && (
+                    <ProviderIcon type={post.author.providerType} />
+                  )}
+                  {getUserName(post)}
+                </span>
                 <span>{formatDateSafe(post.createdAt)}</span>
               </div>
               <div className="flex items-center gap-3">
@@ -162,9 +168,12 @@ export const ArticleContent = ({
         {/* 작성자 */}
         <div className="w-24 flex-shrink-0 text-center">
           <span
-            className="text-sm font-medium"
+            className="text-sm font-medium flex items-center justify-center gap-1"
             style={{ color: "var(--text-secondary)" }}
           >
+            {post.author && post.author.providerType && (
+              <ProviderIcon type={post.author.providerType} />
+            )}
             {getUserName(post)}
           </span>
         </div>

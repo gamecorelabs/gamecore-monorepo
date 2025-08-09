@@ -7,6 +7,7 @@ import {
 import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
+import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
 export const ArticleContent = ({
   boardId,
   post,
@@ -56,7 +57,12 @@ export const ArticleContent = ({
                 className="flex items-center gap-4 text-xs"
                 style={{ color: "var(--text-muted)" }}
               >
-                <span>작성자: {getUserName(post)}</span>
+                <span className="flex items-center justify-center gap-1">
+                  {post.author && post.author.providerType && (
+                    <ProviderIcon type={post.author.providerType} />
+                  )}
+                  {getUserName(post)}
+                </span>
                 <span>조회 {post.viewCount || 0}</span>
               </div>
 
@@ -140,7 +146,13 @@ export const ArticleContent = ({
 
         {/* 작성자 */}
         <div className="col-span-2 text-center">
-          <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          <span
+            className="text-sm flex items-center justify-center gap-1"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {post.author && post.author.providerType && (
+              <ProviderIcon type={post.author.providerType} />
+            )}
             {getUserName(post)}
           </span>
         </div>

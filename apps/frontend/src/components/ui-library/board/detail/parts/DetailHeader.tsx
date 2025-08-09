@@ -1,6 +1,7 @@
 import { getUserName } from "@/utils/helpers/getUserName";
 import { BoardPost } from "@/types/board/boardPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
+import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
 
 const DetailHeader = ({ post }: { post: BoardPost }) => {
   return (
@@ -30,7 +31,15 @@ const DetailHeader = ({ post }: { post: BoardPost }) => {
           style={{ color: "var(--text-secondary)" }}
         >
           <div className="flex gap-3">
-            <span>{getUserName(post)}</span>
+            <span
+              className="flex items-center justify-center gap-2"
+              style={{ color: "var(--text-color)" }}
+            >
+              {post.author && post.author.providerType && (
+                <ProviderIcon type={post.author.providerType} />
+              )}
+              {getUserName(post)}
+            </span>
             <span
               className="inline-block w-[1px] h-4"
               style={{ backgroundColor: "var(--border-color)" }}

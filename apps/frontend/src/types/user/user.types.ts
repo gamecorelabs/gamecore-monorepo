@@ -14,11 +14,21 @@ export type UserAccount = {
   role: UserRole;
   grade: string;
   profileImage?: string;
+  providerId?: number;
+  providerType?: ProviderType;
 };
 
-export type GuestAccount = {
-  guestAuthorId: string;
-};
+export enum ProviderType {
+  DISCORD = "discord",
+  GOOGLE = "google",
+  NAVER = "naver",
+  APPLE = "apple",
+  FACEBOOK = "facebook",
+  TWITTER = "twitter",
+  GITHUB = "github",
+  INSTAGRAM = "instagram",
+  KAKAO = "kakao",
+}
 
 export type User =
   | (BaseUserInfo & { type: "user"; userAccount: UserAccount })
