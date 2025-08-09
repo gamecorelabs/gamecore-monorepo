@@ -18,6 +18,10 @@ export type UserAccount = {
   providerType?: ProviderType;
 };
 
+export type GuestAccount = {
+  guestAuthorId: string;
+};
+
 export enum ProviderType {
   DISCORD = "discord",
   GOOGLE = "google",
