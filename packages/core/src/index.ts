@@ -25,5 +25,8 @@ export * from "./base-post";
 // Base User
 export * from "./base-user";
 
+// Base Search
+export * from "./base-search";
+
 // Core Module
 export { CoreModule } from "./core.module";

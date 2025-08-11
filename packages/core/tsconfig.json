@@ -25,7 +25,8 @@
       "@base-channel/*": ["./base-channel/*"],
       "@base-like/*": ["./base-like/*"],
       "@base-post/*": ["./base-post/*"],
-      "@base-user/*": ["./base-user/*"]
+      "@base-user/*": ["./base-user/*"],
+      "@base-search/*": ["./base-search/*"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths", "afterDeclarations": true }

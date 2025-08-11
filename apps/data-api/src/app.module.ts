@@ -22,6 +22,7 @@ import { CommentModule } from "./comment/comment.module";
 import { LikeModule } from "./like/like.module";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { NewsModule } from "./news/news.module";
+import { SearchModule } from './search/search.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -55,6 +56,7 @@ import { NewsModule } from "./news/news.module";
     CommentModule,
     LikeModule,
     NewsModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [

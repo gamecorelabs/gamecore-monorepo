@@ -31,7 +31,8 @@
       "@base-channel/*": ["../../packages/core/src/base-channel/*"],
       "@base-like/*": ["../../packages/core/src/base-like/*"],
       "@base-post/*": ["../../packages/core/src/base-post/*"],
-      "@base-user/*": ["../../packages/core/src/base-user/*"]
+      "@base-user/*": ["../../packages/core/src/base-user/*"],
+      "@base-search/*": ["../../packages/core/src/base-search/*"]
     }
   }
 }

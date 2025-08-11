@@ -27,11 +27,20 @@ export class CommonPaginationService {
       ...overrideFindOptions,
     };
 
+    // OR 조건이 있는 경우 where 병합을 다르게 처리
     if (findOptions.where && overrideFindOptions.where) {
-      mergedOptions.where = {
-        ...findOptions.where,
-        ...overrideFindOptions.where,
-      };
+      if (Array.isArray(findOptions.where)) {
+        // findOptions.where가 배열(OR 조건)인 경우
+        mergedOptions.where = findOptions.where.map((whereCondition) => ({
+          ...whereCondition,
+          ...overrideFindOptions.where,
+        }));
+      } else {
+        mergedOptions.where = {
+          ...findOptions.where,
+          ...overrideFindOptions.where,
+        };
+      }
     }
 
     const [data, count] = await repository.findAndCount(mergedOptions);
@@ -59,6 +68,7 @@ export class CommonPaginationService {
 
     let where: FindOptionsWhere<T> = {};
     let order: FindOptionsOrder<T> = {};
+    let orConditions: FindOptionsWhere<T>[] = [];
 
     for (const [key, value] of Object.entries(dto)) {
       if (value) {
@@ -67,6 +77,13 @@ export class CommonPaginationService {
             ...where,
             ...this.parseWhereFilter(key, value),
           };
+        } else if (key.startsWith("or_where__")) {
+          // OR 조건 처리 - 각각을 별도의 객체로 생성
+          const orCondition = this.parseWhereFilter(
+            key.replace("or_where__", "where__"),
+            value
+          ) as FindOptionsWhere<T>;
+          orConditions.push(orCondition);
         } else if (key.startsWith("order__")) {
           order = {
             ...order,
@@ -76,8 +93,21 @@ export class CommonPaginationService {
       }
     }
 
+    // OR 조건이 있으면 적용
+    let finalWhere: FindOptionsWhere<T> | FindOptionsWhere<T>[] = where;
+    if (orConditions.length > 0) {
+      if (Object.keys(where).length > 0) {
+        // 기존 where 조건을 첫 번째 OR 조건에 추가하고, 나머지 OR 조건들과 배열로 구성
+        // where OR orCondition1 OR orCondition2 OR ...
+        finalWhere = [where, ...orConditions];
+      } else {
+        // OR 조건만 있는 경우: orCondition1 OR orCondition2 OR ...
+        finalWhere = orConditions;
+      }
+    }
+
     return {
-      where,
+      where: finalWhere,
       order,
       take: dto.take,
       skip: dto.page ? ((dto.page ?? 1) - 1) * dto.take : 0,
