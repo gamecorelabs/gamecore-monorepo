@@ -30,15 +30,12 @@ export class BoardPostService {
   constructor(
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>,
-    private readonly postUtilService: PostUtilService,
     private readonly configService: ConfigService,
-    private readonly baseLikeService: BaseLikeService,
-    private readonly baseCommentService: BaseCommentService,
     private readonly commonPaginationService: CommonPaginationService
   ) {}
 
   async getPostList(boardId: number, dto: BoardPostPaginationDto) {
-    const result = await this.getPostsPaginate(boardId, dto);
+    const result = await this.getPostsPaginate(dto, boardId);
     const { data: posts, paginationInfo } = result;
 
     return { posts, paginationInfo };
@@ -163,11 +160,11 @@ export class BoardPostService {
     return post;
   }
 
-  async getPostsPaginate(boardId: number, dto: RequestBoardPostPaginationDto) {
+  async getPostsPaginate(dto: RequestBoardPostPaginationDto, boardId?: number) {
     const conditions: FindManyOptions<BoardPost> = {
       where: {
         status: BoardPostStatus.USE,
-        boardConfig: { id: boardId },
+        ...(boardId && { boardConfig: { id: boardId } }),
         ...(dto.where__categoryId && {
           category: { id: dto.where__categoryId },
         }),

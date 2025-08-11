@@ -14,6 +14,14 @@ export class BoardPostPaginationDto extends BasePaginationDto {
   @IsString()
   @IsOptional()
   where__content__like?: string;
+
+  @IsString()
+  @IsOptional()
+  or_where__title__like?: string;
+
+  @IsString()
+  @IsOptional()
+  or_where__content__like?: string;
 }
 
 export class RequestBoardPostPaginationDto extends BoardPostPaginationDto {

@@ -13,6 +13,14 @@ export class NewsPostPaginationDto extends BasePaginationDto {
   @IsString()
   @IsOptional()
   where__content__like?: string;
+
+  @IsString()
+  @IsOptional()
+  or_where__title__like?: string;
+
+  @IsString()
+  @IsOptional()
+  or_where__content__like?: string;
 }
 
 export class RequestNewsPostPaginationDto extends NewsPostPaginationDto {

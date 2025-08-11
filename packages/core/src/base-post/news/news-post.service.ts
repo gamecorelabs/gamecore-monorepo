@@ -25,13 +25,12 @@ export class NewsPostService {
   constructor(
     @InjectRepository(NewsPost)
     private readonly newsPostRepository: Repository<NewsPost>,
-    private readonly postUtilService: PostUtilService,
     private readonly configService: ConfigService,
     private readonly commonPaginationService: CommonPaginationService
   ) {}
 
   async getPostList(newsId: number, dto: NewsPostPaginationDto) {
-    const result = await this.getPostsPaginate(newsId, dto);
+    const result = await this.getPostsPaginate(dto, newsId);
     const { data: posts, paginationInfo } = result;
 
     return { posts, paginationInfo };
@@ -134,11 +133,11 @@ export class NewsPostService {
     return post;
   }
 
-  async getPostsPaginate(newsId: number, dto: RequestNewsPostPaginationDto) {
+  async getPostsPaginate(dto: RequestNewsPostPaginationDto, newsId?: number) {
     const conditions: FindManyOptions<NewsPost> = {
       where: {
         status: NewsPostStatus.USE,
-        newsConfig: { id: newsId },
+        ...(newsId && { newsConfig: { id: newsId } }),
         ...(dto.where__categoryId && {
           category: { id: dto.where__categoryId },
         }),
