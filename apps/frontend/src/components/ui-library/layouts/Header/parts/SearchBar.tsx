@@ -1,4 +1,6 @@
+"use client";
 import { useRef } from "react";
+import { useEffect } from "react";
 
 interface SearchBarProps {
   isDesktop?: boolean;
@@ -6,6 +8,13 @@ interface SearchBarProps {
 
 const SearchBar = ({ isDesktop = true }: SearchBarProps) => {
   const searchInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const match = window.location.pathname.match(/^\/search\/(.+)/);
+    if (match && searchInput.current) {
+      searchInput.current.value = decodeURIComponent(match[1]);
+    }
+  }, []);
 
   const handleSearch = () => {
     const query = searchInput.current?.value.trim();
@@ -29,7 +38,7 @@ const SearchBar = ({ isDesktop = true }: SearchBarProps) => {
       <div className="relative">
         <input
           type="text"
-          placeholder="게임, 뉴스, 커뮤니티 검색..."
+          placeholder="검색어를 입력해주세요.."
           className={`search-input px-6 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none ${
             isDesktop ? "w-[400px]" : "w-full px-4"
           }`}
