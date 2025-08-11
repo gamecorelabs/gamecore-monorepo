@@ -63,7 +63,6 @@ export default function ChannelManagement() {
   //   //   console.error('Failed to update channel:', error);
   //   // }
 
-  //   console.log("Toggling channel status:", id, !isActive);
   // };
 
   return (

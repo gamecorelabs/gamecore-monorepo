@@ -77,7 +77,6 @@ export default function NewsManagement() {
 
   const deleteNews = async (id: number) => {
     if (!confirm("정말로 이 뉴스 설정을 삭제하시겠습니까?")) return;
-    console.log("Deleting news:", id);
   };
 
   return (

@@ -102,8 +102,6 @@ export default function BoardManagement() {
     // } catch (error) {
     //   console.error('Failed to delete board:', error);
     // }
-
-    console.log("Deleting board:", id);
   };
 
   return (

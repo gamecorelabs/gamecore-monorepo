@@ -19,7 +19,6 @@ const SearchResults = ({
 }: SearchResultsProps) => {
   const hasResults = newsResults.length > 0 || boardResults.length > 0;
 
-  console.log("hasResults:", hasResults);
   return (
     <div className="min-h-screen">
       <SearchHeader keyword={keyword} />

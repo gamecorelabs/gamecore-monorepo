@@ -63,11 +63,6 @@ const SearchPage = async ({ params }: { params: { keyword: string } }) => {
   let newsResults = result.data.newsResults ?? [];
   let boardResults = result.data.boardResults ?? [];
 
-  console.log("Search Results:", {
-    newsResults,
-    boardResults,
-  });
-
   return (
     <SearchResults
       keyword={safeKeyword}
