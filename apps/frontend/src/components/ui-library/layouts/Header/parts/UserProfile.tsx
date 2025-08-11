@@ -2,7 +2,6 @@
 import CurrentProfile from "@/components/ui-library/common/CurrentProfile";
 import { useUserStore } from "@/store/userStore";
 import { userLogout } from "@/utils/auth/logout";
-import Image from "next/image";
 import Link from "next/link";
 
 const UserProfile = () => {

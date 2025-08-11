@@ -49,8 +49,8 @@ const SearchErrorFallback = ({ error, keyword }: SearchErrorFallbackProps) => {
               border: "1px solid var(--border-color)",
             }}
           >
-            입력된 검색어: "{keyword.substring(0, 50)}
-            {keyword.length > 50 ? "..." : ""}"
+            입력된 검색어: &ldquo;{keyword.substring(0, 50)}
+            {keyword.length > 50 ? "..." : ""}&rdquo;
           </p>
         )}
 

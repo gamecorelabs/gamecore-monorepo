@@ -1,7 +1,6 @@
 "use client";
 import { buildAuthUrl } from "@/utils/helpers/buildAuthUrl";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const AuthBlock = () => {
   return (

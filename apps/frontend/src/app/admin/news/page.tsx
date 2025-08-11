@@ -1,5 +1,4 @@
 "use client";
-import { Channel } from "@/types/channel/channel.types";
 import {
   NewsConfig,
   NewsStatus,

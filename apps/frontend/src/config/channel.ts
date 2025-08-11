@@ -30,7 +30,7 @@ export function getAllChannels() {
   const channels = Object.entries(CHANNEL_CONFIG).filter(([key]) => {
     return isChannelEnabled(key);
   });
-  return channels.map(([key, value]) => value);
+  return channels.map(([_, value]) => value);
 }
 
 /**

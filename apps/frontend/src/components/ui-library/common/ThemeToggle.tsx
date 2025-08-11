@@ -1,26 +1,26 @@
 "use client";
 
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from "@/contexts/ThemeContext";
 
 const ThemeToggle = () => {
-  const { mode, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
 
   return (
     <button
       onClick={toggleTheme}
       className="theme-toggle-btn relative p-2 rounded-lg border transition-all duration-200 hover:scale-105"
       style={{
-        backgroundColor: 'var(--card-bg)',
-        borderColor: 'var(--border-color)',
+        backgroundColor: "var(--card-bg)",
+        borderColor: "var(--border-color)",
       }}
-      title={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+      title={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
     >
       {/* 다크 모드 아이콘 (달) */}
       {isDark ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 transition-all duration-200"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: "var(--text-secondary)" }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -37,7 +37,7 @@ const ThemeToggle = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 transition-all duration-200"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: "var(--text-secondary)" }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -50,11 +50,11 @@ const ThemeToggle = () => {
           />
         </svg>
       )}
-      
+
       {/* 호버 시 나타나는 배경 효과 */}
-      <div 
+      <div
         className="theme-toggle-bg absolute inset-0 rounded-lg opacity-0 transition-opacity duration-200 pointer-events-none"
-        style={{ backgroundColor: 'rgba(var(--primary-color-rgb), 0.1)' }}
+        style={{ backgroundColor: "rgba(var(--primary-color-rgb), 0.1)" }}
       ></div>
     </button>
   );

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { getAllChannels, getChannelUrl } from "@/config/channel";
+import Image from "next/image";
 
 const ChannelNavigationModule = () => {
   const channels = getAllChannels();
@@ -36,10 +37,12 @@ const ChannelNavigationModule = () => {
               >
                 <div className="flex items-center gap-4 mb-3">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center">
-                    <img
+                    <Image
                       src={`${process.env.NEXT_PUBLIC_S3_URL}/${channel.metadata?.icon}`}
                       alt={`${channel.title} 아이콘`}
-                      className="w-12 h-12 object-contain"
+                      className="object-contain"
+                      width={48}
+                      height={48}
                     />
                   </div>
                   <div className="flex-1">

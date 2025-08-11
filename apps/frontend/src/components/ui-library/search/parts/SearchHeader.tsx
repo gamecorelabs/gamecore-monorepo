@@ -11,7 +11,8 @@ const SearchHeader = ({ keyword }: { keyword: string }) => {
         검색결과
       </h1>
       <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-        '<span className="font-medium">{keyword}</span>' 검색 결과
+        &lsquo;<span className="font-lg text-red-600">{keyword}</span>&rsquo;
+        검색 결과
       </p>
     </div>
   );

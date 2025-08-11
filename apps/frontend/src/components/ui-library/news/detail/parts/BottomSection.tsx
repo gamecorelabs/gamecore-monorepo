@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { useUserStore } from "@/store/userStore";
 import { NewsPost } from "@/types/news/newsPost.types";
 import { useRouter } from "next/navigation";
@@ -33,7 +32,7 @@ const BottomSection = ({ post }: { post: NewsPost }) => {
     router.push(`/news/${newsId}/post/${post.id}/edit`);
   };
 
-  const postDelete = async (password?: string) => {
+  const postDelete = async () => {
     try {
       let result = null;
       result = await dataApi.delete(`/news-post/${post.id}`, {

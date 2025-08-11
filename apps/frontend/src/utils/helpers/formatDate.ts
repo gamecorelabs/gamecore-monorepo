@@ -28,7 +28,7 @@ export const formatDateSafe = (dateString: string): string => {
     const day = parseInt(match[3], 10);
 
     return `${month}월 ${day}일`;
-  } catch (error) {
+  } catch {
     return "-";
   }
 };

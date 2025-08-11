@@ -1,12 +1,7 @@
 import { getUserName } from "@/utils/helpers/getUserName";
 import { NewsPost } from "@/types/news/newsPost.types";
 import { formatDate } from "@/utils/helpers/formatDate";
-import {
-  EyeIcon,
-  ClockIcon,
-  UserIcon,
-  CalendarIcon,
-} from "@heroicons/react/24/outline";
+import { EyeIcon, UserIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import CurrentProfile from "@/components/ui-library/common/CurrentProfile";
 import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";

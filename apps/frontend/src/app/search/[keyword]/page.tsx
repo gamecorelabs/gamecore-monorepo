@@ -1,15 +1,17 @@
 import SearchResults from "@/components/ui-library/search/SearchResults";
 import SearchErrorFallback from "@/components/ui-library/fallback/SearchErrorFallback";
-import { BoardPost } from "@/types/board/boardPost.types";
-import { NewsPost } from "@/types/news/newsPost.types";
 import {
   validateSearchKeyword,
   isSafeKeyword,
 } from "@/utils/validation/search/searchKeywordSchema";
 import dataApi from "@/utils/common-axios/dataApi";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 
-const SearchPage = async ({ params }: { params: { keyword: string } }) => {
+const SearchPage = async ({
+  params,
+}: {
+  params: Promise<{ keyword: string }>;
+}) => {
   const { keyword } = await params;
   const decodedKeyword = decodeURIComponent(keyword);
 
@@ -60,8 +62,8 @@ const SearchPage = async ({ params }: { params: { keyword: string } }) => {
     );
   }
 
-  let newsResults = result.data.newsResults ?? [];
-  let boardResults = result.data.boardResults ?? [];
+  const newsResults = result.data.newsResults ?? [];
+  const boardResults = result.data.boardResults ?? [];
 
   return (
     <SearchResults

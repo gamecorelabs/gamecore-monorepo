@@ -65,7 +65,7 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
       set({
         nicknameCheckStatus: response.data ? "unavailable" : "available",
       });
-    } catch (error) {
+    } catch {
       set({ nicknameCheckStatus: "unavailable" });
     }
   },

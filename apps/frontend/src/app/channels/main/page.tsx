@@ -1,7 +1,6 @@
 import {
   ChannelNavigationModule,
   ChannelInfoModule,
-  BannerImageModule,
 } from "@/components/ui-library/common/modules";
 import { getChannelInfo } from "@/utils/hooks/useChannel";
 

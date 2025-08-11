@@ -1,4 +1,4 @@
-import { BoardPostList, FallbackPage } from "@ui-library";
+import { BoardPostList } from "@ui-library";
 import React from "react";
 import dataApi from "@/utils/common-axios/dataApi";
 import qs from "qs";
