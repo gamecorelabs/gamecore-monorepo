@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "./parts/Nav";
 import ProfileBlock from "./parts/ProfileBlock";
+import SearchBar from "./parts/SearchBar";
 import ThemeToggle from "../../common/ThemeToggle";
 import { ChannelConfig } from "@/types/channel/channel.types";
 import { getChannelUrl } from "@/config/channel";
@@ -71,50 +72,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
             </div>
 
             {/* Search Section */}
-            <div className="relative hidden lg:block">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="게임, 뉴스, 커뮤니티 검색..."
-                  className="search-input w-[400px] px-6 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
-                  style={{
-                    backgroundColor: "var(--input-bg)",
-                    borderColor: "var(--border-color)",
-                    color: "var(--text-color)",
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      window.alert("통합 검색기능은 현재 개발중입니다.");
-                    }
-                  }}
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <div
-                    className="p-2 rounded-md"
-                    style={{ backgroundColor: "var(--primary-color)" }}
-                    onClick={() => {
-                      window.alert("통합 검색기능은 현재 개발중입니다.");
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      style={{ color: "var(--text-color)" }}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SearchBar isDesktop={true} />
 
             {/* Theme Toggle & Profile Section */}
             <div className="flex items-center gap-3">
@@ -124,50 +82,7 @@ const Header = ({ config }: { config: ChannelConfig }) => {
           </div>
 
           {/* Mobile Search */}
-          <div className="px-4 pb-4 block lg:hidden">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="게임, 뉴스, 커뮤니티 검색..."
-                className="search-input w-full px-4 py-3 rounded-lg border transition-all backdrop-blur-sm focus:outline-none"
-                style={{
-                  backgroundColor: "var(--input-bg)",
-                  borderColor: "var(--border-color)",
-                  color: "var(--text-color)",
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    window.alert("통합 검색기능은 현재 개발중입니다.");
-                  }
-                }}
-              />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <div
-                  className="p-2 rounded-md"
-                  style={{ backgroundColor: "var(--primary-color)" }}
-                  onClick={() => {
-                    window.alert("통합 검색기능은 현재 개발중입니다.");
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    style={{ color: "var(--text-color)" }}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SearchBar isDesktop={false} />
         </div>
 
         {/* Navigation Bar */}
