@@ -3,10 +3,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
-  UnauthorizedException,
 } from "@nestjs/common";
-import { BasicTokenGuard } from "./basic-token.guard";
-
 /**
  * CSRF 검증
  */
