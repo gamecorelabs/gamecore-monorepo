@@ -78,6 +78,22 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
   handleImageUpload: (event) => {
     const file = event.target.files?.[0];
     if (file) {
+      // 파일 확장자 검증 (jpg, jpeg, png만 허용)
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.");
+        event.target.value = ""; // input 초기화
+        return;
+      }
+
+      // 파일 크기 검증 (1MB 이하만 허용)
+      const maxSize = 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("파일 크기는 1MB 이하만 업로드 가능합니다.");
+        event.target.value = ""; // input 초기화
+        return;
+      }
+
       set({ profileImageFile: file, isImageRemoved: false });
 
       const reader = new FileReader();
