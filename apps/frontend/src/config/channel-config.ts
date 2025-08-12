@@ -18,7 +18,7 @@ export const CHANNEL_CONFIG: Record<string, ChannelConfig> = {
     },
     menuItems: [
       { id: 1, title: "홈", href: "/" },
-      { id: 2, title: "뉴스", href: "/news/1/post", badge: "NEW" },
+      { id: 2, title: "뉴스", href: "/news/1/post", badge: "N" },
       { id: 3, title: "게시판", href: "/board/1/post" },
     ],
   },
