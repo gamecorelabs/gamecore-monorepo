@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
 import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
+import SafeHtmlContent from "@/components/ui-library/content/SafeHtmlContent";
 
 export const ArticleContent = ({
   newsId,
@@ -51,12 +52,16 @@ export const ArticleContent = ({
 
             {/* 미리보기 텍스트 */}
             {post.content && (
-              <p
+              <div
                 className="text-sm mb-2 line-clamp-2"
                 style={{ color: "var(--text-secondary)" }}
               >
-                {post.content}
-              </p>
+                <SafeHtmlContent
+                  content={post.content}
+                  ignore={true}
+                  className="leading-relaxed text-base"
+                />
+              </div>
             )}
 
             {/* 메타 정보 */}
@@ -156,12 +161,16 @@ export const ArticleContent = ({
           </div>
           {/* 미리보기 */}
           {post.content && (
-            <p
+            <div
               className="text-sm line-clamp-1"
               style={{ color: "var(--text-secondary)" }}
             >
-              {post.content}
-            </p>
+              <SafeHtmlContent
+                content={post.content}
+                ignore={true}
+                className="leading-relaxed text-base"
+              />
+            </div>
           )}
         </div>
 

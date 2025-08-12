@@ -3,6 +3,7 @@ import LikeDetail from "@/components/ui-library/like/LikeDetail";
 import { useLikeSelection } from "@/utils/hooks/useLikeSelection";
 import { NewsPost } from "@/types/news/newsPost.types";
 import { ResourceType } from "@/types/common/resource.types";
+import SafeHtmlContent from "@/components/ui-library/content/SafeHtmlContent";
 import { useMemo } from "react";
 
 const DetailContent = ({ post }: { post: NewsPost }) => {
@@ -18,15 +19,10 @@ const DetailContent = ({ post }: { post: NewsPost }) => {
         className="prose prose-lg max-w-none min-h-48 mb-8"
         style={{ color: "var(--text-color)" }}
       >
-        <div
-          className="whitespace-pre-wrap leading-relaxed text-base"
-          style={{
-            lineHeight: "1.8",
-            color: "var(--text-color)",
-          }}
-        >
-          {post.content}
-        </div>
+        <SafeHtmlContent
+          content={post.content}
+          className="leading-relaxed text-base"
+        />
       </article>
 
       {/* 좋아요/싫어요 섹션 */}

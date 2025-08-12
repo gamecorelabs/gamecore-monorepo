@@ -4,6 +4,7 @@ import { useLikeSelection } from "@/utils/hooks/useLikeSelection";
 import { BoardPost } from "@/types/board/boardPost.types";
 import { ResourceType } from "@/types/common/resource.types";
 import { useMemo } from "react";
+import SafeHtmlContent from "@/components/ui-library/content/SafeHtmlContent";
 
 const DetailContent = ({ post }: { post: BoardPost }) => {
   const { selectedMap, isLoading } = useLikeSelection(
@@ -14,7 +15,12 @@ const DetailContent = ({ post }: { post: BoardPost }) => {
   return (
     <>
       <div className="max-w-none min-h-48 mb-6 ">
-        <div className="whitespace-pre-wrap">{post.content}</div>
+        <div className="whitespace-pre-wrap">
+          <SafeHtmlContent
+            content={post.content}
+            className="leading-relaxed text-base"
+          />
+        </div>
       </div>
 
       {!isLoading && (

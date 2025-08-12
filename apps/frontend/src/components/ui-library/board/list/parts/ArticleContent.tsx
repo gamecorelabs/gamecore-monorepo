@@ -8,6 +8,7 @@ import Link from "next/link";
 import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
 import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
+import SafeHtmlContent from "@/components/ui-library/content/SafeHtmlContent";
 export const ArticleContent = ({
   boardId,
   post,
@@ -44,12 +45,16 @@ export const ArticleContent = ({
             </h3>
 
             {post.content && (
-              <p
+              <div
                 className="text-sm mb-3 line-clamp-2"
                 style={{ color: "var(--text-secondary)" }}
               >
-                {post.content}
-              </p>
+                <SafeHtmlContent
+                  content={post.content}
+                  ignore={true}
+                  className="leading-relaxed text-base"
+                />
+              </div>
             )}
 
             <div className="flex items-center justify-between">
@@ -133,12 +138,16 @@ export const ArticleContent = ({
                 )}
               </div>
               {post.content && (
-                <p
+                <div
                   className="text-sm line-clamp-1"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  {post.content}
-                </p>
+                  <SafeHtmlContent
+                    content={post.content}
+                    ignore={true}
+                    className="leading-relaxed text-base"
+                  />
+                </div>
               )}
             </div>
           </div>
