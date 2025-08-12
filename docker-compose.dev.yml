@@ -17,6 +17,7 @@ services:
   traefik:
     image: traefik:v2.11
     container_name: traefik
+    restart: unless-stopped
     command:
       - "--configFile=/etc/traefik/traefik.yml"
     ports:
