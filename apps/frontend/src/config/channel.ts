@@ -34,6 +34,20 @@ export function getAllChannels() {
 }
 
 /**
+ * 활성화 된 채널 중 키워드에 속한 채널을 가져온다.
+ */
+export function getChannelsByKeyword(keyword: string): ChannelConfig[] {
+  const lowerKeyword = keyword.toLowerCase();
+  const channels = getAllChannels();
+  return channels.filter(
+    (channel) =>
+      channel.title.toLowerCase().includes(lowerKeyword) ||
+      channel.shortTitle.toLowerCase().includes(lowerKeyword) ||
+      channel.description.toLowerCase().includes(lowerKeyword)
+  );
+}
+
+/**
  * 채널의 풀 URL 생성 (환경별 대응)
  */
 export function getChannelUrl(channel: string, path: string = "/"): string {

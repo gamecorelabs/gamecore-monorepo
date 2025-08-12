@@ -1,10 +1,17 @@
 "use client";
 import Link from "next/link";
-import { getAllChannels, getChannelUrl } from "@/config/channel";
+import { getChannelUrl } from "@/config/channel";
 import Image from "next/image";
+import { ChannelConfig } from "@/types/channel/channel.types";
+import { highlightKeyword } from "@/utils/helpers/highlightKeyword";
 
-const ChannelNavigationModule = () => {
-  const channels = getAllChannels();
+const ChannelNavigationModule = ({
+  channels,
+  keyword,
+}: {
+  channels: ChannelConfig[];
+  keyword?: string;
+}) => {
   return (
     <div className="w-full">
       <div
@@ -21,7 +28,13 @@ const ChannelNavigationModule = () => {
           게임코어 채널 리스트
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          className={`grid gap-4 ${
+            channels.length < 3
+              ? "grid-cols-1"
+              : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          }`}
+        >
           {channels.map((channel) => (
             <Link
               key={channel.channel}
@@ -50,13 +63,13 @@ const ChannelNavigationModule = () => {
                       className="font-bold text-lg group-hover:transition-colors"
                       style={{ color: "var(--text-color)" }}
                     >
-                      {channel.shortTitle}
+                      {highlightKeyword(channel.shortTitle, keyword)}
                     </h3>
                     <p
                       className="text-sm"
                       style={{ color: "var(--text-muted)" }}
                     >
-                      {channel.title}
+                      {highlightKeyword(channel.title, keyword)}
                     </p>
                   </div>
                 </div>
@@ -65,7 +78,7 @@ const ChannelNavigationModule = () => {
                   className="text-sm mb-3"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  {channel.description}
+                  {highlightKeyword(channel.description, keyword)}
                 </p>
               </div>
             </Link>

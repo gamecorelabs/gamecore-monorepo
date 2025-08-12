@@ -6,6 +6,7 @@ import {
 } from "@/utils/validation/search/searchKeywordSchema";
 import dataApi from "@/utils/common-axios/dataApi";
 import { AxiosError } from "axios";
+import { getChannelsByKeyword } from "@/config/channel";
 
 const SearchPage = async ({
   params,
@@ -62,11 +63,16 @@ const SearchPage = async ({
     );
   }
 
+  // 채널 검색 결과 (프론트 내 처리)
+  const channels = getChannelsByKeyword(safeKeyword) ?? [];
+  // 뉴스 결과
   const newsResults = result.data.newsResults ?? [];
+  // 게시판 결과
   const boardResults = result.data.boardResults ?? [];
 
   return (
     <SearchResults
+      channels={channels}
       keyword={safeKeyword}
       newsResults={newsResults}
       boardResults={boardResults}
