@@ -56,14 +56,14 @@ const SearchBoardItem = ({ post, keyword, isLast }: SearchBoardItemProps) => {
                 className="font-medium text-sm mb-2 line-clamp-2"
                 style={{ color: "var(--text-color)" }}
               >
-                {highlightKeyword({ text: post.title, keyword })}
+                {highlightKeyword(post.title, keyword)}
               </h3>
               {post.content && (
                 <p
                   className="text-xs text-opacity-80 line-clamp-1 mb-2"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  {highlightKeyword({ text: post.content, keyword })}
+                  {highlightKeyword(post.content, keyword)}
                 </p>
               )}
               <div className="flex items-center justify-between">
@@ -136,14 +136,14 @@ const SearchBoardItem = ({ post, keyword, isLast }: SearchBoardItemProps) => {
                 className="font-medium text-sm truncate"
                 style={{ color: "var(--text-color)" }}
               >
-                {highlightKeyword({ text: post.title, keyword })}
+                {highlightKeyword(post.title, keyword)}
               </h3>
               {post.content && (
                 <p
                   className="text-xs text-opacity-80 line-clamp-1"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  {highlightKeyword({ text: post.content, keyword })}
+                  {highlightKeyword(post.content, keyword)}
                 </p>
               )}
             </div>

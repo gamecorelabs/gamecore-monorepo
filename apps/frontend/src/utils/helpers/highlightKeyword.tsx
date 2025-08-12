@@ -1,14 +1,6 @@
 import React from "react";
 
-interface HighlightKeywordProps {
-  text: string;
-  keyword: string;
-}
-
-export const highlightKeyword = ({
-  text,
-  keyword,
-}: HighlightKeywordProps): React.ReactNode => {
+export const highlightKeyword = (text: string, keyword?: string) => {
   if (!keyword || !text) return text;
 
   // 특수 문자 이스케이프

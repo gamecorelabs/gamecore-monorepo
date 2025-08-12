@@ -5,19 +5,24 @@ import SearchNewsItem from "./parts/SearchNewsItem";
 import SearchBoardItem from "./parts/SearchBoardItem";
 import SearchHeader from "./parts/SearchHeader";
 import SearchResultEmpty from "./parts/SearchResultEmpty";
+import { ChannelConfig } from "@/types/channel/channel.types";
+import { ChannelNavigationModule } from "../common/modules";
 
 interface SearchResultsProps {
   keyword: string;
+  channels: ChannelConfig[];
   newsResults: NewsPost[];
   boardResults: BoardPost[];
 }
 
 const SearchResults = ({
   keyword,
+  channels,
   newsResults,
   boardResults,
 }: SearchResultsProps) => {
-  const hasResults = newsResults.length > 0 || boardResults.length > 0;
+  const hasResults =
+    channels.length > 0 || newsResults.length > 0 || boardResults.length > 0;
 
   return (
     <div className="min-h-screen">
@@ -26,6 +31,10 @@ const SearchResults = ({
         <SearchResultEmpty />
       ) : (
         <div className="space-y-8 p-6">
+          {/* 채널 검색 결과 */}
+          {channels.length > 0 && (
+            <ChannelNavigationModule channels={channels} keyword={keyword} />
+          )}
           {/* 뉴스 검색 결과 */}
           {newsResults.length > 0 && (
             <section>
