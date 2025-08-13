@@ -18,7 +18,7 @@ const NewsPostEdit = ({ post }: { post: NewsPost }) => {
     } else {
       setCanAccessPage(false);
     }
-  }, []);
+  }, [currentUser]);
 
   if (!hydrated) return null;
 

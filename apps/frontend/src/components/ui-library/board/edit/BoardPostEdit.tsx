@@ -46,7 +46,7 @@ const BoardPostEdit = ({ post }: { post: BoardPost }) => {
     } else {
       setCanAccessPage(false);
     }
-  }, []);
+  }, [currentUser, post.guestAccount]);
 
   if (!hydrated) return null;
 
