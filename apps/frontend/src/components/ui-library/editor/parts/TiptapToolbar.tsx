@@ -11,10 +11,6 @@ import {
   Bars3BottomLeftIcon,
 } from "@heroicons/react/24/outline";
 
-interface TiptapToolbarProps {
-  editor: Editor;
-}
-
 interface ToolbarButton {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
@@ -22,23 +18,7 @@ interface ToolbarButton {
   isActive?: () => boolean;
 }
 
-const TiptapToolbar = ({ editor }: TiptapToolbarProps) => {
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const src = e.target?.result as string;
-        editor.chain().focus().setImage({ src }).run();
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // input 초기화
-    event.target.value = "";
-  };
-
+const TiptapToolbar = ({ editor }: { editor: Editor }) => {
   const formatButtons: ToolbarButton[] = [
     {
       icon: BoldIcon,
@@ -138,21 +118,18 @@ const TiptapToolbar = ({ editor }: TiptapToolbarProps) => {
         style={{ backgroundColor: "var(--border-color)" }}
       />
 
-      {/* 이미지 업로드 버튼 */}
-      <label
-        className="p-2 rounded hover:bg-opacity-50 transition-colors cursor-pointer"
-        style={{ backgroundColor: "var(--hover-bg)" }}
-        title="이미지 업로드 (다중 선택 가능)"
+      {/* 드래그 앤 드롭 안내 */}
+      <div
+        className="flex items-center gap-2 px-3 py-1 text-xs rounded"
+        style={{
+          backgroundColor: "var(--card-bg)",
+          color: "var(--text-muted)",
+        }}
+        title="이미지를 드래그 앤 드롭하거나 Ctrl+V로 붙여넣기"
       >
-        <PhotoIcon className="w-4 h-4" style={{ color: "var(--text-color)" }} />
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImageUpload}
-          className="hidden"
-        />
-      </label>
+        <PhotoIcon className="w-3 h-3" />
+        <span>이미지 드래그 앤 드롭 지원</span>
+      </div>
     </div>
   );
 };
