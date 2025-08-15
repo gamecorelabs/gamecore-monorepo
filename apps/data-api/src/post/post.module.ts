@@ -11,10 +11,10 @@ import {
 } from "@gamecorelabs/nestjs-core";
 import { BoardPostController } from "./board-post.controller";
 import { NewsPostController } from "./news-post.controller";
+import { MulterModule } from "@nestjs/platform-express";
+import { S3StorageFactory } from "./interceptors/s3-storage.factory";
 
 @Module({
-  controllers: [PostController, BoardPostController, NewsPostController],
-  providers: [PostService],
   imports: [
     TypeOrmModule.forFeature([
       BoardConfig,
@@ -23,6 +23,9 @@ import { NewsPostController } from "./news-post.controller";
       Comment,
       Like,
     ]),
+    MulterModule.register({}),
   ],
+  controllers: [PostController, BoardPostController, NewsPostController],
+  providers: [PostService, S3StorageFactory],
 })
 export class PostModule {}

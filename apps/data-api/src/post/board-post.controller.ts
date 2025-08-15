@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Request,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -25,12 +26,15 @@ import {
   QueryRunnerTransactionInterceptor,
   CurrentQueryRunner,
   CsrfTokenProtectionGuard,
+  UserLoginRequest,
 } from "@gamecorelabs/nestjs-core";
 import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
 import * as BoardRequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { QueryRunner } from "typeorm";
+import { S3FileInterceptor } from "./interceptors/s3-file-interceptor";
+import { S3_CONFIG } from "src/config/s3.config";
 
 @Controller(["board-post"])
 export class BoardPostController {
@@ -146,5 +150,23 @@ export class BoardPostController {
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.boardPostService.checkOwnerPost(id, user);
+  }
+
+  @Post("/images")
+  @UseGuards(CsrfTokenProtectionGuard, UserRequestTypes.UserTokenGuard)
+  @UseInterceptors(
+    S3FileInterceptor("ImageData", S3_CONFIG.newsPostImagesPath, 1)
+  ) // 1MB 제한
+  async saveTempImage(
+    @CurrentUser() user: UserLoginRequest,
+    @UploadedFile() file: Express.MulterS3.File
+  ) {
+    if (!file) {
+      throw new Error("파일이 업로드되지 않았습니다.");
+    }
+
+    return {
+      imageUrl: file.location, // S3 URL
+    };
   }
 }
