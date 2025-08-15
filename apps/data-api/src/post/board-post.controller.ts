@@ -155,7 +155,7 @@ export class BoardPostController {
   @Post("/images")
   @UseGuards(CsrfTokenProtectionGuard, UserRequestTypes.UserTokenGuard)
   @UseInterceptors(
-    S3FileInterceptor("ImageData", S3_CONFIG.newsPostImagesPath, 1)
+    S3FileInterceptor("ImageData", S3_CONFIG.boardPostImagePath, 1)
   ) // 1MB 제한
   async saveTempImage(
     @CurrentUser() user: UserLoginRequest,
