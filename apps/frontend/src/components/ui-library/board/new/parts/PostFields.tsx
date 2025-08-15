@@ -1,5 +1,4 @@
 "use client";
-import TiptapEditor from "@/components/ui-library/editor/TiptapEditor";
 import TiptapEditorWithImageManager from "@/components/ui-library/editor/TiptapEditorWithImageManager";
 import { BoardConfig } from "@/types/board/boardConfig.types";
 import { BoardPost } from "@/types/board/boardPost.types";
