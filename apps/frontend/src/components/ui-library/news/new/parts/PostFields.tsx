@@ -1,6 +1,6 @@
 import { NewsConfig } from "@/types/news/newsConfig.types";
 import { NewsPost } from "@/types/news/newsPost.types";
-import TiptapEditor from "@/components/ui-library/editor/TiptapEditor";
+import TiptapEditorWithImageManager from "@/components/ui-library/editor/TiptapEditorWithImageManager";
 
 const PostFields = ({
   newsConfig,
@@ -53,7 +53,8 @@ const PostFields = ({
         <label htmlFor="content" className="block font-semibold mb-2">
           내용
         </label>
-        <TiptapEditor
+        <TiptapEditorWithImageManager
+          resource="news-post"
           defaultValue={post?.content}
           placeholder="내용을 입력하세요"
           className="border-gray-300 focus-within:ring-2 focus-within:ring-blue-400"
