@@ -1,20 +1,6 @@
-import {
-  Controller,
-  Post,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import { PostService } from "./post.service";
-import {
-  BasePostService,
-  CsrfTokenProtectionGuard,
-  CurrentUser,
-  UserTokenGuard,
-  UserLoginRequest,
-} from "@gamecorelabs/nestjs-core";
-import { S3FileInterceptor } from "./interceptors/s3-file-interceptor";
-import { S3_CONFIG } from "src/config/s3.config";
+import { BasePostService } from "@gamecorelabs/nestjs-core";
 
 @Controller(["post"])
 export class PostController {

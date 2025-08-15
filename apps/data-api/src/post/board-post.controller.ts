@@ -33,8 +33,8 @@ import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
 import * as BoardRequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { QueryRunner } from "typeorm";
+import { S3_CONFIG } from "../config/s3.config";
 import { S3FileInterceptor } from "./interceptors/s3-file-interceptor";
-import { S3_CONFIG } from "src/config/s3.config";
 
 @Controller(["board-post"])
 export class BoardPostController {
