@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import "@/styles/rich-content.css";
 import useHydrated from "@/utils/hooks/useHydrated";
 
 interface SafeHtmlContentProps {
