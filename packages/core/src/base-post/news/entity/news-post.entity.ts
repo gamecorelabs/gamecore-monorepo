@@ -23,6 +23,15 @@ export class NewsPost extends BaseModel {
   @Column({ type: "enum", enum: NewsPostStatus, default: NewsPostStatus.USE })
   status: NewsPostStatus;
 
+  // 썸네일 path
+  @Column({
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
+  @IsString()
+  thumbnail?: string;
+
   // 조회수
   @IsNumber()
   @Column({ type: "int", default: 0 })

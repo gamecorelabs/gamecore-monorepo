@@ -31,7 +31,8 @@ export class BoardPostService {
     @InjectRepository(BoardPost)
     private readonly boardPostRepository: Repository<BoardPost>,
     private readonly configService: ConfigService,
-    private readonly commonPaginationService: CommonPaginationService
+    private readonly commonPaginationService: CommonPaginationService,
+    private readonly postUtilService: PostUtilService
   ) {}
 
   async getPostList(boardId: number, dto: BoardPostPaginationDto) {
@@ -50,11 +51,21 @@ export class BoardPostService {
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
     );
+
+    const thumbnail = this.postUtilService.extractFirstImage(dto.content);
+
+    const saveData = {
+      ...dto,
+      ...(thumbnail && {
+        thumbnail,
+      }),
+    };
+
     const boardPost = this.boardPostRepository.create({
       category: { id: dto.categoryId },
       ipAddress: user.ipAddress,
       ...userInfo,
-      ...dto,
+      ...saveData,
     });
     try {
       return await this.boardPostRepository.save(boardPost);
@@ -117,9 +128,21 @@ export class BoardPostService {
       throw new ConflictException("게시글이 존재하지 않습니다.");
     }
 
+    let thumbnail: string | null = null;
+    if (dto.content) {
+      thumbnail = this.postUtilService.extractFirstImage(dto.content);
+    }
+
+    const saveData = {
+      ...dto,
+      ...(thumbnail && {
+        thumbnail,
+      }),
+    };
+
     Object.assign(post, {
       category: { id: dto.categoryId },
-      ...dto,
+      ...saveData,
     });
 
     try {

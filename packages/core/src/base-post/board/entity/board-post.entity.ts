@@ -27,6 +27,15 @@ export class BoardPost extends BaseModel {
   @Column({ type: "enum", enum: BoardPostStatus, default: BoardPostStatus.USE })
   status: BoardPostStatus;
 
+  // 썸네일 path
+  @Column({
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
+  @IsString()
+  thumbnail?: string;
+
   // 조회수
   @IsNumber()
   @Column({ type: "int", default: 0 })

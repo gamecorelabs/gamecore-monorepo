@@ -26,7 +26,8 @@ export class NewsPostService {
     @InjectRepository(NewsPost)
     private readonly newsPostRepository: Repository<NewsPost>,
     private readonly configService: ConfigService,
-    private readonly commonPaginationService: CommonPaginationService
+    private readonly commonPaginationService: CommonPaginationService,
+    private readonly postUtilService: PostUtilService
   ) {}
 
   async getPostList(newsId: number, dto: NewsPostPaginationDto) {
@@ -45,11 +46,21 @@ export class NewsPostService {
       user,
       parseInt(this.configService.get<string>(ENV_HASH_ROUNDS) as string)
     );
+
+    const thumbnail = this.postUtilService.extractFirstImage(dto.content);
+
+    const saveData = {
+      ...dto,
+      ...(thumbnail && {
+        thumbnail,
+      }),
+    };
+
     const newsPost = this.newsPostRepository.create({
       category: { id: dto.categoryId },
       ipAddress: user.ipAddress,
       ...userInfo,
-      ...dto,
+      ...saveData,
     });
     try {
       return await this.newsPostRepository.save(newsPost);
@@ -95,9 +106,21 @@ export class NewsPostService {
       throw new ConflictException("뉴스이 존재하지 않습니다.");
     }
 
+    let thumbnail: string | null = null;
+    if (dto.content) {
+      thumbnail = this.postUtilService.extractFirstImage(dto.content);
+    }
+
+    const saveData = {
+      ...dto,
+      ...(thumbnail && {
+        thumbnail,
+      }),
+    };
+
     Object.assign(post, {
       category: { id: dto.categoryId },
-      ...dto,
+      ...saveData,
     });
 
     try {
