@@ -4,6 +4,7 @@ import { getChannelUrl } from "@/config/channel";
 import Image from "next/image";
 import { ChannelConfig } from "@/types/channel/channel.types";
 import { highlightKeyword } from "@/utils/helpers/highlightKeyword";
+import { S3_URL } from "@/config/config";
 
 const ChannelNavigationModule = ({
   channels,
@@ -51,7 +52,7 @@ const ChannelNavigationModule = ({
                 <div className="flex items-center gap-4 mb-3">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_S3_URL}/${channel.metadata?.icon}`}
+                      src={`${S3_URL}/${channel.metadata?.icon}`}
                       alt={`${channel.title} 아이콘`}
                       className="object-contain"
                       width={48}

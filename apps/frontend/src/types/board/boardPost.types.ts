@@ -10,6 +10,7 @@ export type BoardPost = {
   updatedAt: string;
   ipAddress: string;
   status: string;
+  thumbnail: string;
   viewCount: number;
 
   likeCount: number;

@@ -1,3 +1,4 @@
+import { S3_URL } from "@/config/config";
 import { UserAccount } from "@/types/user/user.types";
 import Image from "next/image";
 
@@ -28,7 +29,7 @@ export const CurrentProfile = ({
     >
       {user.profileImage ? (
         <Image
-          src={`${process.env.NEXT_PUBLIC_S3_URL}/${user.profileImage}`}
+          src={`${S3_URL}/${user.profileImage}`}
           alt="프로필 이미지"
           className="rounded-full"
           width={width}

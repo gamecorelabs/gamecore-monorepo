@@ -6,6 +6,7 @@ import { formatDateSafe } from "@/utils/helpers/formatDate";
 import { getUserName } from "@/utils/helpers/getUserName";
 import ProviderIcon from "@/components/ui-library/common/icons/ProviderIcon";
 import SafeHtmlContent from "@/components/ui-library/content/SafeHtmlContent";
+import { S3_URL } from "@/config/config";
 
 export const ArticleContent = ({
   newsId,
@@ -108,9 +109,9 @@ export const ArticleContent = ({
       >
         {/* 썸네일 영역 (뉴스 전용) */}
         <div className="w-20 h-14 flex-shrink-0 rounded overflow-hidden">
-          {(post as any).thumbnailUrl ? (
+          {post.thumbnail ? (
             <img
-              src={(post as any).thumbnailUrl}
+              src={`${S3_URL}/${post.thumbnail}`}
               alt={post.title}
               className="w-full h-full object-cover"
             />
