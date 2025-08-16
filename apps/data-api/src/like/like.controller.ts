@@ -6,8 +6,8 @@ import {
   BaseLikeService,
   SelectedLikeDto,
   CsrfTokenProtectionGuard,
+  UserOrGuestLoginRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
 
 @Controller("like")
 export class LikeController {
@@ -20,7 +20,7 @@ export class LikeController {
   @Post("selected")
   @UseGuards(CsrfTokenProtectionGuard, GuestOrUserTokenGuard)
   checkSelectedLike(
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() dto: SelectedLikeDto
   ) {
     return this.baseLikeService.checkUserLikeStatus(dto, user);

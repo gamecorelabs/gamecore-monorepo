@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Post,
@@ -21,10 +20,10 @@ import {
   CurrentQueryRunner,
   QueryRunnerTransactionInterceptor,
   CsrfTokenProtectionGuard,
+  UserOrGuestLoginRequest,
+  CommonRequest,
+  CommentRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
-import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
-import * as CommentRequestTypes from "@gamecorelabs/nestjs-core";
 import { QueryRunner } from "typeorm";
 
 @Controller("comment")
@@ -47,9 +46,9 @@ export class CommentController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async deleteComment(
-    @Request() req: CommentRequestTypes.CommentRequest,
+    @Request() req: CommentRequest,
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner
   ) {
     await this.baseCommentService.checkOwnerComment(id, user);
@@ -65,8 +64,8 @@ export class CommentController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
-    @Request() req: CommonRequestTypes.CommonRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: CreateRequestLikeDto,
     @CurrentQueryRunner() qr: QueryRunner
   ) {

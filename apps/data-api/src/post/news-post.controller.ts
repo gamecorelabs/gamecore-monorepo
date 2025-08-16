@@ -27,10 +27,10 @@ import {
   CurrentQueryRunner,
   CsrfTokenProtectionGuard,
   UserLoginRequest,
+  UserOrGuestLoginRequest,
+  NewsPostRequest,
+  CommonRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
-import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
-import * as NewsRequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { QueryRunner } from "typeorm";
 import { S3_CONFIG } from "../config/s3.config";
@@ -49,7 +49,7 @@ export class NewsPostController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   getPostDetail(
-    @Request() req: CommonRequestTypes.CommonRequest,
+    @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.newsPostService.getPostDetail(id);
@@ -64,7 +64,7 @@ export class NewsPostController {
   @UseInterceptors(AnyFilesInterceptor())
   async patchPost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: UpdateNewsPostDto
   ) {
     await this.newsPostService.checkOwnerPost(id, user);
@@ -79,7 +79,7 @@ export class NewsPostController {
   )
   async deletePost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest
+    @CurrentUser() user: UserOrGuestLoginRequest
   ) {
     await this.newsPostService.checkOwnerPost(id, user);
     return this.newsPostService.deletePost(id);
@@ -89,7 +89,7 @@ export class NewsPostController {
   @Get(":id/comments")
   @UseGuards(ResourceExistenceGuard)
   async getCommentsByPostId(
-    @Request() req: CommonRequestTypes.CommonRequest,
+    @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return await this.baseCommentService.getPostCommentList(
@@ -107,8 +107,8 @@ export class NewsPostController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   postComment(
-    @Request() req: NewsRequestTypes.NewsPostRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: NewsPostRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: RequestCreateCommentDto
   ) {
@@ -129,8 +129,8 @@ export class NewsPostController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
-    @Request() req: CommonRequestTypes.CommonRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: CreateRequestLikeDto
   ) {
@@ -145,15 +145,15 @@ export class NewsPostController {
   @Get(":id/owner-check")
   @UseGuards(ResourceExistenceGuard, GuestOrUserTokenGuard)
   async getOwnerCheck(
-    @Request() req: CommonRequestTypes.CommonRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.newsPostService.checkOwnerPost(id, user);
   }
 
   @Post("/images")
-  @UseGuards(CsrfTokenProtectionGuard, UserRequestTypes.UserTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, GuestOrUserTokenGuard)
   @UseInterceptors(
     S3FileInterceptor("ImageData", S3_CONFIG.newsPostImagesPath, 3)
   ) // 3MB 제한

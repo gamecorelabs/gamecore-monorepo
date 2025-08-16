@@ -19,9 +19,9 @@ import {
   NewsPostService,
   UserTokenGuard,
   RequestCreateNewsPostDto,
+  UserOrGuestLoginRequest,
+  NewsConfigRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserTypes from "@gamecorelabs/nestjs-core";
-import * as RequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
 @Controller("news")
@@ -34,7 +34,7 @@ export class NewsController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   async getNewsById(
-    @Request() req: RequestTypes.NewsConfigRequest,
+    @Request() req: NewsConfigRequest,
     @Param("id", ParseIntPipe) newsId: number
   ) {
     return req.newsConfig;
@@ -43,7 +43,7 @@ export class NewsController {
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
   async getNewsPost(
-    @Request() req: RequestTypes.NewsConfigRequest,
+    @Request() req: NewsConfigRequest,
     @Param("id", ParseIntPipe) newsId: number,
     @Query() query: RequestNewsPostPaginationDto
   ) {
@@ -63,9 +63,9 @@ export class NewsController {
   @UseGuards(CsrfTokenProtectionGuard, ResourceExistenceGuard, UserTokenGuard)
   @UseInterceptors(AnyFilesInterceptor()) // 파일 없어도 formData 파싱을 위해 필요
   postNewsPost(
-    @Request() req: RequestTypes.NewsConfigRequest,
+    @Request() req: NewsConfigRequest,
     @Param("id", ParseIntPipe) newsId: number,
-    @CurrentUser() user: UserTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: RequestCreateNewsPostDto
   ) {
     const dto = {

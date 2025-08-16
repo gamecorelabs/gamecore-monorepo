@@ -18,13 +18,12 @@ import {
   UserAccount,
   CurrentUser,
   CsrfTokenProtectionGuard,
+  UserLoginRequest,
 } from '@gamecorelabs/nestjs-core';
-import * as userTypes from '@gamecorelabs/nestjs-core';
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
-import { ConfigService } from '@nestjs/config';
 
 interface LoginRequest extends ExpressRequest {
   loginInfo: Pick<UserAccount, 'email' | 'password'>;
@@ -40,7 +39,7 @@ export class AuthController {
   @Post('token/access')
   @UseGuards(CsrfTokenProtectionGuard, RefreshTokenGuard)
   async accessToken(
-    @CurrentUser() user: userTypes.UserLoginRequest,
+    @CurrentUser() user: UserLoginRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
     const tokenData = this.baseAuthService.getIssuanceToken(
@@ -87,7 +86,7 @@ export class AuthController {
 
   @Post('me')
   @UseGuards(CsrfTokenProtectionGuard, AccessTokenGuard)
-  async getMe(@CurrentUser() user: userTypes.UserLoginRequest) {
+  async getMe(@CurrentUser() user: UserLoginRequest) {
     return user;
   }
 

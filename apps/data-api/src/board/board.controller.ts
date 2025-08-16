@@ -19,9 +19,9 @@ import {
   ResourceExistenceGuard,
   RequestBoardPostPaginationDto,
   CsrfTokenProtectionGuard,
+  UserOrGuestLoginRequest,
+  BoardConfigRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserTypes from "@gamecorelabs/nestjs-core";
-import * as RequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 
 @Controller("board")
@@ -39,7 +39,7 @@ export class BoardController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   async getBoardById(
-    @Request() req: RequestTypes.BoardConfigRequest,
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number
   ) {
     return req.boardConfig;
@@ -48,7 +48,7 @@ export class BoardController {
   @Get(":id/post")
   @UseGuards(ResourceExistenceGuard)
   async getBoardPost(
-    @Request() req: RequestTypes.BoardConfigRequest,
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
     @Query() query: RequestBoardPostPaginationDto
   ) {
@@ -72,9 +72,9 @@ export class BoardController {
   )
   @UseInterceptors(AnyFilesInterceptor()) // 파일 없어도 formData 파싱을 위해 필요
   postBoardPost(
-    @Request() req: RequestTypes.BoardConfigRequest,
+    @Request() req: BoardConfigRequest,
     @Param("id", ParseIntPipe) boardId: number,
-    @CurrentUser() user: UserTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: RequestCreateBoardPostDto
   ) {
     const dto = {

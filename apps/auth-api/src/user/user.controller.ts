@@ -15,10 +15,9 @@ import {
   CsrfTokenProtectionGuard,
   CurrentUser,
   RequestUserProfileDto,
-  UserAccount,
   UserTokenGuard,
+  UserLoginRequest,
 } from '@gamecorelabs/nestjs-core';
-import * as userTypes from '@gamecorelabs/nestjs-core';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
@@ -37,7 +36,7 @@ export class UserController {
   @UseGuards(CsrfTokenProtectionGuard, UserTokenGuard)
   @UseInterceptors(FileInterceptor('profileImageFile'))
   async profileUpdate(
-    @CurrentUser() user: userTypes.UserLoginRequest,
+    @CurrentUser() user: UserLoginRequest,
     @UploadedFile() file: Express.MulterS3.File,
     @Body() dto: RequestUserProfileDto,
   ) {

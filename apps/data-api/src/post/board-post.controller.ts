@@ -15,6 +15,7 @@ import {
 import { PostService } from "./post.service";
 import {
   GuestOrUserTokenGuard,
+  UserTokenGuard,
   CurrentUser,
   BoardPostService,
   BaseLikeService,
@@ -27,10 +28,10 @@ import {
   CurrentQueryRunner,
   CsrfTokenProtectionGuard,
   UserLoginRequest,
+  UserOrGuestLoginRequest,
+  BoardPostRequest,
+  CommonRequest,
 } from "@gamecorelabs/nestjs-core";
-import * as UserRequestTypes from "@gamecorelabs/nestjs-core";
-import * as CommonRequestTypes from "@gamecorelabs/nestjs-core";
-import * as BoardRequestTypes from "@gamecorelabs/nestjs-core";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { QueryRunner } from "typeorm";
 import { S3_CONFIG } from "../config/s3.config";
@@ -49,7 +50,7 @@ export class BoardPostController {
   @Get(":id")
   @UseGuards(ResourceExistenceGuard)
   getPostDetail(
-    @Request() req: CommonRequestTypes.CommonRequest,
+    @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.boardPostService.getPostDetail(id);
@@ -64,7 +65,7 @@ export class BoardPostController {
   @UseInterceptors(AnyFilesInterceptor())
   async patchPost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Body() body: UpdateBoardPostDto
   ) {
     await this.boardPostService.checkOwnerPost(id, user);
@@ -79,7 +80,7 @@ export class BoardPostController {
   )
   async deletePost(
     @Param("id", ParseIntPipe) id: number,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest
+    @CurrentUser() user: UserOrGuestLoginRequest
   ) {
     await this.boardPostService.checkOwnerPost(id, user);
     return this.boardPostService.deletePost(id);
@@ -89,7 +90,7 @@ export class BoardPostController {
   @Get(":id/comments")
   @UseGuards(ResourceExistenceGuard)
   async getCommentsByPostId(
-    @Request() req: CommonRequestTypes.CommonRequest,
+    @Request() req: CommonRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return await this.baseCommentService.getPostCommentList(
@@ -107,8 +108,8 @@ export class BoardPostController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   postComment(
-    @Request() req: BoardRequestTypes.BoardPostRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: BoardPostRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: RequestCreateCommentDto
   ) {
@@ -129,8 +130,8 @@ export class BoardPostController {
   )
   @UseInterceptors(QueryRunnerTransactionInterceptor)
   async toggleLike(
-    @Request() req: CommonRequestTypes.CommonRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @CurrentQueryRunner() qr: QueryRunner,
     @Body() body: CreateRequestLikeDto
   ) {
@@ -145,15 +146,15 @@ export class BoardPostController {
   @Get(":id/owner-check")
   @UseGuards(ResourceExistenceGuard, GuestOrUserTokenGuard)
   async getOwnerCheck(
-    @Request() req: CommonRequestTypes.CommonRequest,
-    @CurrentUser() user: UserRequestTypes.UserOrGuestLoginRequest,
+    @Request() req: CommonRequest,
+    @CurrentUser() user: UserOrGuestLoginRequest,
     @Param("id", ParseIntPipe) id: number
   ) {
     return this.boardPostService.checkOwnerPost(id, user);
   }
 
   @Post("/images")
-  @UseGuards(CsrfTokenProtectionGuard, UserRequestTypes.UserTokenGuard)
+  @UseGuards(CsrfTokenProtectionGuard, UserTokenGuard)
   @UseInterceptors(
     S3FileInterceptor("ImageData", S3_CONFIG.boardPostImagePath, 3)
   ) // 3MB 제한
