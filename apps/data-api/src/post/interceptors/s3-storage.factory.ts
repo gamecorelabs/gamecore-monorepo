@@ -46,6 +46,7 @@ export class S3StorageFactory {
 
           // MIME 타입 검증
           const allowedMimeTypes = [
+            "image/jpg",
             "image/jpeg",
             "image/png",
             "image/gif",
@@ -59,10 +60,26 @@ export class S3StorageFactory {
             );
           }
 
-          // 파일명 검증 (특수문자 제한)
-          if (!/^[a-zA-Z0-9._-]+$/.test(file.originalname)) {
+          // 파일명 보안 검증 (위험한 문자만 제한)
+          const dangerousChars = /[<>:"/\\|?*\x00-\x1f]/;
+          const pathTraversal = /\.\./;
+
+          if (
+            dangerousChars.test(file.originalname) ||
+            pathTraversal.test(file.originalname)
+          ) {
             return callback(
-              new Error("파일명에 특수문자가 포함되어 있습니다.") as any,
+              new Error(
+                "파일명에 허용되지 않는 문자가 포함되어 있습니다."
+              ) as any,
+              false
+            );
+          }
+
+          // 파일명 길이 제한 (255자)
+          if (file.originalname.length > 255) {
+            return callback(
+              new Error("파일명이 너무 깁니다. (최대 255자)") as any,
               false
             );
           }
