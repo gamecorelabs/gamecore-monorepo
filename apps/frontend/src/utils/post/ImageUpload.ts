@@ -1,8 +1,13 @@
-import { ResourceType } from "@/types/common/resource.types";
 import dataApi from "@/utils/common-axios/dataApi";
 
-const FILE_SIZE = 1 * 1024 * 1024; // 1MB
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif"];
+const FILE_SIZE = 3 * 1024 * 1024; // 3MB
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
 
 // 임시 이미지 업로드 응답 타입
 export interface ImageUploadResponse {
@@ -50,7 +55,7 @@ export const fileAllowedCheck = (
     return {
       result: false,
       message:
-        "지원하지 않는 파일 형식입니다. JPG, PNG, GIF 파일만 업로드 가능합니다.",
+        "지원하지 않는 파일 형식입니다. JPG, JPEG, PNG, GIF, WEBP 파일만 업로드 가능합니다.",
     };
   }
 
@@ -58,7 +63,7 @@ export const fileAllowedCheck = (
   if (file.size > FILE_SIZE) {
     return {
       result: false,
-      message: "파일 크기가 너무 큽니다. 최대 1MB 이하로 업로드해주세요.",
+      message: "파일 크기가 너무 큽니다. 최대 3MB 이하로 업로드해주세요.",
     };
   }
 

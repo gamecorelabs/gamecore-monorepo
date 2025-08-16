@@ -16,14 +16,16 @@ import { s3Client, S3_CONFIG } from '../config/s3.config';
     JwtModule.register({}),
     MulterModule.register({
       limits: {
-        fileSize: 1024 * 1024 * 1, // 1MB로 증가
+        fileSize: 1024 * 1024 * 3, // 3MB로 증가
       },
       fileFilter: (req, file, callback) => {
         const ext = extname(file.originalname).toLowerCase();
 
-        if (!ext.match(/\.(jpg|jpeg|png)$/)) {
+        if (!ext.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
           callback(
-            new BadRequestException('jpg, jpeg, png 파일만 업로드 가능합니다.'),
+            new BadRequestException(
+              'jpg, jpeg, png, gif, webp 파일만 업로드 가능합니다.',
+            ),
             false,
           );
         }

@@ -79,17 +79,23 @@ export const useProfileEditStore = create<ProfileEditState>((set, get) => ({
     const file = event.target.files?.[0];
     if (file) {
       // 파일 확장자 검증 (jpg, jpeg, png만 허용)
-      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.");
+        alert("JPG, JPEG, PNG, GIF, WEBP 파일만 업로드 가능합니다.");
         event.target.value = ""; // input 초기화
         return;
       }
 
-      // 파일 크기 검증 (1MB 이하만 허용)
-      const maxSize = 1024 * 1024;
+      // 파일 크기 검증 (3MB 이하만 허용)
+      const maxSize = 1024 * 1024 * 3;
       if (file.size > maxSize) {
-        alert("파일 크기는 1MB 이하만 업로드 가능합니다.");
+        alert("파일 크기는 3MB 이하만 업로드 가능합니다.");
         event.target.value = ""; // input 초기화
         return;
       }

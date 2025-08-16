@@ -16,7 +16,7 @@ export class MulterExceptionFilter implements ExceptionFilter {
     if (exception.status === 413 || exception.response?.statusCode === 413) {
       return response.status(400).json({
         statusCode: 400,
-        message: '파일 크기가 1MB를 초과할 수 없습니다.',
+        message: '파일 크기가 3MB를 초과할 수 없습니다.',
         error: 'Bad Request',
       });
     }
@@ -25,7 +25,7 @@ export class MulterExceptionFilter implements ExceptionFilter {
     if (exception.code === 'LIMIT_FILE_SIZE') {
       return response.status(400).json({
         statusCode: 400,
-        message: '파일 크기가 1MB를 초과할 수 없습니다.',
+        message: '파일 크기가 3MB를 초과할 수 없습니다.',
         error: 'Bad Request',
       });
     }

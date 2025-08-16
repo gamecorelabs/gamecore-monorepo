@@ -68,8 +68,8 @@ const ProfilePhotoEdit = () => {
             className="text-sm mb-2"
             style={{ color: "var(--text-secondary)" }}
           >
-            JPG, JPEG, PNG 파일을 업로드할 수 있습니다. (최대 1MB, 48x48 사이즈
-            권장)
+            JPG, JPEG, PNG, GIF, WEBP 파일을 업로드할 수 있습니다. (최대 3MB,
+            48x48 사이즈 권장)
           </p>
 
           <div className="flex gap-2">
