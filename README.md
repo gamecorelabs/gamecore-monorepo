@@ -1,12 +1,3 @@
-# 사이드 프로젝트 - GameCore
-
-### 프로젝트 소개
-
-- 종합 게임 포털 '게임코어' 프로젝트를 개발 진행중에 있습니다.
-- 1인 프로젝트로 진행하고 있기 때문에 개발 편의상 현 repo에서 monorepo 방식으로 통합 개발을 진행하고 있습니다.
-- 자세한 프로젝트 설명 및 구조에 대해서는 아래의 Notion 링크를 참고해주세요.
-- <a href="https://gamecore-doc.notion.site/" target="_blank">프로젝트 소개 notion 링크</a>
-
 # GameCore 프로젝트 구성도
 
 ```
